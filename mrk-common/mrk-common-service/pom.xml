@@ -4,19 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.auoralpixel</groupId>
-        <artifactId>MagicRepoKit</artifactId>
+        <artifactId>mrk-common</artifactId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mrk-common</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>mrk-common-dao</module>
-        <module>mrk-common-service</module>
-        <module>mrk-common-web</module>
-        <module>mrk-common-utils</module>
-    </modules>
+    <artifactId>mrk-common-service</artifactId>
 
 
 </project>

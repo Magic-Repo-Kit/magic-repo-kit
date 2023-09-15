@@ -9,14 +9,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mrk-common</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>mrk-common-dao</module>
-        <module>mrk-common-service</module>
-        <module>mrk-common-web</module>
-        <module>mrk-common-utils</module>
-    </modules>
+    <artifactId>mrk-entity</artifactId>
 
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
