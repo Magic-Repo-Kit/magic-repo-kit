@@ -18,7 +18,12 @@ import org.springframework.security.oauth2.provider.code.AuthorizationCodeServic
 import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+
+import javax.annotation.Resource;
+import java.util.Arrays;
 
 /**
  * 认证服务器配置
@@ -36,6 +41,8 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
     private  AuthorizationCodeServices authorizationCodeServices;
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private JwtAccessTokenConverter  accessTokenConverter;
 
     /**
      * 配置客户端详情信息
@@ -80,10 +87,14 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
         security
                 .allowFormAuthenticationForClients() //允许表认证
                 .tokenKeyAccess("permitAll()") //oauth/token_key公开
-                .checkTokenAccess("isAuthenticated()"); //oauth/check_token公开
+                .checkTokenAccess("permitAll()"); //oauth/check_token公开
     }
 
 
+    /**
+     * 令牌服务
+     * @return
+     */
     public AuthorizationServerTokenServices tokenServices(){
         DefaultTokenServices services = new DefaultTokenServices();
         services.setClientDetailsService(clientDetailsService); //客户端信息
@@ -91,6 +102,10 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
         services.setTokenStore(tokenStore); //令牌存储方式
         services.setAccessTokenValiditySeconds(7200); //2小时
         services.setRefreshTokenValiditySeconds(3600*24*7); //7天
+        //令牌增强器
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(accessTokenConverter));
+        services.setTokenEnhancer(tokenEnhancerChain);
         return services;
     }
 

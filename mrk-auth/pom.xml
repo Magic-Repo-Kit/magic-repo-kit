@@ -22,14 +22,12 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-oauth2</artifactId>
-            <version>${spring-cloud-starter.version}</version>
         </dependency>
 
         <!-- Spring Security 依赖 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-security</artifactId>
-            <version>${spring-cloud-starter.version}</version>
         </dependency>
 
         <!--redis-->
@@ -69,6 +67,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.auoralpixel</groupId>
+            <artifactId>mrk-core-jwt</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
 

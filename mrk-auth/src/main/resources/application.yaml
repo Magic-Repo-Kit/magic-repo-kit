@@ -11,3 +11,7 @@ spring:
         server-addr: 124.222.46.195:8848
       config:
         server-addr: 124.222.46.195:8848
+# magicRepoKit服务配置
+mrk:
+  token:
+    sing-key: mrktokentest12345678

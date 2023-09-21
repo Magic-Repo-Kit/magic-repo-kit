@@ -1,10 +1,11 @@
 package com.magicrepokit.auth.config;
 
-import lombok.AllArgsConstructor;
+import com.magicrepokit.jwt.properties.JWTProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @Configuration
 public class MRKTokenConfig {
@@ -13,7 +14,16 @@ public class MRKTokenConfig {
      * @return
      */
     @Bean
-    public TokenStore tokenStore(){
-        return new InMemoryTokenStore();
+    public TokenStore tokenStore(JWTProperties jwtProperties){
+        return new JwtTokenStore(accessTokenConverter(jwtProperties));
+    }
+
+
+    @Bean
+    public JwtAccessTokenConverter accessTokenConverter(JWTProperties jwtProperties){
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        //设置jwt密钥
+        converter.setSigningKey(jwtProperties.getSingKey());
+        return converter;
     }
 }

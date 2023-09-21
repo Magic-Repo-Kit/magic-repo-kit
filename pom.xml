@@ -14,7 +14,6 @@
         <module>mrk-resouce1</module>
         <module>mrk-service-api</module>
         <module>mrk-core</module>
-        <module>mrk-core/mrk-core-mybatis</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -71,6 +70,35 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- OATUH2 的核心组件 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-oauth2</artifactId>
+                <version>${spring.cloud.alibaba.version}</version>
+            </dependency>
+            <!-- Spring Security 依赖 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-security</artifactId>
+                <version>${spring.cloud.alibaba.version}</version>
+            </dependency>
+            <!-- JWT -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>0.11.5</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>0.11.5</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-jwt</artifactId>
+                <version>1.0.11.RELEASE</version>
+            </dependency>
+
             <!-- Gateway组件 -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>

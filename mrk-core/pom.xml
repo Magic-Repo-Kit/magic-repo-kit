@@ -8,7 +8,24 @@
     </parent>
 
     <artifactId>mrk-core</artifactId>
-    <name>${project.artifactId}</name>
-    <version>${mrk.project.version}</version>
     <packaging>pom</packaging>
+    <modules>
+        <module>mrk-core-jwt</module>
+        <module>mrk-core-mybatis</module>
+    </modules>
+    <dependencies>
+        <!--        springboot组件-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+        </dependency>
+    </dependencies>
 </project>
