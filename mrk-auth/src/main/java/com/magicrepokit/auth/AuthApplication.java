@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan("com.magicrepokit.*")
+@ComponentScan("com.magicrepokit")
 public class AuthApplication {
     public static void main(String[] args) {
         SpringApplication.run(AuthApplication.class);

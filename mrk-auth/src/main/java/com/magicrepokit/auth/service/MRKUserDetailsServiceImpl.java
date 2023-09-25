@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 用户管理服务
+ */
 @Service
 public class MRKUserDetailsServiceImpl implements UserDetailsService {
     @Override

@@ -30,12 +30,33 @@
             <artifactId>spring-cloud-starter-security</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
         <!--redis-->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->
 <!--            <artifactId>spring-boot-starter-data-redis</artifactId>-->
 <!--            <version>${spring-cloud-starter.version}</version>-->
 <!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
 
         <!-- Nacos服务注册发现依赖 -->
         <dependency>
@@ -43,25 +64,23 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
 
-<!--        &lt;!&ndash; druid 连接池依赖 &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba</groupId>-->
-<!--            <artifactId>druid-spring-boot-starter</artifactId>-->
-<!--            <version>${druid.version}</version>-->
-<!--        </dependency>-->
+        <!-- druid 连接池依赖 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+        </dependency>
 
-<!--        &lt;!&ndash; 解决druid log4j监控组件无法使用问题， 不用再额外增加其他LOG框架 &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-log4j12</artifactId>-->
-<!--        </dependency>-->
+        <!-- 解决druid log4j监控组件无法使用问题， 不用再额外增加其他LOG框架 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
 
-<!--        &lt;!&ndash; mysql-connector-java &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>mysql</groupId>-->
-<!--            <artifactId>mysql-connector-java</artifactId>-->
-<!--            <version>8.0.14</version>-->
-<!--        </dependency>-->
+        <!-- mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
 
         <!--web 模块-->
         <dependency>
@@ -72,6 +91,12 @@
         <dependency>
             <groupId>org.auoralpixel</groupId>
             <artifactId>mrk-core-jwt</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.auoralpixel</groupId>
+            <artifactId>mrk-core-redis</artifactId>
             <version>1.0.0</version>
         </dependency>
 

@@ -17,6 +17,12 @@
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
 
+        <!-- validation -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

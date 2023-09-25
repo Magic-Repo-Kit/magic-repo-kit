@@ -34,13 +34,13 @@
         <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
         <mybatis-plugin-version>3.4.0</mybatis-plugin-version>
         <druid.version>1.1.18</druid.version>
+        <mysql.version>8.0.14</mysql.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
         <maven-jar-plugin.version>3.1.0</maven-jar-plugin.version>
         <jackson.version>2.13.5</jackson.version>
     </properties>
-
 
 
     <dependencies>
@@ -98,6 +98,17 @@
                 <artifactId>spring-security-jwt</artifactId>
                 <version>1.0.11.RELEASE</version>
             </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
 
             <!-- Gateway组件 -->
             <dependency>
@@ -126,6 +137,17 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plugin-version}</version>
+            </dependency>
+            <!-- protostuff -->
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-core</artifactId>
+                <version>1.6.0</version>
+            </dependency>
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-runtime</artifactId>
+                <version>1.6.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

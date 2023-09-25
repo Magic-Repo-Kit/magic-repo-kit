@@ -12,6 +12,7 @@
     <modules>
         <module>mrk-core-jwt</module>
         <module>mrk-core-mybatis</module>
+        <module>mrk-core-redis</module>
     </modules>
     <dependencies>
         <!--        springboot组件-->
