@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <description>微服务网关</description>
+    <parent>
+        <groupId>org.auoralpixel</groupId>
+        <artifactId>MagicRepoKit</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <artifactId>mrk-gateway</artifactId>
+    <name>${project.artifactId}</name>
+    <version>${mrk.project.version}</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- gateway 网关依赖组件 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
+        </dependency>
+
+        <!-- spring boot 的监控依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- Nacos 服务注册发现依赖-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.auoralpixel</groupId>
+            <artifactId>mrk-common-utils</artifactId>
+            <version>${mrk.project.version}</version>
+        </dependency>
+    </dependencies>
+</project>

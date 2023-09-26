@@ -1,0 +1,34 @@
+server:
+  port: 1000
+
+spring:
+  application:
+    name: mrk-gateway
+  cloud:
+    # 注册中心配置
+    nacos:
+      discovery:
+        server-addr: 124.222.46.195:8848
+      config:
+        server-addr: 124.222.46.195:8848
+    gateway:
+      discovery:
+    # 允许通过服务名称进行路由转发访问， http://service-id/user
+        locator:
+          enabled: true
+  # 路由配置
+      routes:
+#        - id: stock-user
+#          uri: lb://stock-user
+#          predicates:
+#            - Path=/user/**
+        - id: mrk-auth
+          uri: lb://mrk-auth
+          predicates:
+            # - Method=GET,POST  不要开启此项
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+logging:
+  level:
+    root: info

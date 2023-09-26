@@ -14,6 +14,7 @@
         <module>mrk-resouce1</module>
         <module>mrk-service-api</module>
         <module>mrk-core</module>
+        <module>mrk-gateway</module>
     </modules>
     <packaging>pom</packaging>
 
