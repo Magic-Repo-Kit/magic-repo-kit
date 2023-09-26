@@ -15,11 +15,7 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 
 /**
- * <p>Description: </p>
- * @date 2020/1/2
- * @author 贺锟 
- * @version 1.0
- * <p>Copyright:Copyright(c)2019</p>
+ * md5加密工具
  */
 @SuppressWarnings("restriction")
 public class EncryptUtil {

@@ -4,9 +4,7 @@ import com.magicrepokit.auth.constant.MRKAuthConstant;
 import com.magicrepokit.redis.utils.MRKRedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.code.RandomValueAuthorizationCodeServices;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +33,11 @@ public class MRKAuthorizationCodeServiceImpl extends RandomValueAuthorizationCod
         redisUtils.setExpire(getKey(code), oAuth2Authentication, 10, TimeUnit.MINUTES, valueSerializer);
     }
 
+    /**
+     * 验证删除授权码
+     * @param code
+     * @return
+     */
     @Override
     protected OAuth2Authentication remove(String code) {
         String codeKey = getKey(code);
