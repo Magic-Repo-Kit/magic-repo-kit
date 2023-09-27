@@ -11,10 +11,10 @@
     <modules>
         <module>mrk-auth</module>
         <module>mrk-common</module>
-        <module>mrk-resouce1</module>
         <module>mrk-service-api</module>
         <module>mrk-core</module>
         <module>mrk-gateway</module>
+        <module>mrk-service</module>
     </modules>
     <packaging>pom</packaging>
 
