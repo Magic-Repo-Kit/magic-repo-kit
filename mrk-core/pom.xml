@@ -13,7 +13,7 @@
         <module>mrk-core-jwt</module>
         <module>mrk-core-mybatis</module>
         <module>mrk-core-redis</module>
-        <module>mrk-core-auto</module>
+        <module>mrk-core-generate-code</module>
     </modules>
     <dependencies>
         <!--        springboot组件-->
