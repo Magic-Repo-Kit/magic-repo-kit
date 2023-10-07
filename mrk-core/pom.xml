@@ -14,6 +14,7 @@
         <module>mrk-core-mybatis</module>
         <module>mrk-core-redis</module>
         <module>mrk-core-generate-code</module>
+        <module>mrk-core-i18n</module>
     </modules>
     <dependencies>
         <!--        springboot组件-->

@@ -29,6 +29,13 @@ spring:
             - Path=/auth/**
           filters:
             - StripPrefix=1
+        - id: mrk-user
+          uri: lb://mrk-user
+          predicates:
+            # - Method=GET,POST  不要开启此项
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
 logging:
   level:
     root: info

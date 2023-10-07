@@ -16,3 +16,7 @@ spring:
     url: jdbc:mysql://124.222.46.195:3306/magic_repo_kit?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
     username: root
     password: apollotest
+  messages:
+    basename: i18n.message
+    cache-duration: 3600
+    encoding: UTF-8
