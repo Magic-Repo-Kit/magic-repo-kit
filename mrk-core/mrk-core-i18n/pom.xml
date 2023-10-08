@@ -30,5 +30,11 @@
             <artifactId>jquery-i18n-properties</artifactId>
             <version>1.2.7</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.auoralpixel</groupId>
+            <artifactId>mrk-core-redis</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 </project>

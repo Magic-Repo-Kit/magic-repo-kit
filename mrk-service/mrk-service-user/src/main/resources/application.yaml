@@ -20,3 +20,11 @@ spring:
     basename: i18n.message
     cache-duration: 3600
     encoding: UTF-8
+  # redis
+  redis:
+    ##redis 单机环境配置
+    host: 124.222.46.195
+    port: 6379
+    password: apollotest
+    database: 0
+    ssl: false
