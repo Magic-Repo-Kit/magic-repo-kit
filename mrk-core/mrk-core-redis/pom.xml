@@ -12,11 +12,6 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <dependency>
-            <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-common-utils</artifactId>
-            <version>${mrk.project.version}</version>
-        </dependency>
         <!-- protostuff -->
         <dependency>
             <groupId>io.protostuff</groupId>

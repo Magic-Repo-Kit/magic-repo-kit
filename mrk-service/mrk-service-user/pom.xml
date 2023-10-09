@@ -39,12 +39,6 @@
             <version>1.0.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-i18n</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
         <!-- mysql-connector-java -->
         <dependency>
             <groupId>mysql</groupId>
@@ -54,6 +48,12 @@
         <dependency>
             <groupId>org.auoralpixel</groupId>
             <artifactId>mrk-core-generate-code</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.auoralpixel</groupId>
+            <artifactId>mrk-common-utils</artifactId>
             <version>1.0.0</version>
         </dependency>
 

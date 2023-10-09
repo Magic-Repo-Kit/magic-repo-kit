@@ -1,12 +1,13 @@
 package com.magicrepokit.redis.serializer;
 
-import com.magicrepokit.common.utils.ObjectUtil;
+
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
+import org.springframework.util.ObjectUtils;
 
 public class ProtoStuffSerializer implements RedisSerializer<Object> {
     private final Schema<BytesWrapper> schema;
@@ -30,7 +31,7 @@ public class ProtoStuffSerializer implements RedisSerializer<Object> {
 
     @Override
     public Object deserialize(byte[] bytes) throws SerializationException {
-        if (ObjectUtil.isEmpty(bytes)) {
+        if (ObjectUtils.isEmpty(bytes)) {
             return null;
         }
         BytesWrapper<Object> wrapper = new BytesWrapper<>();
