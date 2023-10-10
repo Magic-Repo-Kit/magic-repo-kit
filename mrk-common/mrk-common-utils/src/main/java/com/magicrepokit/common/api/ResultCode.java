@@ -16,9 +16,8 @@
  */
 package com.magicrepokit.common.api;
 
-import com.magicrepokit.common.utils.MessageUtil;
+import com.magicrepokit.i18n.utils.MessageUtil;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,14 +27,13 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author raipiot
  */
-@Getter
 @AllArgsConstructor
 public enum ResultCode implements IResultCode {
 
 	/**
 	 * 操作成功
 	 */
-	SUCCESS(HttpServletResponse.SC_OK, MessageUtil.getMessage("SUCCESS")),
+	SUCCESS(HttpServletResponse.SC_OK,"SUCCESS"),
 
 	/**
 	 * 业务异常
@@ -112,4 +110,13 @@ public enum ResultCode implements IResultCode {
 	 */
 	final String message;
 
+	@Override
+	public String getMessage() {
+		return MessageUtil.getMessage(this.message);
+	}
+
+	@Override
+	public int getCode() {
+		return this.code;
+	}
 }

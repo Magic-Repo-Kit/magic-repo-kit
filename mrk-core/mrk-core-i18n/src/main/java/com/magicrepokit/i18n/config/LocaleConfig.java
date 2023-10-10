@@ -53,7 +53,7 @@ public class LocaleConfig implements WebMvcConfigurer {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setDefaultEncoding(StandardCharsets.UTF_8.toString());
         // 多语言文件地址
-        messageSource.addBasenames("i18n/message");
+        messageSource.addBasenames("i18nBase/message");
         return messageSource;
     }
 
