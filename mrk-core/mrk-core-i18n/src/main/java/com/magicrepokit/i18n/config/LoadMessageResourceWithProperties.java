@@ -3,6 +3,7 @@ package com.magicrepokit.i18n.config;
 import com.magicrepokit.i18n.constant.I18nConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
@@ -17,29 +18,28 @@ import java.util.Properties;
 
 @Component
 public class LoadMessageResourceWithProperties implements LoadMessageResource {
-    @Value("classpath:i18n/")
-    private Resource resource;
 
-    @Autowired
-    private ResourceLoader resourceLoader;
 
     @Override
     public Map<String, Map<String, String>> load(){
-        return load(resource);
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL resourceUrl = classLoader.getResource("i18n");
+        return load(resourceUrl);
     }
 
     @Override
     public Map<String, Map<String, String>> loadBase() {
-        Resource baseResource = resourceLoader.getResource(I18nConstant.BASE_RESOURCE);
-        return load(baseResource);
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL resourceUrl = classLoader.getResource("i18nBase");
+        return load(resourceUrl);
     }
 
-    public Map<String, Map<String, String>> load(Resource resource) {
+    public Map<String, Map<String, String>> load(URL resourceUrl) {
         Map<String, Map<String, String>> result;
         try {
-            File parentFile = resource.getFile();
-            result = load(parentFile.listFiles());
-        } catch (IOException e) {
+            File resourceDir = new File(resourceUrl.toURI());
+            result = load(resourceDir.listFiles());
+        } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
         return result;
