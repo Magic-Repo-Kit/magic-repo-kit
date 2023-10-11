@@ -3,12 +3,13 @@ package com.magicrepokit.user.controller;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.common.api.ResultCode;
 import com.magicrepokit.i18n.utils.MessageUtil;
+import com.magicrepokit.user.service.IUserService;
+import com.magicrepokit.user.service.impl.UserServiceImpl;
+import com.magicrepokit.user.vo.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,10 +17,36 @@ import java.io.IOException;
 @RestController
 @RequestMapping
 public class UserController {
-    @Value("classpath:i18n/")
-    private Resource resource;
+    @Autowired
+    private IUserService userService;
+
+    /**
+     * i18n测试
+     * @return
+     */
     @GetMapping("/version")
-    public R version(){
-        return R.data(ResultCode.SUCCESS.getMessage(),MessageUtil.getMessage("VERSION"));
+    public R<String> version(){
+        return R.data(MessageUtil.getMessage("VERSION"));
+    }
+
+    /**
+     * 用户信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/info/{id}")
+    public R<UserInfo> userInfo(@PathVariable Long id){
+        return R.data(userService.userInfo(id));
+    }
+
+    /**
+     * 用户信息
+     * @param account
+     * @param userType
+     * @return
+     */
+    @GetMapping("/info")
+    public R<UserInfo> userInfo(@RequestParam("account") String account,@RequestParam("userType") Integer userType){
+        return R.data(userService.userInfo(account,userType));
     }
 }

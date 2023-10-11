@@ -32,9 +32,10 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
      * @return
      */
     @Override
-    public UserInfo userInfo(String account) {
+    public UserInfo userInfo(String account,Integer userType) {
         User user = this.getOne(new LambdaQueryWrapper<User>()
                 .eq(User::getAccount,account)
+                .eq(User::getUserType,userType)
         );
         return userBuild.userInfoBuild(user);
     }

@@ -83,6 +83,11 @@
                 <artifactId>spring-cloud-starter-security</artifactId>
                 <version>${spring.cloud.alibaba.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>${spring.cloud.alibaba.version}</version>
+            </dependency>
             <!-- JWT -->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>

@@ -79,13 +79,13 @@
 
         <dependency>
             <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-i18n</artifactId>
+            <artifactId>mrk-core-redis</artifactId>
             <version>1.0.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-redis</artifactId>
+            <artifactId>mrk-service-api-user</artifactId>
             <version>1.0.0</version>
         </dependency>
 
@@ -94,7 +94,7 @@
 
     <!-- 打包配置 -->
     <build>
-        <finalName>trade-auth</finalName>
+        <finalName>mrk-auth</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -1,5 +1,6 @@
 package com.magicrepokit.user;
 
+import com.magicrepokit.user.bean.CreateSql;
 import com.magicrepokit.user.bean.User;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -39,6 +40,23 @@ public class GenerateSqlTest {
         } catch (TemplateException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void TestCreateSql(){
+        Template template;
+        // Create the root hash
+        Map<String, Object> root = new HashMap<>();
+        try {
+            template = freeMarkConfig.getTemplate("CreateSql.ftl");
+            CreateSql createSql = new CreateSql();
+            createSql.setTableName("user");
+            root.put("create",createSql);
+            Writer out = new OutputStreamWriter(System.out);
+            template.process(root,out);
+        } catch (IOException | TemplateException e) {
             throw new RuntimeException(e);
         }
     }

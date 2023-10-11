@@ -11,12 +11,4 @@
     <version>${mrk.project.version}</version>
     <description>MagicRepoKit用户服务api</description>
     <packaging>jar</packaging>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-mybatis</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-    </dependencies>
 </project>
