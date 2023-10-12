@@ -7,6 +7,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -35,6 +36,9 @@ public class LoadMessageResourceWithProperties implements LoadMessageResource {
     }
 
     public Map<String, Map<String, String>> load(URL resourceUrl) {
+        if(ObjectUtils.isEmpty(resourceUrl)){
+            return null;
+        }
         Map<String, Map<String, String>> result;
         try {
             File resourceDir = new File(resourceUrl.toURI());

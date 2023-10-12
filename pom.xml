@@ -86,7 +86,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-openfeign</artifactId>
-                <version>${spring.cloud.alibaba.version}</version>
+                <version>2.2.1.RELEASE</version>
             </dependency>
             <!-- JWT -->
             <dependency>

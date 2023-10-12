@@ -19,6 +19,11 @@ public class MRKTokenConfig {
     }
 
 
+    /**
+     * 指定jwt密钥
+     * @param jwtProperties
+     * @return
+     */
     @Bean
     public JwtAccessTokenConverter accessTokenConverter(JWTProperties jwtProperties){
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();

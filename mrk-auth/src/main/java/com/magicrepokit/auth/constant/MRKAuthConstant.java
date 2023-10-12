@@ -31,4 +31,23 @@ public interface MRKAuthConstant {
      * redis中授权码存储前缀key
      */
     String REDIS_KEY_AUTHORIZATION_CODE_PREFIX = "mrk:auth:authorization_code:";
+
+    /**
+     * 用户登录的type
+     */
+    String USER_TYPE = "userType";
+
+    /**
+     * 用户锁定的key
+     */
+    String FAIL_REDIS_KEY = "mrk:auth:login:fail:";
+
+    /**
+     * 被锁定的最多次数
+     */
+    int FAIL_COUNT = 5;
+
+    static String getFailRedisKey(String account){
+        return FAIL_REDIS_KEY+account;
+    }
 }

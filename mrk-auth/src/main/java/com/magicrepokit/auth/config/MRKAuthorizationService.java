@@ -61,6 +61,7 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
         //从数据库获取客户端信息
         clientDetailsService.setSelectClientDetailsSql(MRKAuthConstant.SELECT_BY_CLIENT_ID);
         clientDetailsService.setFindClientDetailsSql(MRKAuthConstant.BASE_SELECT);
+        //设置密码验证方法
         clientDetailsService.setPasswordEncoder(passwordEncoder);
         clients.withClientDetails(clientDetailsService);
     }
