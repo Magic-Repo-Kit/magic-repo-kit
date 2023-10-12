@@ -42,6 +42,19 @@ public interface MRKAuthConstant {
      */
     String FAIL_REDIS_KEY = "mrk:auth:login:fail:";
 
+    String CLIENT_ID = "client_id";
+
+    String USER_NAME = "user_name";
+    String NICK_NAME = "nick_name";
+    String REAL_NAME = "real_name";
+    String USER_ID = "user_id";
+    String DEPT_ID = "dept_id";
+    String POST_ID = "post_id";
+    String ROLE_ID = "role_id";
+    String ROLE_NAME = "role_name";
+    String TENANT_ID = "tenant_id";
+    String ACCOUNT = "account";
+
     /**
      * 被锁定的最多次数
      */

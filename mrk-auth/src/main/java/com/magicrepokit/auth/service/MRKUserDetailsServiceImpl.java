@@ -3,6 +3,7 @@ package com.magicrepokit.auth.service;
 import com.magicrepokit.auth.constant.MRKAuthConstant;
 import com.magicrepokit.auth.constant.MRKI18N;
 import com.magicrepokit.common.api.R;
+import com.magicrepokit.common.utils.ObjectUtil;
 import com.magicrepokit.common.utils.StringUtil;
 import com.magicrepokit.common.utils.WebUtil;
 import com.magicrepokit.redis.utils.MRKRedisUtils;
@@ -46,7 +47,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
             ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
             //成功清除错误次数
             delFailCount(account);
-            return new MrkUserDetails(userInfo,grantedAuthorities);
+            return new MrkUserDetails(userInfo, grantedAuthorities);
         } else {
             //用户错误次数+1
             setFailCount(account);
@@ -69,8 +70,9 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
      * @param account
      */
     private void judgeFail(String account) {
-        int count = (int) mrkRedisUtils.get(MRKAuthConstant.getFailRedisKey(account));
-        if (count >= MRKAuthConstant.FAIL_COUNT) {
+        Integer count = (Integer) mrkRedisUtils.get(MRKAuthConstant.getFailRedisKey(account));
+
+        if (ObjectUtil.isNotEmpty(count) && count >= MRKAuthConstant.FAIL_COUNT) {
             throw new UserDeniedAuthorizationException(MRKI18N.USER_IS_LOCKED.getMessage());
         }
     }
