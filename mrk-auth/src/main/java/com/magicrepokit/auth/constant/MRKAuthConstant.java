@@ -37,6 +37,12 @@ public interface MRKAuthConstant {
      */
     String USER_TYPE = "userType";
 
+    String PASSWORD = "password";
+
+    int ACCESS_TOKEN_VALIDITY_SECONDS = 7200;
+
+    int REFRESH_TOKEN_VALIDITY_SECONDS = 3600*24*7;
+
     /**
      * 用户锁定的key
      */

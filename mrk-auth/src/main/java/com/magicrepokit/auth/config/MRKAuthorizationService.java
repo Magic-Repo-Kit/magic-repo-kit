@@ -2,6 +2,7 @@ package com.magicrepokit.auth.config;
 
 import com.magicrepokit.auth.constant.MRKAuthConstant;
 import com.magicrepokit.auth.service.MRKClientDetailsServiceImpl;
+import com.magicrepokit.auth.support.MRKJwtTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,14 +19,13 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
-import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
-import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
-import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.*;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 认证服务器配置
@@ -49,6 +49,8 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
     private DataSource dataSource;
     @Autowired
     private AuthorizationCodeServices authorizationCodeServices;
+    @Autowired
+    private TokenEnhancer tokenEnhancer;
 
     /**
      * 配置客户端详情信息
@@ -103,11 +105,14 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
         services.setClientDetailsService(clientDetailsService); //客户端信息
         services.setSupportRefreshToken(true); //是否刷新令牌
         services.setTokenStore(tokenStore); //令牌存储方式
-        services.setAccessTokenValiditySeconds(7200); //2小时
-        services.setRefreshTokenValiditySeconds(3600*24*7); //7天
+        services.setAccessTokenValiditySeconds(MRKAuthConstant.ACCESS_TOKEN_VALIDITY_SECONDS); //2小时
+        services.setRefreshTokenValiditySeconds(MRKAuthConstant.REFRESH_TOKEN_VALIDITY_SECONDS); //7天
         //令牌增强器
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(accessTokenConverter));
+        List<TokenEnhancer> enhancerList = new ArrayList<>();
+        enhancerList.add(tokenEnhancer);
+        enhancerList.add(accessTokenConverter);
+        tokenEnhancerChain.setTokenEnhancers(enhancerList);
         services.setTokenEnhancer(tokenEnhancerChain);
         return services;
     }
