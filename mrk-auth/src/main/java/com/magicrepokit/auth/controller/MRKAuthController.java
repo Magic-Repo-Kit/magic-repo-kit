@@ -8,6 +8,9 @@ import com.magicrepokit.auth.entity.vo.AuthAccessTokenVO;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.common.exception.ServiceException;
 import com.magicrepokit.common.utils.WebUtil;
+import com.magicrepokit.user.entity.OAuth2Client;
+import com.magicrepokit.user.feign.SystemClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,8 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
  * @github https://github.com/AuroraPixel
  */
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/mrk-auth")
 public class MRKAuthController {
+    @Autowired
+    private SystemClient systemClient;
 
     /**
      * 获取token
@@ -53,6 +58,8 @@ public class MRKAuthController {
         //获取客户id和密钥
         String[] clientIdAndSecret = basicAuthorization();
         //校验客户端
+        R<OAuth2Client> oAuth2ClientR = systemClient.validOAuthClientFromCache(clientIdAndSecret[0], clientIdAndSecret[1],
+                grantType, null, redirectUri);
 
         return null;
     }

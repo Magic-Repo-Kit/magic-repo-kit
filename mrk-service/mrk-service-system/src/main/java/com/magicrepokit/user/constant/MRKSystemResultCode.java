@@ -1,11 +1,7 @@
 package com.magicrepokit.user.constant;
 
-import cn.hutool.core.lang.intern.InternUtil;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.StrUtil;
 import com.magicrepokit.common.api.IResultCode;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang.text.StrBuilder;
 
 /**
  * 状态码常量
@@ -38,8 +34,15 @@ public enum MRKSystemResultCode implements IResultCode {
      */
     OAUTH2_CLIENT_AUTHORIZED_GRANT_TYPE_NOT_EXISTS(10010204,"OAUTH2_CLIENT_AUTHORIZED_GRANT_TYPE_NOT_EXISTS"),
 
-    OAUTH2_CLIENT_SCOPE_OVER(1_002_020_004, "OAUTH2_CLIENT_SCOPE_OVER"),
-    OAUTH2_CLIENT_REDIRECT_URI_NOT_MATCH(1_002_020_005, "OAUTH2_CLIENT_REDIRECT_URI_NOT_MATCH:{}");
+    /**
+     * 权限过大
+     */
+    OAUTH2_CLIENT_SCOPE_OVER(10010205, "OAUTH2_CLIENT_SCOPE_OVER"),
+
+    /**
+     * 客户端重定向地址不匹配
+     */
+    OAUTH2_CLIENT_REDIRECT_URI_NOT_MATCH(10010206, "OAUTH2_CLIENT_REDIRECT_URI_NOT_MATCH:{}");
 
     /**
      * code编码
@@ -54,7 +57,7 @@ public enum MRKSystemResultCode implements IResultCode {
     @Override
     public String getMessage() {
         //TODO 后期改造i18n
-        return this.getMessage();
+        return this.message;
     }
 
     @Override

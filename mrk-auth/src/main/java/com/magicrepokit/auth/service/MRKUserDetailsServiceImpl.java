@@ -5,8 +5,7 @@ import com.magicrepokit.auth.constant.MRKI18N;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.common.utils.*;
 import com.magicrepokit.redis.utils.MRKRedisUtils;
-import com.magicrepokit.user.entity.User;
-import com.magicrepokit.user.feign.UserClient;
+import com.magicrepokit.user.feign.SystemClient;
 import com.magicrepokit.user.vo.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.common.exceptions.UserDeniedAuthorizationException;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +25,7 @@ import java.util.ArrayList;
 @Service
 public class MRKUserDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    private UserClient userClient;
+    private SystemClient userClient;
     @Autowired
     private MRKRedisUtils mrkRedisUtils;
 

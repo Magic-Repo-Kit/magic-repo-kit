@@ -6,15 +6,18 @@ import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.magicrepokit.mp.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import com.magicrepokit.common.enums.CommonStatusEnum;
+
 
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@TableName("mrk_system_oauth2_client")
+@TableName("mrk_oauth2_client")
+@EqualsAndHashCode(callSuper = true)
 public class OAuth2Client extends BaseEntity {
 
     /**

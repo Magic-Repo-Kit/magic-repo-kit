@@ -9,10 +9,11 @@ import com.magicrepokit.common.utils.DateUtil;
 import lombok.Data;
 
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class BaseEntity {
+public class BaseEntity implements Serializable {
     /**
      * 主键id
      */

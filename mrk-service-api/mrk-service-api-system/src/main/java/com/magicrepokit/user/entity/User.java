@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+
 import java.util.Date;
 
 /**
@@ -18,7 +19,7 @@ import java.util.Date;
 @TableName("mrk_system_user")
 @AllArgsConstructor
 @NoArgsConstructor
-public class User extends BaseEntity {
+public class User extends BaseEntity  {
 
     /**
      * 用户编号

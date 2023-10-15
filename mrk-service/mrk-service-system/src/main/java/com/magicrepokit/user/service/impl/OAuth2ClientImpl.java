@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
+import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.magicrepokit.common.enums.CommonStatusEnum;
 import com.magicrepokit.common.exception.ServiceException;
@@ -23,11 +24,11 @@ import java.util.Collection;
 public class OAuth2ClientImpl  extends BaseServiceImpl<OAuth2ClientMapper, OAuth2Client> implements IOAuth2ClientService {
     @Override
     public OAuth2Client validOAuthClientFromCache(String clientId, String clientSecret, String authorizedGrantType, Collection<String> scopes, String redirectUri) {
-        OAuth2Client client = getOAuth2ClientFromCache(clientId);
+        OAuth2Client client = getSelf().getOAuth2ClientFromCache(clientId);
         if(ObjectUtil.isEmpty(client)){
             throw new ServiceException(MRKSystemResultCode.OAUTH2_CLIENT_NOT_EXISTS);
         }
-        if(ObjectUtil.notEqual(client.getStatus(), CommonStatusEnum.ENABLE)){
+        if(ObjectUtil.notEqual(client.getStatus(), CommonStatusEnum.ENABLE.getStatus())){
             throw new ServiceException(MRKSystemResultCode.OAUTH2_CLIENT_DISABLE);
         }
         //校验密钥
@@ -61,5 +62,14 @@ public class OAuth2ClientImpl  extends BaseServiceImpl<OAuth2ClientMapper, OAuth
         return this.getOne(new LambdaQueryWrapper<OAuth2Client>()
                 .eq(OAuth2Client::getClientId,clientId)
         );
+    }
+
+    /**
+     * 获得自身的代理对象，解决 AOP 生效问题
+     *
+     * @return 自己
+     */
+    private OAuth2ClientImpl getSelf() {
+        return SpringUtil.getBean(getClass());
     }
 }
