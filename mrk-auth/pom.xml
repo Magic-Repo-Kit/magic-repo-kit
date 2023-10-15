@@ -85,7 +85,13 @@
 
         <dependency>
             <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-service-api-user</artifactId>
+            <artifactId>mrk-service-api-system</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.auoralpixel</groupId>
+            <artifactId>mrk-common-utils</artifactId>
             <version>1.0.0</version>
         </dependency>
 

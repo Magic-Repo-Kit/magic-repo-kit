@@ -33,6 +33,7 @@
         <spring-cloud-gateway.version>2.1.2.RELEASE</spring-cloud-gateway.version>
         <spring-cloud-starter.version>2.1.1.RELEASE</spring-cloud-starter.version>
         <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
+        <hutool.version>5.8.22</hutool.version>
         <mybatis-plugin-version>3.4.0</mybatis-plugin-version>
         <druid.version>1.1.18</druid.version>
         <mysql.version>8.0.14</mysql.version>
@@ -51,6 +52,13 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- hutool 工具类， 简化开发代码 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
