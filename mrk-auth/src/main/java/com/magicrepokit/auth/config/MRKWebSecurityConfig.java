@@ -36,7 +36,7 @@ public class MRKWebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/r/**").authenticated()
+                .antMatchers("/**").authenticated()
                 .anyRequest().permitAll()
                 .and().formLogin();
     }

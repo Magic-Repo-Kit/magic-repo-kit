@@ -2,6 +2,7 @@ package com.magicrepokit.auth.service;
 
 import com.magicrepokit.auth.constant.MRKAuthConstant;
 import com.magicrepokit.auth.constant.MRKI18NEnum;
+import com.magicrepokit.auth.constant.MRKUserTypeEnum;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.common.utils.*;
 import com.magicrepokit.redis.utils.MRKRedisUtils;
@@ -40,9 +41,14 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
         if (StringUtil.isEmpty(userType)) {
             throw new UserDeniedAuthorizationException(MRKI18NEnum.NOT_FOUND_USER_TYPE.getMessage());
         }
+        MRKUserTypeEnum userTypeEnum = MRKUserTypeEnum.getByUserType(userType);
+        if(userTypeEnum==null){
+            throw new UserDeniedAuthorizationException(MRKI18NEnum.NOT_FOUND_USER_TYPE.getMessage());
+        }
 
         //判断账户是否已锁定
         judgeFail(account);
+
         //查询数据库
         R<UserInfo> result = userClient.userInfo(account);
         if (result.isSuccess()) {
@@ -52,6 +58,13 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
                 setFailCount(account);
                 throw new UsernameNotFoundException(MRKI18NEnum.USER_NOT_FOUND.getMessage());
             }
+            //匹配用户type
+            if(!userInfo.getUser().getUserType().contains(userTypeEnum.getCode())){
+                //用户错误次数+1
+                setFailCount(account);
+                throw new UsernameNotFoundException(MRKI18NEnum.NOT_FOUND_USER_TYPE.getMessage());
+            }
+
 
             ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
             //成功清除错误次数

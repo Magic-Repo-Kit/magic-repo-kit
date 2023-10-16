@@ -2,9 +2,6 @@ package com.magicrepokit.client;
 
 import cn.hutool.crypto.digest.BCrypt;
 import com.magicrepokit.user.MRKSystemApplication;
-import com.magicrepokit.user.entity.AuthClient;
-import com.magicrepokit.user.service.IOAuth2ClientService;
-import com.magicrepokit.user.service.impl.OAuth2ClientImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
