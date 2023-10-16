@@ -1,6 +1,7 @@
 package com.magicrepokit.auth.service;
 
-import com.magicrepokit.auth.entity.vo.AuthAccessTokenVO;
+
+import com.magicrepokit.auth.entity.AuthAccessToken;
 import com.magicrepokit.user.entity.AuthClient;
 import com.magicrepokit.user.vo.UserInfo;
 
@@ -24,7 +25,7 @@ public interface MRKAuthTokenService {
      * @param scopes 授权范围
      * @return 访问令牌的信息
      */
-    AuthAccessTokenVO createAccessToken(UserInfo user, AuthClient client, List<String> scopes);
+    AuthAccessToken createAccessToken(UserInfo user, AuthClient client, List<String> scopes,String userType);
 
     /**
      * 刷新访问令牌
@@ -34,7 +35,7 @@ public interface MRKAuthTokenService {
      * @param refreshToken 刷新令牌
      * @return 访问令牌的信息
      */
-    AuthAccessTokenVO refreshAccessToken(String refreshToken);
+    AuthAccessToken refreshAccessToken(String refreshToken,String userType);
 
     /**
      * 移除访问令牌
@@ -45,5 +46,5 @@ public interface MRKAuthTokenService {
      * @param accessToken 刷新令牌
      * @return 访问令牌的信息
      */
-    AuthAccessTokenVO removeAccessToken(String accessToken);
+    AuthAccessToken removeAccessToken(String accessToken,String userType);
 }

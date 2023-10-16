@@ -1,7 +1,7 @@
 package com.magicrepokit.auth.service;
 
 import com.magicrepokit.auth.constant.MRKAuthConstant;
-import com.magicrepokit.auth.constant.MRKI18N;
+import com.magicrepokit.auth.constant.MRKI18NEnum;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.common.utils.*;
 import com.magicrepokit.redis.utils.MRKRedisUtils;
@@ -38,7 +38,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
         String password = request.getParameter(MRKAuthConstant.PASSWORD);
 
         if (StringUtil.isEmpty(userType)) {
-            throw new UserDeniedAuthorizationException(MRKI18N.NOT_FOUND_USER_TYPE.getMessage());
+            throw new UserDeniedAuthorizationException(MRKI18NEnum.NOT_FOUND_USER_TYPE.getMessage());
         }
 
         //判断账户是否已锁定
@@ -50,7 +50,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
             if(ObjectUtil.isEmpty(userInfo)||ObjectUtil.isEmpty(userInfo.getUser())||!BCrypt.checkpw(password,userInfo.getUser().getPassword())){
                 //用户错误次数+1
                 setFailCount(account);
-                throw new UsernameNotFoundException(MRKI18N.USER_NOT_FOUND.getMessage());
+                throw new UsernameNotFoundException(MRKI18NEnum.USER_NOT_FOUND.getMessage());
             }
 
             ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
@@ -60,7 +60,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
         } else {
             //用户错误次数+1
             setFailCount(account);
-            throw new UsernameNotFoundException(MRKI18N.USER_NOT_FOUND.getMessage());
+            throw new UsernameNotFoundException(MRKI18NEnum.USER_NOT_FOUND.getMessage());
         }
     }
 
@@ -89,7 +89,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
     private void judgeFail(String account) {
         int count = MRKUtil.toInt(mrkRedisUtils.get(MRKAuthConstant.getFailRedisKey(account)), 0);
         if (count >= MRKAuthConstant.FAIL_COUNT) {
-            throw new UserDeniedAuthorizationException(MRKI18N.USER_IS_LOCKED.getMessage());
+            throw new UserDeniedAuthorizationException(MRKI18NEnum.USER_IS_LOCKED.getMessage());
         }
     }
 }

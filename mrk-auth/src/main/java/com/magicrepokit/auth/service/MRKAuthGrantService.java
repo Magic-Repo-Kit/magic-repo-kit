@@ -1,6 +1,6 @@
 package com.magicrepokit.auth.service;
 
-import com.magicrepokit.auth.entity.vo.AuthAccessTokenVO;
+import com.magicrepokit.auth.entity.AuthAccessToken;
 import com.magicrepokit.user.entity.AuthClient;
 
 import java.util.List;
@@ -13,6 +13,16 @@ import java.util.List;
  */
 public interface MRKAuthGrantService {
 
+    /**
+     * 校验客户端信息
+     *
+     * @param clientId
+     * @param clientSecret
+     * @param grantType
+     * @param scopes
+     * @param redirectUri
+     * @return
+     */
     AuthClient validOAuthClient(String clientId, String clientSecret,String grantType,List<String> scopes,String redirectUri);
 
     /**
@@ -26,8 +36,8 @@ public interface MRKAuthGrantService {
      * @param scopes 授权范围
      * @return 访问令牌
      */
-   AuthAccessTokenVO grantPassword(String username, String password,
-                                   String clientId, List<String> scopes);
+   AuthAccessToken grantPassword(String username, String password,
+                                 String clientId, List<String> scopes,String userType);
 
     /**
      * 授权码模式，获得 accessToken 访问令牌
@@ -40,8 +50,8 @@ public interface MRKAuthGrantService {
      * @param state 状态
      * @return 访问令牌
      */
-    AuthAccessTokenVO grantAuthorizationCodeForAccessToken(String clientId, String code,
-                                                             String redirectUri, String state);
+    AuthAccessToken grantAuthorizationCodeForAccessToken(String clientId, String code,
+                                                             String redirectUri, String state,String userType);
 
     /**
      * 刷新模式
@@ -52,7 +62,7 @@ public interface MRKAuthGrantService {
      * @param clientId 客户端编号
      * @return 访问令牌
      */
-    AuthAccessTokenVO grantRefreshToken(String refreshToken, String clientId);
+    AuthAccessToken grantRefreshToken(String refreshToken, String clientId,String userType);
 
     /**
      * 获取的授权码

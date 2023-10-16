@@ -1,11 +1,13 @@
 package com.magicrepokit.auth.service;
 
-import com.magicrepokit.auth.constant.MRKI18N;
-import com.magicrepokit.auth.entity.vo.AuthAccessTokenVO;
+import com.magicrepokit.auth.constant.MRKI18NEnum;
+import com.magicrepokit.auth.constant.MRKUserTypeEnum;
+import com.magicrepokit.auth.entity.AuthAccessToken;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.common.api.ResultCode;
 import com.magicrepokit.log.exceotion.ServiceException;
 import com.magicrepokit.user.entity.AuthClient;
+import com.magicrepokit.user.entity.User;
 import com.magicrepokit.user.feign.SystemClient;
 import com.magicrepokit.user.vo.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,7 @@ public class MRKAuthGrantServiceImpl implements MRKAuthGrantService {
         }
         AuthClient client = oAuth2ClientR.getData();
         if(client==null){
-            throw new ServiceException(MRKI18N.NOT_FOUND_CLIENT.getMessage());
+            throw new ServiceException(MRKI18NEnum.NOT_FOUND_CLIENT.getMessage());
         }
         return client;
     }
@@ -52,23 +54,28 @@ public class MRKAuthGrantServiceImpl implements MRKAuthGrantService {
      * @return
      */
     @Override
-    public AuthAccessTokenVO grantPassword(String username, String password, String clientId, List<String> scopes) {
+    public AuthAccessToken grantPassword(String username, String password, String clientId, List<String> scopes,String userType) {
         //获取用户
         R<UserInfo> userInfoR = systemClient.userInfo(username);
         if(!userInfoR.isSuccess()||userInfoR.getData()==null){
-            throw new ServiceException(ResultCode.UN_AUTHORIZED, MRKI18N.USER_NOT_FOUND.getMessage());
+            throw new ServiceException(ResultCode.UN_AUTHORIZED, MRKI18NEnum.USER_NOT_FOUND.getMessage());
         }
         UserInfo userInfo = userInfoR.getData();
+        //校验用户类型
+        MRKUserTypeEnum userTypeEnum = MRKUserTypeEnum.getByUserType(userType);
+        User user = userInfo.getUser();
+        if (!user.getUserType().contains(userTypeEnum.getCode())) {
+            throw new ServiceException(ResultCode.UN_AUTHORIZED, MRKI18NEnum.UNKNOWN_USER_TYPE.getMessage());
+        }
         //获取客户端
         R<AuthClient> authClientR = systemClient.authClientInfo(clientId);
         AuthClient client = authClientR.getData();
-        if(authClientR.isSuccess()||client==null){
-            throw new ServiceException(MRKI18N.NOT_FOUND_CLIENT.getMessage());
+        if(!authClientR.isSuccess()||client==null){
+            throw new ServiceException(MRKI18NEnum.NOT_FOUND_CLIENT.getMessage());
         }
         //创造令牌
-        mrkAuthTokenService.createAccessToken(userInfo,client,scopes);
 
-        return null;
+        return mrkAuthTokenService.createAccessToken(userInfo, client, scopes,userType);
     }
 
     /**
@@ -81,7 +88,7 @@ public class MRKAuthGrantServiceImpl implements MRKAuthGrantService {
      * @return 令牌信息
      */
     @Override
-    public AuthAccessTokenVO grantAuthorizationCodeForAccessToken(String clientId, String code, String redirectUri, String state) {
+    public AuthAccessToken grantAuthorizationCodeForAccessToken(String clientId, String code, String redirectUri, String state,String userType) {
         return null;
     }
 
@@ -93,7 +100,7 @@ public class MRKAuthGrantServiceImpl implements MRKAuthGrantService {
      * @return 令牌信息
      */
     @Override
-    public AuthAccessTokenVO grantRefreshToken(String refreshToken, String clientId) {
+    public AuthAccessToken grantRefreshToken(String refreshToken, String clientId,String userType) {
         return null;
     }
 

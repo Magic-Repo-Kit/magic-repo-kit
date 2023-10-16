@@ -19,7 +19,7 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("mrk_system_user")
+@TableName(value = "mrk_system_user",autoResultMap = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends BaseEntity  {

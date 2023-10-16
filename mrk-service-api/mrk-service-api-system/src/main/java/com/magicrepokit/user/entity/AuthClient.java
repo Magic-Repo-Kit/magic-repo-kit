@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import com.magicrepokit.common.enums.CommonStatusEnum;
+import lombok.experimental.Accessors;
 
 
 import java.util.List;
@@ -16,8 +17,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@TableName("mrk_oauth2_client")
+@TableName(value = "mrk_oauth2_client",autoResultMap = true)
 @EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
 public class AuthClient extends BaseEntity {
 
     /**
@@ -46,7 +48,7 @@ public class AuthClient extends BaseEntity {
     private String description;
 
     /**
-     * 状态
+     * 状态 0:开启 1:关闭
      *
      * 枚举 {@link CommonStatusEnum}
      */

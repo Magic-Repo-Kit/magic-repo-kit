@@ -1,10 +1,9 @@
 package com.magicrepokit.auth.constant;
 
 import lombok.AllArgsConstructor;
-import org.omg.CORBA.UNKNOWN;
 
 @AllArgsConstructor
-public enum MRKI18N {
+public enum MRKI18NEnum {
 
     /**
      * 未发现用户登录类型
@@ -27,6 +26,11 @@ public enum MRKI18N {
     UNKNOWN_GRANT_TYPE("UNKNOWN_GRANT_TYPE"),
 
     /**
+     * 未知用户类型
+     */
+    UNKNOWN_USER_TYPE("UNKNOWN_USER_TYPE"),
+
+    /**
      * 未发现Authorization
      */
     NOT_FOUND_AUTHORIZATION("NOT_FOUND_AUTHORIZATION"),
@@ -40,6 +44,11 @@ public enum MRKI18N {
      * 令牌不能为空
      */
     NOT_EMPTY_ACCESS_TOKEN("NOT_EMPTY_ACCESS_TOKEN"),
+
+    /**
+     * 无效token
+     */
+    INVALID_TOKEN("INVALID_TOKEN"),
 
     ;
 
