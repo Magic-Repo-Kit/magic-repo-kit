@@ -62,6 +62,21 @@ public interface MRKAuthConstant {
     String ACCOUNT = "account";
 
     /**
+     * accessToke
+     */
+    String REDIS_ACCESS_TOKEN_KEY = "mrk:access-token:";
+
+    /**
+     * refreshToken
+     */
+    String REDIS_REFRESH_TOKEN_KEY = "mkr:refresh-token:";
+
+    /**
+     * 记录用户状态
+     */
+    String REDIS_USER_STATUS_KEY = "mkr:status:";
+
+    /**
      * 被锁定的最多次数
      */
     int FAIL_COUNT = 5;

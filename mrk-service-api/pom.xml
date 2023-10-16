@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>mrk-service-api-user</module>
+        <module>mrk-service-api-system</module>
     </modules>
 
     <dependencies>

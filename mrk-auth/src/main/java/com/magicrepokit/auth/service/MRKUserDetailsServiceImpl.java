@@ -1,12 +1,11 @@
 package com.magicrepokit.auth.service;
 
 import com.magicrepokit.auth.constant.MRKAuthConstant;
-import com.magicrepokit.auth.constant.MRKI18N;
+import com.magicrepokit.auth.constant.MRKI18NEnum;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.common.utils.*;
 import com.magicrepokit.redis.utils.MRKRedisUtils;
-import com.magicrepokit.user.entity.User;
-import com.magicrepokit.user.feign.UserClient;
+import com.magicrepokit.user.feign.SystemClient;
 import com.magicrepokit.user.vo.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.common.exceptions.UserDeniedAuthorizationException;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +25,7 @@ import java.util.ArrayList;
 @Service
 public class MRKUserDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    private UserClient userClient;
+    private SystemClient userClient;
     @Autowired
     private MRKRedisUtils mrkRedisUtils;
 
@@ -40,19 +38,19 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
         String password = request.getParameter(MRKAuthConstant.PASSWORD);
 
         if (StringUtil.isEmpty(userType)) {
-            throw new UserDeniedAuthorizationException(MRKI18N.NOT_FOUND_USER_TYPE.getMessage());
+            throw new UserDeniedAuthorizationException(MRKI18NEnum.NOT_FOUND_USER_TYPE.getMessage());
         }
 
         //判断账户是否已锁定
         judgeFail(account);
         //查询数据库
-        R<UserInfo> result = userClient.userInfo(account, 1);
+        R<UserInfo> result = userClient.userInfo(account);
         if (result.isSuccess()) {
             UserInfo userInfo = result.getData();
             if(ObjectUtil.isEmpty(userInfo)||ObjectUtil.isEmpty(userInfo.getUser())||!BCrypt.checkpw(password,userInfo.getUser().getPassword())){
                 //用户错误次数+1
                 setFailCount(account);
-                throw new UsernameNotFoundException(MRKI18N.USER_NOT_FOUND.getMessage());
+                throw new UsernameNotFoundException(MRKI18NEnum.USER_NOT_FOUND.getMessage());
             }
 
             ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
@@ -62,7 +60,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
         } else {
             //用户错误次数+1
             setFailCount(account);
-            throw new UsernameNotFoundException(MRKI18N.USER_NOT_FOUND.getMessage());
+            throw new UsernameNotFoundException(MRKI18NEnum.USER_NOT_FOUND.getMessage());
         }
     }
 
@@ -91,7 +89,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
     private void judgeFail(String account) {
         int count = MRKUtil.toInt(mrkRedisUtils.get(MRKAuthConstant.getFailRedisKey(account)), 0);
         if (count >= MRKAuthConstant.FAIL_COUNT) {
-            throw new UserDeniedAuthorizationException(MRKI18N.USER_IS_LOCKED.getMessage());
+            throw new UserDeniedAuthorizationException(MRKI18NEnum.USER_IS_LOCKED.getMessage());
         }
     }
 }
