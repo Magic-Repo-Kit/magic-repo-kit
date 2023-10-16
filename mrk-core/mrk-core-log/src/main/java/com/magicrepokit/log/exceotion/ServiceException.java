@@ -1,6 +1,5 @@
-package com.magicrepokit.common.exception;
+package com.magicrepokit.log.exceotion;
 
-import cn.hutool.core.util.StrUtil;
 import com.magicrepokit.common.api.IResultCode;
 import com.magicrepokit.common.api.ResultCode;
 import lombok.Getter;
@@ -15,7 +14,12 @@ public class ServiceException extends RuntimeException {
 
     public ServiceException(String message) {
         super(message);
-        this.resultCode = ResultCode.FAILURE;
+        this.resultCode = ResultCode.INTERNAL_SERVER_ERROR;
+    }
+
+    public ServiceException(IResultCode resultCode,String message) {
+        super(message);
+        this.resultCode = resultCode;
     }
 
     public ServiceException(IResultCode resultCode) {
@@ -23,7 +27,7 @@ public class ServiceException extends RuntimeException {
         this.resultCode = resultCode;
     }
 
-    public ServiceException(IResultCode resultCode,String ...args) {
+    public ServiceException(IResultCode resultCode, String ...args) {
         super(doFormat(resultCode.getMessage(), (Object) args));
         this.resultCode = resultCode;
     }

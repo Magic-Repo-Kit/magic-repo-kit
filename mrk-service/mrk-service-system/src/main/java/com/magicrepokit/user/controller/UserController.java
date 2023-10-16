@@ -42,11 +42,10 @@ public class UserController {
     /**
      * 用户信息
      * @param account
-     * @param userType
      * @return
      */
     @GetMapping("/info")
-    public R<UserInfo> userInfo(@RequestParam("account") String account,@RequestParam("userType") Integer userType){
-        return R.data(userService.userInfo(account,userType));
+    public R<UserInfo> userInfo(@RequestParam("account") String account){
+        return R.data(userService.userInfo(account));
     }
 }

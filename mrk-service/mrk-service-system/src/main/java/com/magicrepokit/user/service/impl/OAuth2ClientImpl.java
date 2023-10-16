@@ -7,12 +7,12 @@ import cn.hutool.crypto.digest.BCrypt;
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.magicrepokit.common.enums.CommonStatusEnum;
-import com.magicrepokit.common.exception.ServiceException;
 import com.magicrepokit.common.utils.StringUtil;
+import com.magicrepokit.log.exceotion.ServiceException;
 import com.magicrepokit.mp.base.BaseServiceImpl;
 import com.magicrepokit.user.constant.MRKSystemConstant;
 import com.magicrepokit.user.constant.MRKSystemResultCode;
-import com.magicrepokit.user.entity.OAuth2Client;
+import com.magicrepokit.user.entity.AuthClient;
 import com.magicrepokit.user.mapper.OAuth2ClientMapper;
 import com.magicrepokit.user.service.IOAuth2ClientService;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,10 +21,10 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 @Service
-public class OAuth2ClientImpl  extends BaseServiceImpl<OAuth2ClientMapper, OAuth2Client> implements IOAuth2ClientService {
+public class OAuth2ClientImpl  extends BaseServiceImpl<OAuth2ClientMapper, AuthClient> implements IOAuth2ClientService {
     @Override
-    public OAuth2Client validOAuthClientFromCache(String clientId, String clientSecret, String authorizedGrantType, Collection<String> scopes, String redirectUri) {
-        OAuth2Client client = getSelf().getOAuth2ClientFromCache(clientId);
+    public AuthClient validOAuthClientFromCache(String clientId, String clientSecret, String authorizedGrantType, Collection<String> scopes, String redirectUri) {
+        AuthClient client = getSelf().infoClient(clientId);
         if(ObjectUtil.isEmpty(client)){
             throw new ServiceException(MRKSystemResultCode.OAUTH2_CLIENT_NOT_EXISTS);
         }
@@ -58,9 +58,9 @@ public class OAuth2ClientImpl  extends BaseServiceImpl<OAuth2ClientMapper, OAuth
      */
     @Cacheable(cacheNames = MRKSystemConstant.CACHE_NAME_OAUTH_CLIENT, key = "#clientId",
             unless = "#result == null")
-    public OAuth2Client getOAuth2ClientFromCache(String clientId) {
-        return this.getOne(new LambdaQueryWrapper<OAuth2Client>()
-                .eq(OAuth2Client::getClientId,clientId)
+    public AuthClient infoClient(String clientId) {
+        return this.getOne(new LambdaQueryWrapper<AuthClient>()
+                .eq(AuthClient::getClientId,clientId)
         );
     }
 

@@ -33,8 +33,8 @@ public class WebUtil extends WebUtils {
             clientSecret = StrUtil.subAfter(authorization, ":", false);
             // 再从 Param 中获取
         } else {
-            clientId = request.getParameter("client_id");
-            clientSecret = request.getParameter("client_secret");
+            clientId = request.getParameter("clientId");
+            clientSecret = request.getParameter("clientSecret");
         }
 
         // 如果两者非空，则返回

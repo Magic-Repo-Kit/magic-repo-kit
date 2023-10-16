@@ -1,4 +1,4 @@
-package com.magicrepokit.auto.code.service;
+package com.magicrepokit.log.service;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

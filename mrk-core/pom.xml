@@ -15,6 +15,7 @@
         <module>mrk-core-redis</module>
         <module>mrk-core-generate</module>
         <module>mrk-core-i18n</module>
+        <module>mrk-core-log</module>
     </modules>
     <dependencies>
         <!--        springboot组件-->

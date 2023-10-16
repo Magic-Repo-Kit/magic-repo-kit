@@ -22,5 +22,5 @@ public interface IUserService extends BaseService<User> {
      * @param account
      * @return
      */
-    UserInfo userInfo(String account,Integer userType);
+    UserInfo userInfo(String account);
 }

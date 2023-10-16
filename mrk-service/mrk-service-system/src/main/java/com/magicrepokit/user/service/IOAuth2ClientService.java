@@ -1,11 +1,11 @@
 package com.magicrepokit.user.service;
 
 import com.magicrepokit.mp.base.BaseService;
-import com.magicrepokit.user.entity.OAuth2Client;
+import com.magicrepokit.user.entity.AuthClient;
 
 import java.util.Collection;
 
-public interface IOAuth2ClientService extends BaseService<OAuth2Client> {
+public interface IOAuth2ClientService extends BaseService<AuthClient> {
     /**
      * 从缓存中，校验客户端是否合法
      *
@@ -18,6 +18,14 @@ public interface IOAuth2ClientService extends BaseService<OAuth2Client> {
      * @param redirectUri 重定向地址
      * @return 客户端
      */
-    OAuth2Client validOAuthClientFromCache(String clientId, String clientSecret, String authorizedGrantType,
-                                           Collection<String> scopes, String redirectUri);
+    AuthClient validOAuthClientFromCache(String clientId, String clientSecret, String authorizedGrantType,
+                                         Collection<String> scopes, String redirectUri);
+
+    /**
+     * 获取客户端信息
+     *
+     * @param clientId
+     * @return
+     */
+    AuthClient infoClient(String clientId);
 }

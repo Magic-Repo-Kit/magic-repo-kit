@@ -44,7 +44,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
         //判断账户是否已锁定
         judgeFail(account);
         //查询数据库
-        R<UserInfo> result = userClient.userInfo(account, 1);
+        R<UserInfo> result = userClient.userInfo(account);
         if (result.isSuccess()) {
             UserInfo userInfo = result.getData();
             if(ObjectUtil.isEmpty(userInfo)||ObjectUtil.isEmpty(userInfo.getUser())||!BCrypt.checkpw(password,userInfo.getUser().getPassword())){

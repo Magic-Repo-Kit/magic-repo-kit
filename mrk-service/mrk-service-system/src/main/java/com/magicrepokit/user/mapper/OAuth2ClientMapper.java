@@ -1,8 +1,7 @@
 package com.magicrepokit.user.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.magicrepokit.user.entity.OAuth2Client;
-import com.magicrepokit.user.entity.User;
+import com.magicrepokit.user.entity.AuthClient;
 
-public interface OAuth2ClientMapper extends BaseMapper<OAuth2Client> {
+public interface OAuth2ClientMapper extends BaseMapper<AuthClient> {
 }

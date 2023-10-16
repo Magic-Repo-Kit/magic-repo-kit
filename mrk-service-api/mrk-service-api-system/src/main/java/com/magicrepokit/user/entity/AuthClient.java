@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 @TableName("mrk_oauth2_client")
 @EqualsAndHashCode(callSuper = true)
-public class OAuth2Client extends BaseEntity {
+public class AuthClient extends BaseEntity {
 
     /**
      * 客户端编号

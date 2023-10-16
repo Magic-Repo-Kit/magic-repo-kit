@@ -1,7 +1,7 @@
 package com.magicrepokit.user.controller;
 
 import com.magicrepokit.common.api.R;
-import com.magicrepokit.user.entity.OAuth2Client;
+import com.magicrepokit.user.entity.AuthClient;
 import com.magicrepokit.user.service.IOAuth2ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,7 @@ import java.util.Collection;
  */
 @RestController
 @RequestMapping("oauth2-client")
-public class OAuth2ClientController {
+public class AuthClientController {
     @Autowired
     private IOAuth2ClientService auth2ClientService;
 
@@ -34,11 +34,22 @@ public class OAuth2ClientController {
      * @return 客户端
      */
     @PostMapping("/valid-oauth-client")
-    public R<OAuth2Client> validOAuthClientFromCache(@RequestParam("clientId") String clientId,
-                                                     @RequestParam("clientSecret") String clientSecret,
-                                                     @RequestParam(value = "grantType", required = false) String authorizedGrantType,
-                                                     @RequestParam(value = "scopes", required = false) Collection<String> scopes,
-                                                     @RequestParam(value = "redirectUri", required = false) String redirectUri) {
+    public R<AuthClient> validOAuthClientFromCache(@RequestParam("clientId") String clientId,
+                                                   @RequestParam("clientSecret") String clientSecret,
+                                                   @RequestParam(value = "grantType", required = false) String authorizedGrantType,
+                                                   @RequestParam(value = "scopes", required = false) Collection<String> scopes,
+                                                   @RequestParam(value = "redirectUri", required = false) String redirectUri) {
         return R.data(auth2ClientService.validOAuthClientFromCache(clientId, clientSecret, authorizedGrantType, scopes, redirectUri));
+    }
+
+    /**
+     * 获取客户端信息
+     *
+     * @param clientId
+     * @return
+     */
+    @PostMapping("/info-oauth-client")
+    public R<AuthClient> authClientInfo(@RequestParam("clientId")String clientId){
+        return R.data(auth2ClientService.infoClient(clientId));
     }
 }

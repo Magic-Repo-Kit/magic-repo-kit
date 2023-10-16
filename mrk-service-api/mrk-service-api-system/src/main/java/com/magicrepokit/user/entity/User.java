@@ -1,6 +1,8 @@
 package com.magicrepokit.user.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.magicrepokit.mp.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户实体类
@@ -27,9 +30,10 @@ public class User extends BaseEntity  {
     private String code;
 
     /**
-     * 用户平台[0:本地平台,1:github]
+     * 用户平台[0:web,1:app]
      */
-    private Integer userType;
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<Integer> userType;
 
     /**
      * 账号

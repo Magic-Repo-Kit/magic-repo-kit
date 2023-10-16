@@ -53,7 +53,7 @@
 
         <dependency>
             <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-common-utils</artifactId>
+            <artifactId>mrk-core-log</artifactId>
             <version>1.0.0</version>
         </dependency>
 

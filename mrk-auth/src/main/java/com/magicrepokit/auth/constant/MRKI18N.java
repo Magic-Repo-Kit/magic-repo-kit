@@ -27,9 +27,21 @@ public enum MRKI18N {
     UNKNOWN_GRANT_TYPE("UNKNOWN_GRANT_TYPE"),
 
     /**
-     * 未发现客户端Authorization
+     * 未发现Authorization
      */
-    NOT_FOUND_AUTHORIZATION("NOT_FOUND_AUTHORIZATION");
+    NOT_FOUND_AUTHORIZATION("NOT_FOUND_AUTHORIZATION"),
+
+    /**
+     * 未发现客户端
+     */
+    NOT_FOUND_CLIENT("NOT_FOUND_CLIENT"),
+
+    /**
+     * 令牌不能为空
+     */
+    NOT_EMPTY_ACCESS_TOKEN("NOT_EMPTY_ACCESS_TOKEN"),
+
+    ;
 
 
 
