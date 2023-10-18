@@ -37,7 +37,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String account) throws UsernameNotFoundException {
         HttpServletRequest request = WebUtil.getRequest();
         //获取用户类型
-        String userType = request.getParameter(MRKAuthConstant.USER_TYPE);
+        String userType = request.getHeader(MRKAuthConstant.USER_TYPE);
         //获取密码
         String password = request.getParameter(MRKAuthConstant.PASSWORD);
         //请求类型

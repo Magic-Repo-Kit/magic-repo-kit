@@ -35,7 +35,7 @@ public interface MRKAuthConstant {
     /**
      * 用户登录的type
      */
-    String USER_TYPE = "userType";
+    String USER_TYPE = "User-Type";
 
     String PASSWORD = "password";
 

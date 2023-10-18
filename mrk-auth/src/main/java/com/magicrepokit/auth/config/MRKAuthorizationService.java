@@ -82,7 +82,15 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
                 .authorizationCodeServices(authorizationCodeServices) //授权码服务
                 .tokenServices(tokenServices()) //token管理服务
                 .userDetailsService(userDetailsService)
-                .allowedTokenEndpointRequestMethods(HttpMethod.POST); //允许post请求
+                .allowedTokenEndpointRequestMethods(HttpMethod.POST);//允许post请求
+
+        //令牌增强器
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        List<TokenEnhancer> enhancerList = new ArrayList<>();
+        enhancerList.add(tokenEnhancer);
+        enhancerList.add(accessTokenConverter);
+        tokenEnhancerChain.setTokenEnhancers(enhancerList);
+        endpoints.tokenEnhancer(tokenEnhancerChain).accessTokenConverter(accessTokenConverter);
     }
 
     /**
@@ -110,13 +118,6 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
         services.setTokenStore(tokenStore); //令牌存储方式
         services.setAccessTokenValiditySeconds(jwtProperties.getAccessTokenValiditySeconds());   //2小时
         services.setRefreshTokenValiditySeconds(jwtProperties.getRefreshTokenValiditySeconds()); //7天
-        //令牌增强器
-        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-        List<TokenEnhancer> enhancerList = new ArrayList<>();
-        enhancerList.add(tokenEnhancer);
-        enhancerList.add(accessTokenConverter);
-        tokenEnhancerChain.setTokenEnhancers(enhancerList);
-        services.setTokenEnhancer(tokenEnhancerChain);
         return services;
     }
 }

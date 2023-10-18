@@ -34,7 +34,7 @@ public class MRKJwtTokenEnhancer implements TokenEnhancer {
         Map<String, Object> info = new HashMap<>(16);
         HttpServletRequest request = WebUtil.getRequest();
         //获取用户类型
-        String userType = request.getParameter(MRKAuthConstant.USER_TYPE);
+        String userType = request.getHeader(MRKAuthConstant.USER_TYPE);
         info.put(JWTConstant.USER_ID, principal.getUserId());
         info.put(JWTConstant.DEPT_ID, principal.getDeptId());
         info.put(JWTConstant.POST_ID, principal.getPostId());
