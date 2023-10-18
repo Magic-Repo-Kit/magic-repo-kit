@@ -48,33 +48,6 @@ public interface MRKAuthConstant {
      */
     String FAIL_REDIS_KEY = "mrk:auth:login:fail:";
 
-    String CLIENT_ID = "client_id";
-
-    String USER_NAME = "user_name";
-    String NICK_NAME = "nick_name";
-    String REAL_NAME = "real_name";
-    String USER_ID = "user_id";
-    String DEPT_ID = "dept_id";
-    String POST_ID = "post_id";
-    String ROLE_ID = "role_id";
-    String ROLE_NAME = "role_name";
-    String TENANT_ID = "tenant_id";
-    String ACCOUNT = "account";
-
-    /**
-     * accessToke
-     */
-    String REDIS_ACCESS_TOKEN_KEY = "mrk:access-token:";
-
-    /**
-     * refreshToken
-     */
-    String REDIS_REFRESH_TOKEN_KEY = "mkr:refresh-token:";
-
-    /**
-     * 记录用户状态
-     */
-    String REDIS_USER_STATUS_KEY = "mkr:status:";
 
     /**
      * 被锁定的最多次数

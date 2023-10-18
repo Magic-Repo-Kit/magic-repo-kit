@@ -28,5 +28,5 @@ spring:
 # magicRepoKit服务配置
 mrk:
   token:
-    sing-key: mrktokentest12345678
+    sing-key: mrkmrkisapowerfulmicroservicearchitectureupgradedandoptimizedfromacommercialproject
 

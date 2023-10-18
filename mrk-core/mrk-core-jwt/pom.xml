@@ -10,4 +10,13 @@
     <name>${project.artifactId}</name>
     <version>${mrk.project.version}</version>
     <packaging>jar</packaging>
+
+    <dependencies>
+        <!-- Redis -->
+        <dependency>
+            <groupId>org.auoralpixel</groupId>
+            <artifactId>mrk-core-redis</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
 </project>

@@ -35,5 +35,11 @@
             <artifactId>spring-cloud-alibaba-nacos-discovery</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.auoralpixel</groupId>
+            <artifactId>mrk-core-jwt</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
     </dependencies>
 </project>

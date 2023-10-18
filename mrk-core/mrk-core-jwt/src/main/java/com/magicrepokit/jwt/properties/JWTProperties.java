@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 @Data
 @ConfigurationProperties("mrk.token")
-@Component
 public class JWTProperties {
     /**
      * token签名

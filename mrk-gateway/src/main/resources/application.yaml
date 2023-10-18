@@ -36,6 +36,7 @@ spring:
             - Path=/system/**
           filters:
             - StripPrefix=1
-logging:
-  level:
-    root: info
+# magicRepoKit服务配置
+mrk:
+  token:
+    sing-key: mrkmrkisapowerfulmicroservicearchitectureupgradedandoptimizedfromacommercialproject

@@ -2,12 +2,12 @@ package com.magicrepokit.auth.service;
 
 import com.magicrepokit.auth.constant.MRKAuthConstant;
 import com.magicrepokit.auth.constant.MRKI18NEnum;
-import com.magicrepokit.auth.constant.MRKUserTypeEnum;
+import com.magicrepokit.jwt.constant.UserTypeEnum;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.common.utils.*;
 import com.magicrepokit.redis.utils.MRKRedisUtils;
-import com.magicrepokit.user.feign.SystemClient;
-import com.magicrepokit.user.vo.UserInfo;
+import com.magicrepokit.system.feign.SystemClient;
+import com.magicrepokit.system.vo.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 @Service
 public class MRKUserDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    private SystemClient userClient;
+    private SystemClient systemClient;
     @Autowired
     private MRKRedisUtils mrkRedisUtils;
 
@@ -41,7 +41,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
         if (StringUtil.isEmpty(userType)) {
             throw new UserDeniedAuthorizationException(MRKI18NEnum.NOT_FOUND_USER_TYPE.getMessage());
         }
-        MRKUserTypeEnum userTypeEnum = MRKUserTypeEnum.getByUserType(userType);
+        UserTypeEnum userTypeEnum = UserTypeEnum.getByUserType(userType);
         if(userTypeEnum==null){
             throw new UserDeniedAuthorizationException(MRKI18NEnum.NOT_FOUND_USER_TYPE.getMessage());
         }
@@ -50,7 +50,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
         judgeFail(account);
 
         //查询数据库
-        R<UserInfo> result = userClient.userInfo(account);
+        R<UserInfo> result = systemClient.userInfo(account);
         if (result.isSuccess()) {
             UserInfo userInfo = result.getData();
             if(ObjectUtil.isEmpty(userInfo)||ObjectUtil.isEmpty(userInfo.getUser())||!BCrypt.checkpw(password,userInfo.getUser().getPassword())){

@@ -1,7 +1,7 @@
 package com.magicrepokit.client;
 
 import cn.hutool.crypto.digest.BCrypt;
-import com.magicrepokit.user.MRKSystemApplication;
+import com.magicrepokit.system.MRKSystemApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
