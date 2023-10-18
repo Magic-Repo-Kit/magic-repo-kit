@@ -61,7 +61,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
         R<UserInfo> result = systemClient.userInfo(account);
         if (result.isSuccess()) {
             UserInfo userInfo = result.getData();
-            if(ObjectUtil.isEmpty(userInfo)||ObjectUtil.isEmpty(userInfo.getUser())||!BCrypt.checkpw(password,userInfo.getUser().getPassword())){
+            if(ObjectUtil.isEmpty(userInfo)||ObjectUtil.isEmpty(userInfo.getUser())||(grantType.equals(MRKAuthConstant.PASSWORD)&&!BCrypt.checkpw(password,userInfo.getUser().getPassword()))){
                 //用户错误次数+1
                 setFailCount(account);
                 throw new UsernameNotFoundException(MRKI18NEnum.USER_NOT_FOUND.getMessage());

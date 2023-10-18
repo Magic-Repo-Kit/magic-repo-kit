@@ -78,19 +78,21 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.authenticationManager(authenticationManager) //密码授权服务
-                .authorizationCodeServices(authorizationCodeServices) //授权码服务
-                .tokenServices(tokenServices()) //token管理服务
-                .userDetailsService(userDetailsService)
-                .allowedTokenEndpointRequestMethods(HttpMethod.POST);//允许post请求
-
         //令牌增强器
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
         List<TokenEnhancer> enhancerList = new ArrayList<>();
         enhancerList.add(tokenEnhancer);
         enhancerList.add(accessTokenConverter);
         tokenEnhancerChain.setTokenEnhancers(enhancerList);
-        endpoints.tokenEnhancer(tokenEnhancerChain).accessTokenConverter(accessTokenConverter);
+
+        endpoints.authenticationManager(authenticationManager) //密码授权服务
+                .authorizationCodeServices(authorizationCodeServices) //授权码服务
+                .userDetailsService(userDetailsService)
+                .tokenEnhancer(tokenEnhancerChain)
+                .accessTokenConverter(accessTokenConverter)
+//                .tokenServices(tokenServices()) //token管理服务
+                .allowedTokenEndpointRequestMethods(HttpMethod.POST)//允许post请求
+        ;
     }
 
     /**
