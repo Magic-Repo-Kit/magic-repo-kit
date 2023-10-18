@@ -57,7 +57,7 @@ public class MRKRequestGlobalFilter implements GlobalFilter, Ordered {
         }
         //判断token状态
         String userId = String.valueOf(claims.get(JWTConstant.USER_ID));
-        String accessToken = JWTUtil.getAccessToken(Long.valueOf(userId));
+        String accessToken = JWTUtil.getAccessToken(Long.valueOf(userId),userType);
         if (!token.equalsIgnoreCase(accessToken)) {
             return unAuth(response, MRKI18nEnum.INVALID_TOKEN.getMessage());
         }

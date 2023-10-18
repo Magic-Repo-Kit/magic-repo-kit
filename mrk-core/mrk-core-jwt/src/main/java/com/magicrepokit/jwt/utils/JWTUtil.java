@@ -73,13 +73,53 @@ public class JWTUtil {
      * @param userId 用户id
      * @return accessToken
      */
-    public static String getAccessToken(Long userId) {
-        if (mrkRedisUtils.hasKey(getAccessTokenRedisKey(userId))) {
-            return (String) mrkRedisUtils.get(getAccessTokenRedisKey(userId));
+    public static String getAccessToken(Long userId,String userType) {
+        if (getMrkRedisUtils().hasKey(getAccessTokenRedisKey(userId,userType))) {
+            return (String) getMrkRedisUtils().get(getAccessTokenRedisKey(userId,userType));
         } else {
             return null;
         }
 
+    }
+
+
+    /**
+     * 获取保存在redis的refreshToken
+     *
+     * @param userId
+     * @param userType
+     * @return refreshToken
+     */
+    public static String getRefreshToken(Long userId,String userType){
+        if (getMrkRedisUtils().hasKey(getRefreshTokenRedisKey(userId,userType))) {
+            return (String)getMrkRedisUtils().get(getRefreshTokenRedisKey(userId,userType));
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 添加token状态到redis
+     *
+     * @param userId
+     * @param userType
+     * @param accessTokenValue
+     */
+    public static void addAccessToken(Long userId, String userType, String accessTokenValue) {
+        getMrkRedisUtils().del(getAccessTokenRedisKey(userId,userType));
+        getMrkRedisUtils().set(getAccessTokenRedisKey(userId,userType),accessTokenValue, getJwtProperties().getAccessTokenValiditySeconds());
+    }
+
+    /**
+     * 添加token状态到redis
+     *
+     * @param userId
+     * @param userType
+     * @param refreshToken
+     */
+    public static void addRefreshToken(Long userId, String userType, String refreshToken) {
+        getMrkRedisUtils().del(getRefreshTokenRedisKey(userId,userType));
+        getMrkRedisUtils().set(getRefreshTokenRedisKey(userId,userType),refreshToken, getJwtProperties().getRefreshTokenValiditySeconds());
     }
 
     /**
@@ -88,9 +128,20 @@ public class JWTUtil {
      * @param userId
      * @return
      */
-    public static String getAccessTokenRedisKey(Long userId) {
-        return JWTConstant.REDIS_KEY_ACCESS_TOKEN + userId;
+    public static String getAccessTokenRedisKey(Long userId,String userType) {
+        return JWTConstant.REDIS_KEY_ACCESS_TOKEN + userType+":"+userId;
     }
+
+    /**
+     * 获取用户user的Refresh在redis中key
+     *
+     * @param userId
+     * @return
+     */
+    public static String getRefreshTokenRedisKey(Long userId,String userType) {
+        return JWTConstant.REDIS_KEY_REFRESH_TOKEN + userType+":"+userId;
+    }
+
 
 
 }

@@ -3,6 +3,7 @@ package com.magicrepokit.auth.config;
 import com.magicrepokit.auth.constant.MRKAuthConstant;
 import com.magicrepokit.auth.service.MRKClientDetailsServiceImpl;
 import com.magicrepokit.auth.support.MRKJwtTokenEnhancer;
+import com.magicrepokit.jwt.properties.JWTProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,6 +52,8 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
     private AuthorizationCodeServices authorizationCodeServices;
     @Autowired
     private TokenEnhancer tokenEnhancer;
+    @Autowired
+    private JWTProperties jwtProperties;
 
     /**
      * 配置客户端详情信息
@@ -105,8 +108,8 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
         services.setClientDetailsService(clientDetailsService); //客户端信息
         services.setSupportRefreshToken(true); //是否刷新令牌
         services.setTokenStore(tokenStore); //令牌存储方式
-        services.setAccessTokenValiditySeconds(MRKAuthConstant.ACCESS_TOKEN_VALIDITY_SECONDS); //2小时
-        services.setRefreshTokenValiditySeconds(MRKAuthConstant.REFRESH_TOKEN_VALIDITY_SECONDS); //7天
+        services.setAccessTokenValiditySeconds(jwtProperties.getAccessTokenValiditySeconds());   //2小时
+        services.setRefreshTokenValiditySeconds(jwtProperties.getRefreshTokenValiditySeconds()); //7天
         //令牌增强器
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
         List<TokenEnhancer> enhancerList = new ArrayList<>();

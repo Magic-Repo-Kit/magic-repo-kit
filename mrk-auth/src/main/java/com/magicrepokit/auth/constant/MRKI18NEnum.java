@@ -50,6 +50,11 @@ public enum MRKI18NEnum {
      */
     INVALID_TOKEN("INVALID_TOKEN"),
 
+    /**
+     * 未知refreshToken
+     */
+    UNKNOWN_REFRESH_TOKEN("UNKNOWN_REFRESH_TOKEN"),
+
     ;
 
 

@@ -1,13 +1,16 @@
 package com.magicrepokit.auth.service;
 
+import cn.hutool.jwt.JWT;
 import com.magicrepokit.auth.constant.MRKAuthConstant;
 import com.magicrepokit.auth.constant.MRKI18NEnum;
 import com.magicrepokit.jwt.constant.UserTypeEnum;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.common.utils.*;
+import com.magicrepokit.jwt.utils.JWTUtil;
 import com.magicrepokit.redis.utils.MRKRedisUtils;
 import com.magicrepokit.system.feign.SystemClient;
 import com.magicrepokit.system.vo.UserInfo;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,6 +40,8 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
         String userType = request.getParameter(MRKAuthConstant.USER_TYPE);
         //获取密码
         String password = request.getParameter(MRKAuthConstant.PASSWORD);
+        //请求类型
+        String grantType = request.getParameter(MRKAuthConstant.GRANT_TYPE);
 
         if (StringUtil.isEmpty(userType)) {
             throw new UserDeniedAuthorizationException(MRKI18NEnum.NOT_FOUND_USER_TYPE.getMessage());
@@ -45,6 +50,9 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
         if(userTypeEnum==null){
             throw new UserDeniedAuthorizationException(MRKI18NEnum.NOT_FOUND_USER_TYPE.getMessage());
         }
+
+        //判断token
+        judgeRefreshToken(grantType,userType,request);
 
         //判断账户是否已锁定
         judgeFail(account);
@@ -74,6 +82,22 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
             //用户错误次数+1
             setFailCount(account);
             throw new UsernameNotFoundException(MRKI18NEnum.USER_NOT_FOUND.getMessage());
+        }
+    }
+
+    private void judgeRefreshToken(String grantType,String userType,HttpServletRequest request) {
+        if (grantType.equals(MRKAuthConstant.REFRESH_TOKEN)) {
+            String refreshToken = request.getParameter(MRKAuthConstant.REFRESH_TOKEN);
+            //判断令牌的合法性
+            Claims claims = JWTUtil.parseJWT(refreshToken);
+            if(claims==null){
+                throw new UserDeniedAuthorizationException(MRKI18NEnum.UNKNOWN_REFRESH_TOKEN.getMessage());
+            }
+            Long userId = Long.valueOf(String.valueOf(claims.get("user_id")));
+            String token = JWTUtil.getRefreshToken(userId, userType);
+            if(token==null||!token.equalsIgnoreCase(refreshToken)){
+                throw new UserDeniedAuthorizationException(MRKI18NEnum.INVALID_TOKEN.getMessage());
+            }
         }
     }
 

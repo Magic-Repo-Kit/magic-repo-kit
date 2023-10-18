@@ -22,4 +22,9 @@ public interface JWTConstant {
     String ACCOUNT = "account";
     //==================redis相关字段========================
     String REDIS_KEY_ACCESS_TOKEN = "mrk:accessToken:";
+    String REDIS_KEY_REFRESH_TOKEN = "mrk:refreshToken:";
+    //=================令牌设置-=============================
+    int ACCESS_TOKEN_VALIDITY_SECONDS = 7200;
+
+    int REFRESH_TOKEN_VALIDITY_SECONDS = 3600*24*7;
 }

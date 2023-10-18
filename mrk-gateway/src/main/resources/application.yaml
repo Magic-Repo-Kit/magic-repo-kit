@@ -36,6 +36,14 @@ spring:
             - Path=/system/**
           filters:
             - StripPrefix=1
+  # redis
+  redis:
+    ##redis 单机环境配置
+    host: 124.222.46.195
+    port: 6379
+    password: apollotest
+    database: 0
+    ssl: false
 # magicRepoKit服务配置
 mrk:
   token:
