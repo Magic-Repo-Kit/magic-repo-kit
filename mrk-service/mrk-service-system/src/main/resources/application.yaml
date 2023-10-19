@@ -28,3 +28,9 @@ spring:
     type: redis
     redis:
       time-to-live: 1h #过期时间 1小时
+# magicRepoKit服务配置
+mrk:
+  token:
+    sing-key: mrkmrkisapowerfulmicroservicearchitectureupgradedandoptimizedfromacommercialproject
+  client-id: magicrepokit
+  client-secret: magicrepokit

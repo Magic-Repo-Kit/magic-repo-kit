@@ -94,4 +94,9 @@ public class User extends BaseEntity  {
      * 岗位id
      */
     private String postId;
+
+    /**
+     * 状态:[0:未激活 1:激活 2:禁用]
+     */
+    private Integer status;
 }

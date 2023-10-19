@@ -7,6 +7,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.util.Base64Utils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -140,6 +141,14 @@ public class JWTUtil {
      */
     public static String getRefreshTokenRedisKey(Long userId,String userType) {
         return JWTConstant.REDIS_KEY_REFRESH_TOKEN + userType+":"+userId;
+    }
+
+    public static String getAuthorization(String clientId,String clientSecret){
+        //将客户端id和客户端密码拼接，按“客户端id:客户端密码”
+        String string = clientId+":"+clientSecret;
+        //进行base64编码
+        byte[] encode = Base64Utils.encode(string.getBytes());
+        return "Basic "+new String(encode);
     }
 
 

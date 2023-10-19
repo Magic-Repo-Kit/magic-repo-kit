@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum UserTypeEnum {
+public enum UserType {
     APP("app",1), // app模式
     PC("pc",2), // pc模式
     ;
@@ -15,7 +15,7 @@ public enum UserTypeEnum {
 
     private final int code;
 
-    public static UserTypeEnum getByUserType(String userType) {
+    public static UserType getByUserType(String userType) {
         return ArrayUtil.firstMatch(o -> o.getUserType().equals(userType), values());
     }
 }

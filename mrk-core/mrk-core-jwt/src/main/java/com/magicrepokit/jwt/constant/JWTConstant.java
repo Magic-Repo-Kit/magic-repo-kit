@@ -4,13 +4,23 @@ package com.magicrepokit.jwt.constant;
  * JWT配置常量
  */
 public interface JWTConstant {
+
+    //==================令牌配置相关========================
     /**
      * 密钥的最小长度
      */
     int SECRET_KEY_LENGTH = 32;
-    //==================令牌内容相关字段========================
+    /**
+     * 刷新请求token过期时间
+     */
+    int ACCESS_TOKEN_VALIDITY_SECONDS = 7200;
+    /**
+     * 刷新token过期时间
+     */
+    int REFRESH_TOKEN_VALIDITY_SECONDS = 3600*24*7;
+    //==================令牌增强内容相关字段========================
     String CLIENT_ID = "client_id";
-    String USER_NAME = "user_name";
+    String USERNAME = "username";
     String NICK_NAME = "nick_name";
     String REAL_NAME = "real_name";
     String USER_ID = "user_id";
@@ -23,8 +33,12 @@ public interface JWTConstant {
     //==================redis相关字段========================
     String REDIS_KEY_ACCESS_TOKEN = "mrk:accessToken:";
     String REDIS_KEY_REFRESH_TOKEN = "mrk:refreshToken:";
-    //=================令牌设置-=============================
-    int ACCESS_TOKEN_VALIDITY_SECONDS = 7200;
-
-    int REFRESH_TOKEN_VALIDITY_SECONDS = 3600*24*7;
+    //=================oauth请求参数相关-=============================
+    String PASSWORD = "password";
+    String GRANT_TYPE = "grant_type";
+    String REFRESH_TOKEN = "refresh_token";
+    String AUTHORIZATION = "Authorization";
+    String USER_TYPE = "User-Type";
+    String ACCESS_TOKEN = "access_token";
+    String JTI = "jti";
 }

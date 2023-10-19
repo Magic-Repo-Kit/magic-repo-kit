@@ -1,9 +1,8 @@
 package com.magicrepokit.auth.service;
 
-import cn.hutool.jwt.JWT;
 import com.magicrepokit.auth.constant.MRKAuthConstant;
-import com.magicrepokit.auth.constant.MRKI18NEnum;
-import com.magicrepokit.jwt.constant.UserTypeEnum;
+import com.magicrepokit.auth.constant.MRKI18N;
+import com.magicrepokit.jwt.constant.UserType;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.common.utils.*;
 import com.magicrepokit.jwt.utils.JWTUtil;
@@ -44,11 +43,11 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
         String grantType = request.getParameter(MRKAuthConstant.GRANT_TYPE);
 
         if (StringUtil.isEmpty(userType)) {
-            throw new UserDeniedAuthorizationException(MRKI18NEnum.NOT_FOUND_USER_TYPE.getMessage());
+            throw new UserDeniedAuthorizationException(MRKI18N.NOT_FOUND_USER_TYPE.getMessage());
         }
-        UserTypeEnum userTypeEnum = UserTypeEnum.getByUserType(userType);
+        UserType userTypeEnum = UserType.getByUserType(userType);
         if(userTypeEnum==null){
-            throw new UserDeniedAuthorizationException(MRKI18NEnum.NOT_FOUND_USER_TYPE.getMessage());
+            throw new UserDeniedAuthorizationException(MRKI18N.NOT_FOUND_USER_TYPE.getMessage());
         }
 
         //判断token
@@ -64,13 +63,13 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
             if(ObjectUtil.isEmpty(userInfo)||ObjectUtil.isEmpty(userInfo.getUser())||(grantType.equals(MRKAuthConstant.PASSWORD)&&!BCrypt.checkpw(password,userInfo.getUser().getPassword()))){
                 //用户错误次数+1
                 setFailCount(account);
-                throw new UsernameNotFoundException(MRKI18NEnum.USER_NOT_FOUND.getMessage());
+                throw new UsernameNotFoundException(MRKI18N.USER_NOT_FOUND.getMessage());
             }
             //匹配用户type
             if(!userInfo.getUser().getUserType().contains(userTypeEnum.getCode())){
                 //用户错误次数+1
                 setFailCount(account);
-                throw new UsernameNotFoundException(MRKI18NEnum.NOT_FOUND_USER_TYPE.getMessage());
+                throw new UsernameNotFoundException(MRKI18N.NOT_FOUND_USER_TYPE.getMessage());
             }
 
 
@@ -81,7 +80,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
         } else {
             //用户错误次数+1
             setFailCount(account);
-            throw new UsernameNotFoundException(MRKI18NEnum.USER_NOT_FOUND.getMessage());
+            throw new UsernameNotFoundException(MRKI18N.USER_NOT_FOUND.getMessage());
         }
     }
 
@@ -91,12 +90,12 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
             //判断令牌的合法性
             Claims claims = JWTUtil.parseJWT(refreshToken);
             if(claims==null){
-                throw new UserDeniedAuthorizationException(MRKI18NEnum.UNKNOWN_REFRESH_TOKEN.getMessage());
+                throw new UserDeniedAuthorizationException(MRKI18N.UNKNOWN_REFRESH_TOKEN.getMessage());
             }
             Long userId = Long.valueOf(String.valueOf(claims.get("user_id")));
             String token = JWTUtil.getRefreshToken(userId, userType);
             if(token==null||!token.equalsIgnoreCase(refreshToken)){
-                throw new UserDeniedAuthorizationException(MRKI18NEnum.INVALID_TOKEN.getMessage());
+                throw new UserDeniedAuthorizationException(MRKI18N.INVALID_TOKEN.getMessage());
             }
         }
     }
@@ -126,7 +125,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
     private void judgeFail(String account) {
         int count = MRKUtil.toInt(mrkRedisUtils.get(MRKAuthConstant.getFailRedisKey(account)), 0);
         if (count >= MRKAuthConstant.FAIL_COUNT) {
-            throw new UserDeniedAuthorizationException(MRKI18NEnum.USER_IS_LOCKED.getMessage());
+            throw new UserDeniedAuthorizationException(MRKI18N.USER_IS_LOCKED.getMessage());
         }
     }
 }

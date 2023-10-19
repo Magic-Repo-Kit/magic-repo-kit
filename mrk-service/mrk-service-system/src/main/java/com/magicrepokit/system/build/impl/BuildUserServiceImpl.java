@@ -1,6 +1,6 @@
 package com.magicrepokit.system.build.impl;
 
-import com.magicrepokit.common.utils.ObjectUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.magicrepokit.system.build.IBuildUserService;
 import com.magicrepokit.system.entity.User;
 import com.magicrepokit.system.vo.UserInfo;

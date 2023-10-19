@@ -2,13 +2,11 @@ package com.magicrepokit.gateway.filters;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import cn.hutool.jwt.JWT;
 import com.magicrepokit.gateway.constant.GateWayConstant;
 import com.magicrepokit.gateway.constant.MRKI18nEnum;
-import com.magicrepokit.gateway.provider.RequestProvider;
 import com.magicrepokit.gateway.provider.ResponseProvider;
 import com.magicrepokit.jwt.constant.JWTConstant;
-import com.magicrepokit.jwt.constant.UserTypeEnum;
+import com.magicrepokit.jwt.constant.UserType;
 import com.magicrepokit.jwt.utils.JWTUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.log4j.Log4j2;
@@ -43,7 +41,7 @@ public class MRKRequestGlobalFilter implements GlobalFilter, Ordered {
         ServerHttpResponse response = exchange.getResponse();
         String token = exchange.getRequest().getHeaders().getFirst(GateWayConstant.AUTH_KEY);
         String userType = exchange.getRequest().getHeaders().getFirst(GateWayConstant.USER_TYPE);
-        UserTypeEnum userTypeEnum = UserTypeEnum.getByUserType(userType);
+        UserType userTypeEnum = UserType.getByUserType(userType);
         if (userTypeEnum == null) {
             return unAuth(response, MRKI18nEnum.NOT_FOUND_USER_TYPE.getMessage());
         }

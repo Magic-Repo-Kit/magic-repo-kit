@@ -2,7 +2,10 @@ package com.magicrepokit.common.utils;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.StrUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -10,7 +13,9 @@ import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Component
 public class WebUtil extends WebUtils {
+
     /**
      * 获取 HttpServletRequest
      * @return HttpServletRequest
@@ -20,6 +25,11 @@ public class WebUtil extends WebUtils {
         return (requestAttributes == null) ? null : ((ServletRequestAttributes) requestAttributes).getRequest();
     }
 
+    /**
+     * 获取客户id和密钥
+     *
+     * @return 获取客户id和密钥
+     */
     public static String[] BasicAuthorization(){
         HttpServletRequest request = getRequest();
         String clientId;

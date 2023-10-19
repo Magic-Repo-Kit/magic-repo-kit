@@ -3,7 +3,7 @@ package com.magicrepokit.auth.constant;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum MRKI18NEnum {
+public enum MRKI18N {
 
     /**
      * 未发现用户登录类型
