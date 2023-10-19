@@ -16,6 +16,7 @@ import com.magicrepokit.system.entity.vo.AuthTokenVO;
 import com.magicrepokit.system.service.IAuthService;
 import com.magicrepokit.system.service.IUserService;
 import com.magicrepokit.system.vo.UserInfo;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,14 +69,31 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     /**
+     * 刷新token
+     *
+     * @param refreshToken
+     * @return
+     */
+    @Override
+    public AuthTokenVO refreshToken(String refreshToken) {
+        //解析token
+        Claims claims = JWTUtil.parseJWT(refreshToken);
+        if(claims==null){
+            throw new ServiceException(SystemResultCode.REFRESH_TOKEN_FAIL);
+        }
+        String userId = String.valueOf(claims.get(JWTConstant.USER_ID));
+        String refreshTokenRedis = JWTUtil.getRefreshToken(Long.valueOf(userId), getUserType());
+        if(refreshTokenRedis==null||!refreshTokenRedis.equals(refreshToken)){
+            throw new ServiceException(SystemResultCode.REFRESH_TOKEN_FAIL);
+        }
+        return remoteTokenService(JWTConstant.REFRESH_TOKEN,clientId,clientSecret,null,null,refreshToken);
+    }
+
+    /**
      * 申请令牌
      */
     private AuthTokenVO remoteTokenService(String grantType,String clientId,String clientSecret,String username,String password,String refreshToken){
-        HttpServletRequest request = WebUtil.getRequest();
-        String userType = request.getHeader(JWTConstant.USER_TYPE);
-        if(userType==null){
-            throw new ServiceException(SystemResultCode.NOT_FOUND_USER_TYPE);
-        }
+        String userType = getUserType();
         //负载获取远程服务
         ServiceInstance serviceInstance = loadBalancerClient.choose(SystemConstant.REMOTE_AUTH_NAME);
         if(serviceInstance==null){
@@ -112,6 +130,14 @@ public class AuthServiceImpl implements IAuthService {
         return BeanUtil.toBean(remoteResult, AuthTokenVO.class);
     }
 
+    private static String getUserType() {
+        HttpServletRequest request = WebUtil.getRequest();
+        String userType = request.getHeader(JWTConstant.USER_TYPE);
+        if(userType==null){
+            throw new ServiceException(SystemResultCode.NOT_FOUND_USER_TYPE);
+        }
+        return userType;
+    }
 
 
     /**

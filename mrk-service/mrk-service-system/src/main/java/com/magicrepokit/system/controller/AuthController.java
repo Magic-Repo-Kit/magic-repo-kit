@@ -5,10 +5,8 @@ import com.magicrepokit.system.entity.dto.LoginDTO;
 import com.magicrepokit.system.entity.vo.AuthTokenVO;
 import com.magicrepokit.system.service.IAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 
 /**
@@ -33,6 +31,17 @@ public class AuthController {
     @PostMapping("/login")
     public R<AuthTokenVO> Login(@RequestBody @Valid LoginDTO loginDTO){
         return R.data(authService.login(loginDTO));
+    }
+
+    /**
+     * 刷新token
+     *
+     * @param refreshToken
+     * @return
+     */
+    @PostMapping("/refresh-token")
+    public R<AuthTokenVO> refreshToken(@RequestParam("refreshToken") String refreshToken){
+        return R.data(authService.refreshToken(refreshToken));
     }
 }
 

@@ -29,6 +29,8 @@ public enum SystemResultCode implements IResultCode {
     DISABLED_USER(10010201, "DISABLED_USER"),
     //未发现USER-TYPE
     NOT_FOUND_USER_TYPE(10010202,"NOT_FOUND_USER_TYPE"),
+    //刷新token有误
+    REFRESH_TOKEN_FAIL(10010203, "REFRESH_TOKEN_FAIL")
     ;
 
 

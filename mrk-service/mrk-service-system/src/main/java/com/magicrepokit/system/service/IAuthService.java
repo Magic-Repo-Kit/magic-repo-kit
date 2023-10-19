@@ -20,4 +20,12 @@ public interface IAuthService {
      * @return 登录结果
      */
     AuthTokenVO login(@Valid LoginDTO loginDTO);
+
+    /**
+     * 刷新token
+     *
+     * @param refreshToken
+     * @return
+     */
+    AuthTokenVO refreshToken(String refreshToken);
 }
