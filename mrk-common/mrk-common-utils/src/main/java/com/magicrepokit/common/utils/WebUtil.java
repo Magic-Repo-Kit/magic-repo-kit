@@ -4,6 +4,7 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestAttributes;
@@ -12,6 +13,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class WebUtil extends WebUtils {
@@ -52,5 +56,31 @@ public class WebUtil extends WebUtils {
             return new String[]{clientId, clientSecret};
         }
         return null;
+    }
+
+    /**
+     * 参数拼接为URL
+     * @param params
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    public static String buildQueryParams(MultiValueMap<String, String> params){
+        StringBuilder queryParams = new StringBuilder("?");
+        for (String key : params.keySet()) {
+            for (String value : params.get(key)) {
+                if(value==null){
+                    value="";
+                }
+                try {
+                    queryParams.append(key)
+                            .append("=")
+                            .append(URLEncoder.encode(value, StandardCharsets.UTF_8.toString()))
+                            .append("&");
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return queryParams.toString();
     }
 }

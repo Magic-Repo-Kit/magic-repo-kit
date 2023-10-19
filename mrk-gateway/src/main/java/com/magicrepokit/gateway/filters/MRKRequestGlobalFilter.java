@@ -79,7 +79,7 @@ public class MRKRequestGlobalFilter implements GlobalFilter, Ordered {
      * @return
      */
     private boolean isSkip(String path){
-        return false;
+        return true;
     }
 
     /**

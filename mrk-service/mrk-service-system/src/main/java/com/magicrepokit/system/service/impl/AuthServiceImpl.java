@@ -73,6 +73,9 @@ public class AuthServiceImpl implements IAuthService {
     private AuthTokenVO remoteTokenService(String grantType,String clientId,String clientSecret,String username,String password,String refreshToken){
         HttpServletRequest request = WebUtil.getRequest();
         String userType = request.getHeader(JWTConstant.USER_TYPE);
+        if(userType==null){
+            throw new ServiceException(SystemResultCode.NOT_FOUND_USER_TYPE);
+        }
         //负载获取远程服务
         ServiceInstance serviceInstance = loadBalancerClient.choose(SystemConstant.REMOTE_AUTH_NAME);
         if(serviceInstance==null){
@@ -83,10 +86,12 @@ public class AuthServiceImpl implements IAuthService {
         //定义body
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add(JWTConstant.GRANT_TYPE,grantType);
-        formData.add(JWTConstant.CLIENT_ID,clientId);
         formData.add(JWTConstant.USERNAME,username);
         formData.add(JWTConstant.PASSWORD,password);
         formData.add(JWTConstant.REFRESH_TOKEN,refreshToken);
+        String queryParams = WebUtil.buildQueryParams(formData);
+        String urlWithParams = path + queryParams;
+
         //定义请求头
         MultiValueMap<String, String> header = new LinkedMultiValueMap<>();
         header.add(JWTConstant.AUTHORIZATION, JWTUtil.getAuthorization(clientId,clientSecret));
@@ -94,7 +99,7 @@ public class AuthServiceImpl implements IAuthService {
         //远程请求
         Map<String,Object> remoteResult;
         try {
-            ResponseEntity<Map> responseEntity = restTemplate.exchange(path, HttpMethod.POST, new HttpEntity<>(formData, header), Map.class);
+            ResponseEntity<Map> responseEntity = restTemplate.exchange(urlWithParams, HttpMethod.POST, new HttpEntity<>(null, header), Map.class);
             remoteResult = responseEntity.getBody();
         } catch (Exception e){
             log.error(e.getMessage());

@@ -26,7 +26,9 @@ public enum SystemResultCode implements IResultCode {
 
     //=====警告级别===============
     //用户被禁用
-    DISABLED_USER(10010201, "DISABLED_USER")
+    DISABLED_USER(10010201, "DISABLED_USER"),
+    //未发现USER-TYPE
+    NOT_FOUND_USER_TYPE(10010202,"NOT_FOUND_USER_TYPE"),
     ;
 
 
