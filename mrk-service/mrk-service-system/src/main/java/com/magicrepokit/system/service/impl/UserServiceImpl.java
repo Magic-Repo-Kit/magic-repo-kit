@@ -6,7 +6,7 @@ import com.magicrepokit.system.build.IBuildUserService;
 import com.magicrepokit.system.entity.User;
 import com.magicrepokit.system.mapper.UserMapper;
 import com.magicrepokit.system.service.IUserService;
-import com.magicrepokit.system.vo.UserInfo;
+import com.magicrepokit.system.entity.vo.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;

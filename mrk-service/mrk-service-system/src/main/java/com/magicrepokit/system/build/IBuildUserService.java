@@ -1,7 +1,7 @@
 package com.magicrepokit.system.build;
 
 import com.magicrepokit.system.entity.User;
-import com.magicrepokit.system.vo.UserInfo;
+import com.magicrepokit.system.entity.vo.UserInfo;
 
 public interface IBuildUserService {
     /**

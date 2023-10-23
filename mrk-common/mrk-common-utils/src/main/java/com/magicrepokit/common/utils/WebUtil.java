@@ -1,12 +1,13 @@
 package com.magicrepokit.common.utils;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.map.TableMap;
+import cn.hutool.core.net.url.UrlBuilder;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -15,6 +16,7 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 @Component
@@ -82,5 +84,17 @@ public class WebUtil extends WebUtils {
             }
         }
         return queryParams.toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static String replaceUrlQuery(String url, String key, String value) {
+        UrlBuilder builder = UrlBuilder.of(url, Charset.defaultCharset());
+        // 先移除
+        TableMap<CharSequence, CharSequence> query = (TableMap<CharSequence, CharSequence>)
+                ReflectUtil.getFieldValue(builder.getQuery(), "query");
+        query.remove(key);
+        // 后添加
+        builder.addQuery(key, value);
+        return builder.build();
     }
 }

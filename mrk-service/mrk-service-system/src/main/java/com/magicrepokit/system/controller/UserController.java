@@ -3,7 +3,7 @@ package com.magicrepokit.system.controller;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.i18n.utils.MessageUtil;
 import com.magicrepokit.system.service.IUserService;
-import com.magicrepokit.system.vo.UserInfo;
+import com.magicrepokit.system.entity.vo.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginDTO {
+public class AuthLoginDTO {
 
     @NotEmpty(message = "The account cannot be empty.")
     private String username;

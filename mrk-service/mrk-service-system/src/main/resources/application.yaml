@@ -32,5 +32,42 @@ spring:
 mrk:
   token:
     sing-key: mrkmrkisapowerfulmicroservicearchitectureupgradedandoptimizedfromacommercialproject
-  client-id: magicrepokit
-  client-secret: magicrepokit
+  auth:
+    local:
+      client-id: magicrepokit
+      client-secret: magicrepokit
+# 三方登录配置
+justauth:
+  cache:
+    prefix: 'mrk:social:state:'
+    type: redis
+    timeout: 24h
+  enabled: true
+  type:
+    GITEE:
+      client-id: 0396203ae2b0c332f514dcbf752097f0a8a69bb6672eacc4b781be737b5aad68
+      client-secret: b519097c0d81206e9a2db86154d574edc81ff50b87aa80b248d5593293ce21f0
+      redirect-uri: http://localhost:1000/system/auth/social-call-back
+      ignore-check-redirect-uri: true
+    GITHUB:
+      client-id: 53b541f7602d85d88cf0
+      client-secret: 4fe37d5be18c24d4b2783438b24be0595616eb5a
+      redirect-uri: http://localhost:1000/system/auth/social-call-back
+      ignore-check-redirect-uri: true
+    GOOGLE:
+      client-id: 523371826852-0l0cips35vf8ss9mt7bbq7mnau1flngj.apps.googleusercontent.com
+      client-secret: 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
+      redirect-uri: http://localhost:1000/system/auth/social-call-back
+      ignore-check-redirect-uri: true
+
+
+  http-config:
+    proxy:
+      GITHUB:
+        hostname: 127.0.0.1
+        port: 7890
+        type: HTTP
+      GOOGLE:
+        hostname: 127.0.0.1
+        port: 7890
+        type: HTTP

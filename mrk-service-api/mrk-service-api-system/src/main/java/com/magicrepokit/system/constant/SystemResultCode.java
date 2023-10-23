@@ -30,8 +30,11 @@ public enum SystemResultCode implements IResultCode {
     //未发现USER-TYPE
     NOT_FOUND_USER_TYPE(10010202,"NOT_FOUND_USER_TYPE"),
     //刷新token有误
-    REFRESH_TOKEN_FAIL(10010203, "REFRESH_TOKEN_FAIL")
-    ;
+    REFRESH_TOKEN_FAIL(10010203, "REFRESH_TOKEN_FAIL"),
+    //社交账户授权失败
+    SOCIAL_USER_AUTH_FAILURE(10010204,"SOCIAL_USER_AUTH_FAILURE"),
+    //未知社交账户类型
+    NOT_FOUND_SOCIAL_TYPE(10010205, "NOT_FOUND_SOCIAL_TYPE");
 
 
 
@@ -41,7 +44,7 @@ public enum SystemResultCode implements IResultCode {
     final int code;
 
     /**
-     * 中文信息描述
+     * 多语言信息key
      */
     final String message;
 

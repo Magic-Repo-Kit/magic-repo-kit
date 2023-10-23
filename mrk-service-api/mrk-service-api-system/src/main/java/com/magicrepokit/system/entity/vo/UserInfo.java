@@ -1,4 +1,4 @@
-package com.magicrepokit.system.vo;
+package com.magicrepokit.system.entity.vo;
 
 import com.magicrepokit.system.entity.User;
 import lombok.Data;
