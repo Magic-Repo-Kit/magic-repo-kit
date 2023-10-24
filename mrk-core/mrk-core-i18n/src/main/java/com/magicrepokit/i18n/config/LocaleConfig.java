@@ -1,5 +1,6 @@
 package com.magicrepokit.i18n.config;
 
+import com.magicrepokit.i18n.constant.I18nConstant;
 import com.magicrepokit.i18n.interceptor.LocaleInterceptor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -53,7 +54,7 @@ public class LocaleConfig implements WebMvcConfigurer {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setDefaultEncoding(StandardCharsets.UTF_8.toString());
         // 多语言文件地址
-        messageSource.addBasenames("i18nBase/message");
+        messageSource.addBasenames(I18nConstant.BASE_RESOURCE);
         return messageSource;
     }
 

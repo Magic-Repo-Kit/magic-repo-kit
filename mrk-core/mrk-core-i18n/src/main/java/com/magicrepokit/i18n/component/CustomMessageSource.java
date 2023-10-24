@@ -52,57 +52,8 @@ public class CustomMessageSource extends AbstractMessageSource {
                 mrkRedisUtils.set(I18nConstant.i18nKey(appName), localeAppMsgMap);
             }
         }
-        //引用包下的基础
-        Map<String, Map<String, String>> localeBaseMsgMap = (Map<String, Map<String, String>>) mrkRedisUtils.get(I18nConstant.i18nKey(I18nConstant.BASE_NAME));
-        if (localeBaseMsgMap == null || localeBaseMsgMap.isEmpty()) {
-            // 加载所有的国际化资源
-            localeBaseMsgMap = this.loadBaseMessageResources();
-            // 缓存到redis
-            if (localeBaseMsgMap != null && !localeBaseMsgMap.isEmpty()) {
-                mrkRedisUtils.set(I18nConstant.i18nKey(I18nConstant.BASE_NAME), localeBaseMsgMap);
-            }
-        }
         //合并
-        return margeMap(localeAppMsgMap,localeBaseMsgMap);
-    }
-
-    private Map<String, Map<String, String>> margeMap(Map<String, Map<String, String>> localeAppMsgMap,Map<String, Map<String, String>> localeBaseMsgMap){
-        Map<String, Map<String, String>> result = new HashMap<>();
-        // 合并 localeAppMsgMap 到 result
-        if(localeBaseMsgMap!=null){
-            for (Map.Entry<String, Map<String, String>> entry : localeBaseMsgMap.entrySet()) {
-                String key = entry.getKey();
-                Map<String, String> value = entry.getValue();
-
-                if (result.containsKey(key)) {
-                    // 如果 key 已存在于 result 中，进行合并操作
-                    Map<String, String> existingMap = result.get(key);
-                    existingMap.putAll(value);
-                } else {
-                    // 如果 key 不存在于 result 中，添加到 result
-                    result.put(key, new HashMap<>(value));
-                }
-            }
-        }
-
-        // 合并 localeAppMsgMap 到 result
-        if(localeAppMsgMap!=null){
-            for (Map.Entry<String, Map<String, String>> entry : localeAppMsgMap.entrySet()) {
-                String key = entry.getKey();
-                Map<String, String> value = entry.getValue();
-
-                if (result.containsKey(key)) {
-                    // 如果 key 已存在于 result 中，进行合并操作
-                    Map<String, String> existingMap = result.get(key);
-                    existingMap.putAll(value);
-                } else {
-                    // 如果 key 不存在于 result 中，添加到 result
-                    result.put(key, new HashMap<>(value));
-                }
-            }
-        }
-
-        return result;
+        return localeAppMsgMap;
     }
 
     /**
@@ -113,16 +64,6 @@ public class CustomMessageSource extends AbstractMessageSource {
     private Map<String, Map<String, String>> loadAppAllMessageResources() {
         //从配置文件
         return loadMessageResource.load();
-    }
-
-    /**
-     * 从数据源加载基础国际化消息
-     *
-     * @return
-     */
-    private Map<String, Map<String, String>> loadBaseMessageResources() {
-        //从配置文件
-        return loadMessageResource.loadBase();
     }
 
 

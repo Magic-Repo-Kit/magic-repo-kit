@@ -6,6 +6,4 @@ import java.util.Map;
 
 public interface LoadMessageResource {
     Map<String, Map<String, String>> load();
-
-    Map<String, Map<String, String>> loadBase();
 }

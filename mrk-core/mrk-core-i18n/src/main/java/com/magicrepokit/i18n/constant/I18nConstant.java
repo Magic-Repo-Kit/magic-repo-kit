@@ -11,12 +11,11 @@ public interface I18nConstant {
      */
     String REDIS_LOCALE_MESSAGE_KEY = "mkr:i18n:";
 
-    /**
-     * 基础资源名
-     */
-    String BASE_NAME = "base";
 
-    String BASE_RESOURCE = "classpath:i18nBase/";
+
+    String BASE_RESOURCE = "i18n/message";
+
+    String APP_RESOURCE ="i18n";
 
     /**
      * 返回i18n的redis key
