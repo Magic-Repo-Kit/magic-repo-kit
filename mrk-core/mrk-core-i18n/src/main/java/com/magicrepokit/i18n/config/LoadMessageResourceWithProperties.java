@@ -1,7 +1,10 @@
 package com.magicrepokit.i18n.config;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONUtil;
 import com.magicrepokit.i18n.constant.I18nConstant;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -23,6 +26,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 @Component
+@Slf4j
 public class LoadMessageResourceWithProperties implements LoadMessageResource {
 
 
@@ -35,6 +39,7 @@ public class LoadMessageResourceWithProperties implements LoadMessageResource {
 
     public Map<String, Map<String, String>> load(URL resourceUrl) {
         Map<String, Map<String, String>> result;
+        log.info("-----获取文件地址-------{}", JSONUtil.toJsonStr(resourceUrl));
         try {
             if(ObjectUtil.isEmpty(resourceUrl)){
                 return null;
@@ -66,6 +71,9 @@ public class LoadMessageResourceWithProperties implements LoadMessageResource {
         String jarPath = uri.getSchemeSpecificPart().substring(5, uri.getSchemeSpecificPart().indexOf('!'));
         //获取资源路径
         String resourcePath = uri.getSchemeSpecificPart().substring(uri.getSchemeSpecificPart().indexOf('!') + 2);
+        if (resourcePath.contains("classes!")){
+            resourcePath = resourcePath.replace("classes!", "classes");
+        }
         //加载jar包
         try (JarFile jarFile = new JarFile(jarPath)) {
             Enumeration<JarEntry> entries = jarFile.entries();
