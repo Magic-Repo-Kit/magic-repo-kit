@@ -1,9 +1,11 @@
 package com.magicrepokit.auth.config;
 
 import com.magicrepokit.auth.constant.MRKAuthConstant;
+import com.magicrepokit.auth.granter.MRKTokenGranter;
 import com.magicrepokit.auth.service.MRKClientDetailsServiceImpl;
 import com.magicrepokit.auth.support.MRKJwtTokenEnhancer;
 import com.magicrepokit.jwt.properties.JWTProperties;
+import com.magicrepokit.system.feign.SystemClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
@@ -54,6 +57,8 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
     private TokenEnhancer tokenEnhancer;
     @Autowired
     private JWTProperties jwtProperties;
+    @Autowired
+    private SystemClient systemClient;
 
     /**
      * 配置客户端详情信息
@@ -78,6 +83,8 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        //获取自定义tokenGranter
+        TokenGranter tokenGranter = MRKTokenGranter.getTokenGranter(authenticationManager, endpoints, systemClient);
         //令牌增强器
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
         List<TokenEnhancer> enhancerList = new ArrayList<>();
@@ -88,6 +95,7 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
         endpoints.authenticationManager(authenticationManager) //密码授权服务
                 .authorizationCodeServices(authorizationCodeServices) //授权码服务
                 .userDetailsService(userDetailsService)
+                .tokenGranter(tokenGranter) //自定义服务
                 .tokenEnhancer(tokenEnhancerChain)
                 .accessTokenConverter(accessTokenConverter)
 //                .tokenServices(tokenServices()) //token管理服务

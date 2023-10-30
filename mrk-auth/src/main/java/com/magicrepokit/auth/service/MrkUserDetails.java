@@ -1,6 +1,6 @@
 package com.magicrepokit.auth.service;
 
-import com.magicrepokit.system.entity.vo.UserInfo;
+import com.magicrepokit.system.entity.vo.UserInfoVO;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -52,14 +52,14 @@ public class MrkUserDetails extends User {
         this.roleId = roleId;
     }
 
-    public MrkUserDetails(UserInfo userInfo,Collection<? extends GrantedAuthority> authorities){
-        super(userInfo.getUser().getAccount(),userInfo.getUser().getPassword(),true,true,true,true,authorities);
-        this.userId = userInfo.getUser().getId();
-        this.name = userInfo.getUser().getName();
-        this.realName = userInfo.getUser().getRealName();
-        this.account = userInfo.getUser().getAccount();
-        this.deptId = userInfo.getUser().getDeptId();
-        this.postId = userInfo.getUser().getPostId();
-        this.roleId = userInfo.getUser().getRoleId();
+    public MrkUserDetails(UserInfoVO userInfoVO, Collection<? extends GrantedAuthority> authorities){
+        super(userInfoVO.getUser().getAccount(), userInfoVO.getUser().getPassword(),true,true,true,true,authorities);
+        this.userId = userInfoVO.getUser().getId();
+        this.name = userInfoVO.getUser().getName();
+        this.realName = userInfoVO.getUser().getRealName();
+        this.account = userInfoVO.getUser().getAccount();
+        this.deptId = userInfoVO.getUser().getDeptId();
+        this.postId = userInfoVO.getUser().getPostId();
+        this.roleId = userInfoVO.getUser().getRoleId();
     }
 }

@@ -1,4 +1,4 @@
-package com.magicrepokit.social.constant;
+package com.magicrepokit.system.constant;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.magicrepokit.common.core.IntArrayValuable;

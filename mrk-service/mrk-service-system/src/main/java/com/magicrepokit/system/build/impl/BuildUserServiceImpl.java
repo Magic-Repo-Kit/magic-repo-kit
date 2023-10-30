@@ -3,7 +3,7 @@ package com.magicrepokit.system.build.impl;
 import cn.hutool.core.util.ObjectUtil;
 import com.magicrepokit.system.build.IBuildUserService;
 import com.magicrepokit.system.entity.User;
-import com.magicrepokit.system.entity.vo.UserInfo;
+import com.magicrepokit.system.entity.vo.UserInfoVO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,14 +14,14 @@ public class BuildUserServiceImpl implements IBuildUserService {
      * @return
      */
     @Override
-    public UserInfo userInfoBuild(User user) {
+    public UserInfoVO userInfoBuild(User user) {
         if(ObjectUtil.isEmpty(user)){
             return null;
         }
         //扩展用户其它信息
 
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUser(user);
-        return userInfo;
+        UserInfoVO userInfoVO = new UserInfoVO();
+        userInfoVO.setUser(user);
+        return userInfoVO;
     }
 }

@@ -4,25 +4,24 @@ package com.magicrepokit.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.json.JSONUtil;
 import com.magicrepokit.common.utils.WebUtil;
 import com.magicrepokit.jwt.constant.JWTConstant;
 import com.magicrepokit.jwt.utils.JWTUtil;
 import com.magicrepokit.log.exceotion.ServiceException;
-import com.magicrepokit.social.constant.SocialTypeEnum;
+import com.magicrepokit.system.constant.SocialTypeEnum;
 import com.magicrepokit.social.factory.MRKAuthRequestFactory;
 import com.magicrepokit.system.constant.SystemConstant;
 import com.magicrepokit.system.constant.SystemResultCode;
 import com.magicrepokit.system.constant.SystemUserStatus;
+import com.magicrepokit.system.entity.User;
 import com.magicrepokit.system.entity.dto.AuthLoginDTO;
 import com.magicrepokit.system.entity.dto.AuthSocialLoginDTO;
 import com.magicrepokit.system.entity.vo.AuthTokenVO;
+import com.magicrepokit.system.entity.vo.SocialUserAuthVO;
 import com.magicrepokit.system.service.IAuthService;
+import com.magicrepokit.system.service.ISocialUserService;
 import com.magicrepokit.system.service.IUserService;
-import com.magicrepokit.system.entity.vo.UserInfo;
-import com.xingyuv.jushauth.model.AuthCallback;
-import com.xingyuv.jushauth.model.AuthResponse;
-import com.xingyuv.jushauth.model.AuthUser;
+import com.magicrepokit.system.entity.vo.UserInfoVO;
 import com.xingyuv.jushauth.request.AuthRequest;
 import com.xingyuv.jushauth.utils.AuthStateUtils;
 import io.jsonwebtoken.Claims;
@@ -58,6 +57,8 @@ public class AuthServiceImpl implements IAuthService {
     @Autowired
     private MRKAuthRequestFactory mrkAuthRequestFactory;
     @Autowired
+    private ISocialUserService socialUserService;
+    @Autowired
     private RestTemplate restTemplate;
     @Value("${mrk.auth.local.client-id}")
     private String clientId;
@@ -73,10 +74,10 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public AuthTokenVO login(AuthLoginDTO authLoginDTO) {
         //校验用户
-        UserInfo authenticate = authenticate(authLoginDTO.getUsername(), authLoginDTO.getPassword());
+        UserInfoVO authenticate = authenticate(authLoginDTO.getUsername(), authLoginDTO.getPassword());
         //oauth登录获取令牌
 
-        return remoteTokenService(JWTConstant.PASSWORD, clientId, clientSecret, authLoginDTO.getUsername(), authLoginDTO.getPassword(), null);
+        return remoteTokenService(JWTConstant.PASSWORD, clientId, clientSecret, authLoginDTO.getUsername(), authLoginDTO.getPassword(), null,null,null,null);
     }
 
     /**
@@ -97,7 +98,7 @@ public class AuthServiceImpl implements IAuthService {
         if(refreshTokenRedis==null||!refreshTokenRedis.equals(refreshToken)){
             throw new ServiceException(SystemResultCode.REFRESH_TOKEN_FAIL);
         }
-        return remoteTokenService(JWTConstant.REFRESH_TOKEN,clientId,clientSecret,null,null,refreshToken);
+        return remoteTokenService(JWTConstant.REFRESH_TOKEN,clientId,clientSecret,null,null,refreshToken,null,null,null);
     }
 
     /**
@@ -128,44 +129,12 @@ public class AuthServiceImpl implements IAuthService {
      */
     @Override
     public AuthTokenVO socialLogin(AuthSocialLoginDTO authSocialLoginDTO) {
-        Integer type = authSocialLoginDTO.getType();
-        String state = authSocialLoginDTO.getState();
-        String code = authSocialLoginDTO.getCode();
-        //1.从数据库中获取
+        //1.获取社交用户信息
+        socialUserService.authSocialUser(authSocialLoginDTO.getType(), authSocialLoginDTO.getCode(), authSocialLoginDTO.getState());
+        //2.获取系统用户信息
 
-        //2.远程三方获得社交用户信息
-        AuthUser socialUser = getSocialUser(type, code, state);
-        //3.保存数据库
 
-        //4.判断是否与本系统用户绑定
-
-        //5.若绑定返回token
-
-        return null;
-    }
-
-    /**
-     * 社交平台获取用户信息
-     *
-     * @param type 社交平台类型
-     * @param code 授权码
-     * @param state 状态码
-     * @return 社交平台用户
-     */
-    private AuthUser getSocialUser(Integer type, String code, String state) {
-        SocialTypeEnum socialTypeEnum = SocialTypeEnum.valueOfType(type);
-        if(socialTypeEnum==null){
-            throw new ServiceException(SystemResultCode.NOT_FOUND_SOCIAL_TYPE);
-        }
-        AuthRequest authRequest = mrkAuthRequestFactory.get(socialTypeEnum.getSource());
-        AuthCallback authCallback = AuthCallback.builder().code(code).state(state).build();
-        AuthResponse<?> authResponse = authRequest.login(authCallback);
-        log.info("[getAuthUser][请求社交平台 type({}) request({}) response({})]", type,
-                JSONUtil.toJsonStr(authCallback), JSONUtil.toJsonStr(authResponse));
-        if(!authResponse.ok()){
-            throw new ServiceException(SystemResultCode.SOCIAL_USER_AUTH_FAILURE,authResponse.getMsg());
-        }
-        return (AuthUser) authResponse.getData();
+        return remoteTokenService(JWTConstant.SOCIAL, clientId, clientSecret, null, null, null,authSocialLoginDTO.getType(),authSocialLoginDTO.getCode(),authSocialLoginDTO.getState());
     }
 
 
@@ -180,7 +149,7 @@ public class AuthServiceImpl implements IAuthService {
      * @param refreshToken 刷新token
      * @return 令牌信息
      */
-    private AuthTokenVO remoteTokenService(String grantType,String clientId,String clientSecret,String username,String password,String refreshToken){
+    private AuthTokenVO remoteTokenService(String grantType,String clientId,String clientSecret,String username,String password,String refreshToken,Integer socialType,String socialCode,String socialState){
         String userType = getUserType();
         //负载获取远程服务
         ServiceInstance serviceInstance = loadBalancerClient.choose(SystemConstant.REMOTE_AUTH_NAME);
@@ -195,6 +164,9 @@ public class AuthServiceImpl implements IAuthService {
         formData.add(JWTConstant.USERNAME,username);
         formData.add(JWTConstant.PASSWORD,password);
         formData.add(JWTConstant.REFRESH_TOKEN,refreshToken);
+        formData.add(JWTConstant.SOURCE,socialType==null?null:socialType+"");
+        formData.add(JWTConstant.CODE,socialCode);
+        formData.add(JWTConstant.STATE,socialState);
         String queryParams = WebUtil.buildQueryParams(formData);
         String urlWithParams = path + queryParams;
 
@@ -240,20 +212,20 @@ public class AuthServiceImpl implements IAuthService {
      * @param password 密码
      * @return
      */
-    public UserInfo authenticate(String username,String password){
+    public UserInfoVO authenticate(String username, String password){
         //查询用户信息
-        UserInfo userInfo = userService.userInfo(username);
-        if(ObjectUtil.isEmpty(userInfo)){
+        UserInfoVO userInfoVO = userService.userInfo(username);
+        if(ObjectUtil.isEmpty(userInfoVO)){
             throw new ServiceException(SystemResultCode.NOT_FOUND_USER);
         }
         //校验密码
-        if (!userService.isPasswordMatch(password,userInfo.getUser().getPassword())) {
+        if (!userService.isPasswordMatch(password, userInfoVO.getUser().getPassword())) {
             throw new ServiceException(SystemResultCode.NOT_FOUND_USER);
         }
         //判断是否激活
-        if(userInfo.getUser().getStatus()== SystemUserStatus.Disabled.getCode()){
+        if(userInfoVO.getUser().getStatus()== SystemUserStatus.Disabled.getCode()){
             throw new ServiceException(SystemResultCode.DISABLED_USER);
         }
-        return userInfo;
+        return userInfoVO;
     }
 }

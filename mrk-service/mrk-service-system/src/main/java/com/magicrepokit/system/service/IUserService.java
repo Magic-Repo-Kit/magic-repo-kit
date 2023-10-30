@@ -2,7 +2,7 @@ package com.magicrepokit.system.service;
 
 import com.magicrepokit.mp.base.BaseService;
 import com.magicrepokit.system.entity.User;
-import com.magicrepokit.system.entity.vo.UserInfo;
+import com.magicrepokit.system.entity.vo.UserInfoVO;
 
 /**
  * user服务类
@@ -15,14 +15,14 @@ public interface IUserService extends BaseService<User> {
      * @param userId
      * @return
      */
-    UserInfo userInfo(Long userId);
+    UserInfoVO userInfo(Long userId);
 
     /**
      * 用户信息
      * @param account
      * @return
      */
-    UserInfo userInfo(String account);
+    UserInfoVO userInfo(String account);
 
     /**
      * 判断密码是否匹配

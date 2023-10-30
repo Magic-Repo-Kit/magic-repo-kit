@@ -21,6 +21,11 @@ public enum MRKI18N {
     USER_NOT_FOUND("USER_NOT_FOUND"),
 
     /**
+     * 未知source类型
+     */
+    UNKNOWN_SOURCE_TYPE("UNKNOWN_Source_TYPE"),
+
+    /**
      * 未知授权类型
      */
     UNKNOWN_GRANT_TYPE("UNKNOWN_GRANT_TYPE"),

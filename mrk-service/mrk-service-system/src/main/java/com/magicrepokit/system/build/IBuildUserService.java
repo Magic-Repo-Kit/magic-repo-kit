@@ -1,7 +1,7 @@
 package com.magicrepokit.system.build;
 
 import com.magicrepokit.system.entity.User;
-import com.magicrepokit.system.entity.vo.UserInfo;
+import com.magicrepokit.system.entity.vo.UserInfoVO;
 
 public interface IBuildUserService {
     /**
@@ -9,5 +9,5 @@ public interface IBuildUserService {
      * @param user
      * @return
      */
-    UserInfo userInfoBuild (User user);
+    UserInfoVO userInfoBuild (User user);
 }

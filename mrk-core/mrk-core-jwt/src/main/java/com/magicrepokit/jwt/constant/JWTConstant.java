@@ -35,6 +35,14 @@ public interface JWTConstant {
     String REDIS_KEY_REFRESH_TOKEN = "mrk:refreshToken:";
     //=================oauth请求参数相关-=============================
     String PASSWORD = "password";
+    String SOURCE = "source";
+
+    String CODE = "code";
+
+    String STATE = "state";
+
+    String SOCIAL = "social";
+
     String GRANT_TYPE = "grant_type";
     String REFRESH_TOKEN = "refresh_token";
     String AUTHORIZATION = "Authorization";

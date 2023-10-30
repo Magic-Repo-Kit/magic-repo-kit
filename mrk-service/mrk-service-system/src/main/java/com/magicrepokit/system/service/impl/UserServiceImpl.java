@@ -6,7 +6,7 @@ import com.magicrepokit.system.build.IBuildUserService;
 import com.magicrepokit.system.entity.User;
 import com.magicrepokit.system.mapper.UserMapper;
 import com.magicrepokit.system.service.IUserService;
-import com.magicrepokit.system.entity.vo.UserInfo;
+import com.magicrepokit.system.entity.vo.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
      * @return
      */
     @Override
-    public UserInfo userInfo(Long userId) {
+    public UserInfoVO userInfo(Long userId) {
         User user = this.getById(userId);
         return userBuild.userInfoBuild(user);
     }
@@ -33,7 +33,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
      * @return
      */
     @Override
-    public UserInfo userInfo(String account) {
+    public UserInfoVO userInfo(String account) {
         User user = this.getOne(new LambdaQueryWrapper<User>()
                 .eq(User::getAccount,account)
         );
