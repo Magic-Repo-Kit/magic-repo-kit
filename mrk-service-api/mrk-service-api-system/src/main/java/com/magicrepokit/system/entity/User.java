@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.magicrepokit.mp.base.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 import java.util.Date;
@@ -22,6 +19,7 @@ import java.util.List;
 @TableName(value = "mrk_system_user",autoResultMap = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User extends BaseEntity  {
 
     /**
@@ -96,7 +94,7 @@ public class User extends BaseEntity  {
     private String postId;
 
     /**
-     * 状态:[0:未激活 1:激活 2:禁用]
+     * 状态:[0:未激活 1:初始 2:激活 3:禁用]
      */
     private Integer status;
 }

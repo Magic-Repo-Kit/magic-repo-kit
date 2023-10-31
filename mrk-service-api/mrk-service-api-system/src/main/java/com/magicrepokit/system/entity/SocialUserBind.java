@@ -4,6 +4,7 @@ package com.magicrepokit.system.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.magicrepokit.mp.base.BaseEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("mrk_social_user_bind")
+@Builder
 public class SocialUserBind extends BaseEntity {
     /**
      * 关联的用户编号

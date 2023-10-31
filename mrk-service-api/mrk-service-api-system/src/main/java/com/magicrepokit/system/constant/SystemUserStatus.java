@@ -7,10 +7,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum SystemUserStatus {
-    //状态:[0:未激活 1:激活 2:禁用]
+    //状态:[0:未激活 1:初始 2:激活 3:禁用]
     NOT_ACTIVATED(0),
-    ACTIVATED(1),
-    Disabled(2)
+    INITIAL(1),
+    ACTIVATED(2),
+    Disabled(3)
     ;
 
 

@@ -60,6 +60,10 @@ justauth:
       redirect-uri: http://localhost:1000/system/auth/social-call-back
       ignore-check-redirect-uri: true
 
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 
   http-config:
     proxy:

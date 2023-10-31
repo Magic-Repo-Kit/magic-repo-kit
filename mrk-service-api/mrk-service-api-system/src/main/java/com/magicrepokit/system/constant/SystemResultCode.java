@@ -36,7 +36,9 @@ public enum SystemResultCode implements IResultCode {
     //未知社交账户类型
     NOT_FOUND_SOCIAL_TYPE(10010205, "NOT_FOUND_SOCIAL_TYPE"),
     //未绑定账号，需要进行绑定。
-    AUTH_THIRD_LOGIN_NOT_BIND(10010206, "AUTH_THIRD_LOGIN_NOT_BIND");
+    AUTH_THIRD_LOGIN_NOT_BIND(10010206, "AUTH_THIRD_LOGIN_NOT_BIND"),
+    //用户名存在
+    USERNAME_EXIST(10010207,"USERNAME_EXIST");
 
 
 

@@ -4,6 +4,7 @@ import com.magicrepokit.auth.support.MRKJwtTokenEnhancer;
 import com.magicrepokit.jwt.properties.JWTProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -38,5 +39,10 @@ public class MRKTokenConfig {
     @Bean
     public TokenEnhancer tokenEnhancer(JwtAccessTokenConverter accessTokenConverter){
         return new MRKJwtTokenEnhancer(accessTokenConverter);
+    }
+
+    @Bean
+    public MRKOAuthRequestFactory mrkOAuthRequestFactory(ClientDetailsService clientDetailsService){
+        return new MRKOAuthRequestFactory(clientDetailsService);
     }
 }

@@ -40,6 +40,11 @@ public class SocialUser extends BaseEntity {
     private String rawTokenInfo;
 
     /**
+     * 用户名
+     */
+    private String username;
+
+    /**
      * 用户昵称
      */
     private String nickName;

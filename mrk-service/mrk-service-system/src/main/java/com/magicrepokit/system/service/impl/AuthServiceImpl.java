@@ -132,8 +132,6 @@ public class AuthServiceImpl implements IAuthService {
         //1.获取社交用户信息
         socialUserService.authSocialUser(authSocialLoginDTO.getType(), authSocialLoginDTO.getCode(), authSocialLoginDTO.getState());
         //2.获取系统用户信息
-
-
         return remoteTokenService(JWTConstant.SOCIAL, clientId, clientSecret, null, null, null,authSocialLoginDTO.getType(),authSocialLoginDTO.getCode(),authSocialLoginDTO.getState());
     }
 

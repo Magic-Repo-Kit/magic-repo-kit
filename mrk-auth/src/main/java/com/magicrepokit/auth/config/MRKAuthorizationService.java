@@ -59,7 +59,8 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
     private JWTProperties jwtProperties;
     @Autowired
     private SystemClient systemClient;
-
+    @Autowired
+    private MRKOAuthRequestFactory mrkoAuthRequestFactory;
     /**
      * 配置客户端详情信息
      * @param clients
@@ -98,6 +99,7 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
                 .tokenGranter(tokenGranter) //自定义服务
                 .tokenEnhancer(tokenEnhancerChain)
                 .accessTokenConverter(accessTokenConverter)
+                .requestFactory(mrkoAuthRequestFactory)
 //                .tokenServices(tokenServices()) //token管理服务
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST)//允许post请求
         ;

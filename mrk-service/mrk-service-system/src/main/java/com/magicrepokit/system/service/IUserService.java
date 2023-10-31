@@ -2,6 +2,7 @@ package com.magicrepokit.system.service;
 
 import com.magicrepokit.mp.base.BaseService;
 import com.magicrepokit.system.entity.User;
+import com.magicrepokit.system.entity.dto.UserDTO;
 import com.magicrepokit.system.entity.vo.UserInfoVO;
 
 /**
@@ -32,4 +33,11 @@ public interface IUserService extends BaseService<User> {
      * @return 是否匹配
      */
     boolean isPasswordMatch(String rawPassword, String encodedPassword);
+
+    /**
+     * 创建用户
+     * @param user
+     * @return
+     */
+    boolean createUser(User user);
 }
