@@ -12,6 +12,24 @@ spring:
       config:
         server-addr: 124.222.46.195:8848
     gateway:
+      # 全局的跨域配置
+      globalcors:
+        # 解决options请求被拦截问题
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          # 拦截的请求
+          '[/**]':
+            # 允许跨域的请求
+            allowedOrigins: "*" # spring boot2.4以前的配置
+            #allowedOriginPatterns: "*" # spring boot2.4以后的配置
+            # 允许请求中携带的头信息
+            allowedHeaders: "*"
+            # 运行跨域的请求方式
+            allowedMethods: "*"
+            # 是否允许携带cookie
+            alloweCredentials: true
+            # 跨域检测的有效期,单位s
+            maxAge: 36000
       discovery:
     # 允许通过服务名称进行路由转发访问， http://service-id/user
         locator:
@@ -36,6 +54,7 @@ spring:
             - Path=/system/**
           filters:
             - StripPrefix=1
+
   # redis
   redis:
     ##redis 单机环境配置
