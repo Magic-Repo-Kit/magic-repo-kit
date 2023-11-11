@@ -157,7 +157,7 @@ public class AuthServiceImpl implements IAuthService {
         //获取远程地址
         String path = serviceInstance.getUri().toString()+SystemConstant.OAUTH_TOKEN_URL;
         //定义body
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
         formData.add(JWTConstant.GRANT_TYPE,grantType);
         formData.add(JWTConstant.USERNAME,username);
         formData.add(JWTConstant.PASSWORD,password);

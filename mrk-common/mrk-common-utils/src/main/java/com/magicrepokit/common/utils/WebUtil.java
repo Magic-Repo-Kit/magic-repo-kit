@@ -3,6 +3,7 @@ package com.magicrepokit.common.utils;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.map.TableMap;
 import cn.hutool.core.net.url.UrlBuilder;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.stereotype.Component;
@@ -66,17 +67,17 @@ public class WebUtil extends WebUtils {
      * @return
      * @throws UnsupportedEncodingException
      */
-    public static String buildQueryParams(MultiValueMap<String, String> params){
+    public static String buildQueryParams(MultiValueMap<String, Object> params){
         StringBuilder queryParams = new StringBuilder("?");
         for (String key : params.keySet()) {
-            for (String value : params.get(key)) {
+            for (Object value : params.get(key)) {
                 if(value==null){
                     value="";
                 }
                 try {
                     queryParams.append(key)
                             .append("=")
-                            .append(URLEncoder.encode(value, StandardCharsets.UTF_8.toString()))
+                            .append(URLEncoder.encode(ObjectUtil.toString(value), StandardCharsets.UTF_8.toString()))
                             .append("&");
                 } catch (UnsupportedEncodingException e) {
                     throw new RuntimeException(e);
