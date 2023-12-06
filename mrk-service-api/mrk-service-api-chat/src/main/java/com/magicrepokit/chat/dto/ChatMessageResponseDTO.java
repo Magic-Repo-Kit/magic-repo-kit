@@ -1,4 +1,4 @@
-package com.magicrepokit.chat.entity;
+package com.magicrepokit.chat.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -8,8 +8,8 @@ import java.io.Serializable;
 
 @Data
 @ToString
-public class ChatMessageResponseEntity implements Serializable {
-    private MessageEntity message;
+public class ChatMessageResponseDTO implements Serializable {
+    private MessageDTO messageDTO;
     @JsonProperty("conversation_id")
     private String conversationId;
     private String error;

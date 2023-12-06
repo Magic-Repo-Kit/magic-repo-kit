@@ -1,21 +1,21 @@
-package com.magicrepokit.chat.entity;
+package com.magicrepokit.chat.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class MessageEntity {
+public class MessageDTO {
     private String id;
-    private AuthorEntity author;
+    private AuthorDTO author;
     @JsonProperty("create_time")
     private double createTime;
     @JsonProperty("update_time")
     private Double updateTime;
-    private ContentEntity content;
+    private ContentDTO contentDTO;
     private String status;
     @JsonProperty("end_turn")
     private String endTurn;
     private double weight;
-    private MetadataEntity metadata;
+    private MetadataDTO metadataDTO;
     private String recipient;
 }

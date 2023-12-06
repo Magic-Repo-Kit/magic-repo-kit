@@ -1,4 +1,4 @@
-package com.magicrepokit.chat.entity;
+package com.magicrepokit.chat.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ContentEntity {
+public class ContentDTO {
     @JsonProperty("content_type")
     private String contentType;
     private List<String> parts;

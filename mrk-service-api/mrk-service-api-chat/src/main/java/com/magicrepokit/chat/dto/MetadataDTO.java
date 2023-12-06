@@ -1,10 +1,10 @@
-package com.magicrepokit.chat.entity;
+package com.magicrepokit.chat.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class MetadataEntity {
+public class MetadataDTO {
     @JsonProperty("is_complete")
     private Boolean isComplete;
     @JsonProperty("message_type")

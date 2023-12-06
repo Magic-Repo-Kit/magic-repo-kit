@@ -18,8 +18,8 @@ public class RestTemplateConfig {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
 
         // Set the proxy details
-        requestFactory.setProxy(createProxy("127.0.0.1", 7890));
-        RestTemplate restTemplate = new RestTemplate(requestFactory);
+//        requestFactory.setProxy(createProxy("127.0.0.1", 7890));
+        RestTemplate restTemplate = new RestTemplate();
         //配置
         restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
             @Override

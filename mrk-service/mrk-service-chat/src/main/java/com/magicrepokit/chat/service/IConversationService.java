@@ -1,6 +1,9 @@
 package com.magicrepokit.chat.service;
 
-import com.magicrepokit.chat.entity.ChatMessagePages;
+import com.magicrepokit.chat.dto.ChatMessagePagesDTO;
+
+import java.io.InputStream;
+import java.util.function.Consumer;
 
 public interface IConversationService {
     /**
@@ -13,9 +16,18 @@ public interface IConversationService {
     void sendMsg(String messageId,String content,String conversationId,String parentMessageId);
 
     /**
+     * 聊天对话
+     * @param messageId
+     * @param content
+     * @param conversationId
+     * @param parentMessageId
+     */
+    void sendMsg(String messageId, String content, String conversationId, String parentMessageId, Consumer<InputStream> streamProcessor);
+
+    /**
      * 获取对话列表
      * @param offset
      * @param limit
      */
-    ChatMessagePages conversationList(Integer offset, Integer limit);
+    ChatMessagePagesDTO conversationList(Integer offset, Integer limit);
 }

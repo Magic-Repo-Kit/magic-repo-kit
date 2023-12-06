@@ -1,4 +1,4 @@
-package com.magicrepokit.chat.entity;
+package com.magicrepokit.chat.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ChatMessageRequestEntity {
+public class ChatMessageRequestDTO {
     private String action;
     private String arkoseToken;
     private List<Message> messages;
@@ -28,7 +28,7 @@ public class ChatMessageRequestEntity {
         private String id;
         private Author author;
         private Content content;
-        private MetadataEntity metadata;
+        private MetadataDTO metadataDTO;
     }
 
     @Data

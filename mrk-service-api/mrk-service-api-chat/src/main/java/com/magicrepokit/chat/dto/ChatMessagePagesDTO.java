@@ -1,4 +1,4 @@
-package com.magicrepokit.chat.entity;
+package com.magicrepokit.chat.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @ToString
-public class ChatMessagePages implements Serializable {
+public class ChatMessagePagesDTO implements Serializable {
     private List<Item> items;
     private Integer total;
     private Integer limit;

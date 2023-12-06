@@ -23,16 +23,12 @@
             <artifactId>mrk-core-i18n</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor.netty</groupId>
-            <artifactId>reactor-netty</artifactId>
-        </dependency>
 
-
+        <dependency>
+            <groupId>org.auoralpixel</groupId>
+            <artifactId>mrk-core-jwt</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>

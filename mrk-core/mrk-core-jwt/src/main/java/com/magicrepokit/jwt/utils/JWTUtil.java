@@ -19,6 +19,9 @@ import java.util.Base64;
  * @github https://github.com/AuroraPixel
  */
 public class JWTUtil {
+    private static final String JWT_PREFIX = "Bearer ";
+
+
     /**
      * jwt配置文件
      */
@@ -152,5 +155,10 @@ public class JWTUtil {
     }
 
 
-
+    public static String getToken(String auth) {
+        if(auth!=null&&auth.startsWith("Bearer")){
+            return auth.substring(7);
+        }
+        return auth;
+    }
 }

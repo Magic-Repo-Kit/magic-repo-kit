@@ -2,11 +2,12 @@ package com.magicrepokit.chat.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.magicrepokit.chat.component.SseEmitterComponent;
 import com.magicrepokit.chat.constant.ApiConstant;
 import com.magicrepokit.chat.constant.ChatResultCode;
 import com.magicrepokit.chat.constant.TokenConstant;
-import com.magicrepokit.chat.entity.ChatMessagePages;
-import com.magicrepokit.chat.entity.ChatMessageResponseEntity;
+import com.magicrepokit.chat.dto.ChatMessagePagesDTO;
+import com.magicrepokit.chat.dto.ChatMessageResponseDTO;
 import com.magicrepokit.chat.service.IConversationService;
 import com.magicrepokit.common.utils.WebUtil;
 import com.magicrepokit.log.exceotion.ServiceException;
@@ -37,6 +38,8 @@ public class ConversationServiceImpl implements IConversationService {
 
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private SseEmitterComponent sseEmitterComponent;
 
     @Override
     public void sendMsg(String messageId,String content,String conversationId,String parentMessageId) {
@@ -51,7 +54,15 @@ public class ConversationServiceImpl implements IConversationService {
     }
 
     @Override
-    public ChatMessagePages conversationList(Integer offset,Integer limit){
+    public void sendMsg(String messageId,String content,String conversationId,String parentMessageId, Consumer<InputStream> streamProcessor) {
+
+        String arkoseToken = getArkoseToken();
+        String requestBody = getRequest(arkoseToken,messageId,content,conversationId,parentMessageId);
+        chatSendRequest(requestBody, streamProcessor);
+    }
+
+    @Override
+    public ChatMessagePagesDTO conversationList(Integer offset, Integer limit){
         //定义body
         MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
         formData.set("offset", offset);
@@ -69,7 +80,7 @@ public class ConversationServiceImpl implements IConversationService {
         }
 
         String bodyJson = exchange.getBody();
-        ChatMessagePages bean = JSONUtil.toBean(bodyJson, ChatMessagePages.class);
+        ChatMessagePagesDTO bean = JSONUtil.toBean(bodyJson, ChatMessagePagesDTO.class);
         return bean;
     }
 
@@ -77,7 +88,7 @@ public class ConversationServiceImpl implements IConversationService {
      * 解析流
      * @param inputStream
      */
-    public Map<String,ChatMessageResponseEntity> parseStream(InputStream inputStream){
+    public Map<String, ChatMessageResponseDTO> parseStream(InputStream inputStream){
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         String line;
         try (BufferedReader reader = new BufferedReader(inputStreamReader)) {
@@ -90,8 +101,8 @@ public class ConversationServiceImpl implements IConversationService {
                     }
                 }
                 if(StrUtil.isNotBlank(line)){
-                    ChatMessageResponseEntity bean = JSONUtil.toBean(line, ChatMessageResponseEntity.class);
-                    System.out.println(bean.toString());
+                    JSONUtil.toBean(line, ChatMessageResponseDTO.class);
+                    System.out.println(line);
                 }
                 // 打印SSE事件内容
             }
@@ -138,8 +149,7 @@ public class ConversationServiceImpl implements IConversationService {
         headers.set(HEADER_CONTENT_TYPE, APPLICATION_JSON);
         headers.set("Origin", "https://chat.openai.com");
         headers.set("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36");
-        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
-        return request;
+        return new HttpEntity<>(requestBody, headers);
     }
 
     /**
@@ -152,7 +162,7 @@ public class ConversationServiceImpl implements IConversationService {
      * @return
      */
     public String getRequest(String arkoseToken,String messageId,String content,String conversationId,String parentMessageId){
-        conversationId=conversationId==null||conversationId.equals("")?"null":"\""+conversationId+"\"";
+        conversationId=conversationId==null|| conversationId.isEmpty() ?"null":"\""+conversationId+"\"";
         return String.format(requestTemplate(),arkoseToken,messageId,content,conversationId,parentMessageId);
     }
 
