@@ -35,11 +35,14 @@ public class ConversationServiceImpl implements IConversationService {
     private static final String HEADER_AUTHORIZATION = "Authorization";
 
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
+    private static String token;
 
     @Autowired
     private RestTemplate restTemplate;
-    @Autowired
-    private SseEmitterComponent sseEmitterComponent;
+
+    private void setToken(String token){
+        ConversationServiceImpl.token = token;
+    }
 
     @Override
     public void sendMsg(String messageId,String content,String conversationId,String parentMessageId) {
@@ -54,8 +57,8 @@ public class ConversationServiceImpl implements IConversationService {
     }
 
     @Override
-    public void sendMsg(String messageId,String content,String conversationId,String parentMessageId, Consumer<InputStream> streamProcessor) {
-
+    public void sendMsg(String token,String messageId,String content,String conversationId,String parentMessageId, Consumer<InputStream> streamProcessor) {
+        setToken(token);
         String arkoseToken = getArkoseToken();
         String requestBody = getRequest(arkoseToken,messageId,content,conversationId,parentMessageId);
         chatSendRequest(requestBody, streamProcessor);
@@ -145,7 +148,7 @@ public class ConversationServiceImpl implements IConversationService {
     private static HttpEntity<String> getStringHttpEntity(String requestBody) {
         //设置请求头
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.set(HEADER_AUTHORIZATION, AUTH_BEARER + " " + TokenConstant.ACCESS_TOKEN);
+        headers.set(HEADER_AUTHORIZATION, AUTH_BEARER + " " + token);
         headers.set(HEADER_CONTENT_TYPE, APPLICATION_JSON);
         headers.set("Origin", "https://chat.openai.com");
         headers.set("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36");

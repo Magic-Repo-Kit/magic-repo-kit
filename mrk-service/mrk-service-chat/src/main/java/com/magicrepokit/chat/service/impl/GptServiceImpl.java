@@ -49,6 +49,8 @@ public class GptServiceImpl implements IGptService {
         if (gptToken.getStatus().equals(StatusConstant.GPT_NO_REGULAR_CREDIT_LIMIT)) {
             throw new ServiceException(ChatResultCode.GPT_NO_REGULAR_CREDIT_LIMIT);
         }
+        //获取token
+        String token = gptToken.getToken();
         //校验数据类型
         validateGptChatDTO(gptChatDTO);
         //建立连接
@@ -56,7 +58,7 @@ public class GptServiceImpl implements IGptService {
         //获取连接
         SseEmitter sseEmitter = sseEmitterComponent.SseEmitterConnect(key);
         //推送消息
-        conversationService.sendMsg(gptChatDTO.getMessageId(), gptChatDTO.getContent(), gptChatDTO.getConversationId(), gptChatDTO.getParentMessageId(), createConsumer(key));
+        conversationService.sendMsg(token,gptChatDTO.getMessageId(), gptChatDTO.getContent(), gptChatDTO.getConversationId(), gptChatDTO.getParentMessageId(), createConsumer(key));
         sseEmitterComponent.close(key);
         return sseEmitter;
     }

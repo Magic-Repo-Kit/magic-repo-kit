@@ -25,8 +25,10 @@ public class UserGptServiceImpl extends BaseServiceImpl<UserGptMapper, UserGpt> 
         );
         //用户无管理
         if(userGpt==null){
-            result.setStatus(StatusConstant.GPT_NO_ACCOUNT);
-            return result;
+//            result.setStatus(StatusConstant.GPT_NO_ACCOUNT);
+//            return result;
+            //默认体验账号
+            userGpt = createGpt(userId);
         }
 
         //初始化
@@ -40,6 +42,8 @@ public class UserGptServiceImpl extends BaseServiceImpl<UserGptMapper, UserGpt> 
             result.setStatus(StatusConstant.GPT_SELF_ACCOUNT);
             return result;
         }
+        //获取系统的
+        result.setToken(this.getSystemGpt().getOpenToken());
         //判断用户是否有额度
         if(userGpt.getRegularCreditLimit()==null||userGpt.getRegularCreditLimit()<=0){
             result.setStatus(StatusConstant.GPT_NO_REGULAR_CREDIT_LIMIT);
@@ -47,7 +51,6 @@ public class UserGptServiceImpl extends BaseServiceImpl<UserGptMapper, UserGpt> 
         }
         //判断用户是否有订阅额度
         if(userGpt.getSubscriptionCreditLimit()==null||userGpt.getSubscriptionCreditLimit()<=0){
-            result.setToken(this.getSystemGpt().getOpenToken());
             result.setStatus(StatusConstant.GPT_NO_SUBSCRIPTION_CREDIT_LIMIT);
             return result;
         }
@@ -88,12 +91,26 @@ public class UserGptServiceImpl extends BaseServiceImpl<UserGptMapper, UserGpt> 
                 return false;
             }
             //乐观锁
-             return this.update(userGpt, new LambdaQueryWrapper<UserGpt>()
+            return this.update(userGpt, new LambdaQueryWrapper<UserGpt>()
                     .eq(UserGpt::getUserId, userId)
                     .eq(UserGpt::getSubscriptionCreditLimit, userGpt.getSubscriptionCreditLimit())
             );
         }
         return true;
+    }
+
+    /**
+     * 创建用户的gpt
+     * @param userId 用户id
+     *
+     */
+    private UserGpt createGpt(Long userId) {
+        UserGpt userGpt = new UserGpt();
+        userGpt.setUserId(userId);
+        userGpt.setRegularCreditLimit(999999999);
+        userGpt.setSubscriptionCreditLimit(999999999);
+        this.save(userGpt);
+        return userGpt;
     }
 
     /**

@@ -17,12 +17,13 @@ public interface IConversationService {
 
     /**
      * 聊天对话
+     * @param token
      * @param messageId
      * @param content
      * @param conversationId
      * @param parentMessageId
      */
-    void sendMsg(String messageId, String content, String conversationId, String parentMessageId, Consumer<InputStream> streamProcessor);
+    void sendMsg(String token,String messageId, String content, String conversationId, String parentMessageId, Consumer<InputStream> streamProcessor);
 
     /**
      * 获取对话列表
