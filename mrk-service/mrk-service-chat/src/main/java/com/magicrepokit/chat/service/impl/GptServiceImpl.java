@@ -189,7 +189,6 @@ public class GptServiceImpl implements IGptService {
                     if (!line.trim().startsWith("{")||!line.trim().endsWith("}")) {
                         continue;
                     }
-                    System.out.println(line);
                     JSONObject local = JSONUtil.parseObj(line);
                     if (index == 0) {
                         end = local;
