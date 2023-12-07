@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class GptChatDTO {
     /**
-     * 会话uuid
+     * 会话uuid(新会话时为空)
      */
     private String conversationId;
 

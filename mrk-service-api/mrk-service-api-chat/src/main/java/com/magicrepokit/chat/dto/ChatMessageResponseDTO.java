@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Data
 @ToString
 public class ChatMessageResponseDTO implements Serializable {
+    @JsonProperty("message")
     private MessageDTO messageDTO;
     @JsonProperty("conversation_id")
     private String conversationId;

@@ -31,6 +31,16 @@ public enum ChatResultCode implements IResultCode {
      */
     CHAT_UUID_ERROR(20010302, "CHAT_UUID_ERROR"),
 
+    /**
+     * 聊天内容异常解析异常
+     */
+    CHAT_ERROR(20010303,"CHAT_ERROR" ),
+
+    /**
+     * 添加会话异常
+     */
+    CHAT_ADD_CONVERSATION_ERROR(20010304, "CHAT_ADD_CONVERSATION_ERROR"),
+
     //=====警告级别================
     /**
      * 没有gpt账户
@@ -39,7 +49,17 @@ public enum ChatResultCode implements IResultCode {
     /**
      * 没有普通额度
      */
-    GPT_NO_REGULAR_CREDIT_LIMIT(20010202,"GPT_NO_REGULAR_CREDIT_LIMIT");
+    GPT_NO_REGULAR_CREDIT_LIMIT(20010202,"GPT_NO_REGULAR_CREDIT_LIMIT"),
+
+    /**
+     * 消息id为空
+     */
+    MESSAGE_ID_NULL(20010203, "MESSAGE_ID_NULL"),
+
+    /**
+     * 父消息id为空
+     */
+    PARENT_MESSAGE_ID_NULL(20010204, "PARENT_MESSAGE_ID_NULL");
 
     /**
      * code编码

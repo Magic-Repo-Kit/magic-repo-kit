@@ -11,11 +11,13 @@ public class MessageDTO {
     private double createTime;
     @JsonProperty("update_time")
     private Double updateTime;
+    @JsonProperty("content")
     private ContentDTO contentDTO;
     private String status;
     @JsonProperty("end_turn")
     private String endTurn;
     private double weight;
+    @JsonProperty("metadata")
     private MetadataDTO metadataDTO;
     private String recipient;
 }
