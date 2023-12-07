@@ -27,9 +27,4 @@ public class GptConversation extends BaseEntity {
      * 会话标题
      */
     private String title;
-
-    /**
-     * 会话状态[1:未完成 2:已完成]
-     */
-    private Integer status;
 }

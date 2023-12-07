@@ -1,9 +1,14 @@
 package com.magicrepokit.chat.service;
 
 import com.magicrepokit.chat.dto.GptChatDTO;
+import com.magicrepokit.chat.dto.GptConversationPageDTO;
 import com.magicrepokit.chat.entity.GptConversation;
+import com.magicrepokit.chat.entity.GptConversationDetail;
+import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.mp.base.BaseService;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.util.List;
 
 public interface IGptConversationService extends BaseService<GptConversation> {
     /**
@@ -25,4 +30,13 @@ public interface IGptConversationService extends BaseService<GptConversation> {
      * @return 是否成功
      */
     boolean addMessage(String conversationId, String messageId, String parentMessageId, String ask, String pastLine);
+
+    PageResult<GptConversation> page(GptConversationPageDTO gptConversationPageDTO);
+
+    /**
+     * 获取会话详情
+     * @param conversationId 会话id
+     * @return 会话详情
+     */
+    List<GptConversationDetail> listConversationDetail(String conversationId);
 }

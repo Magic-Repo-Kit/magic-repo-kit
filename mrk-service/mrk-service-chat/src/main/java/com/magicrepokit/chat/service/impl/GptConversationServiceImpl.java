@@ -1,15 +1,19 @@
 package com.magicrepokit.chat.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.magicrepokit.chat.dto.GptConversationPageDTO;
 import com.magicrepokit.chat.entity.GptConversation;
 import com.magicrepokit.chat.entity.GptConversationDetail;
 import com.magicrepokit.chat.mapper.GptConversationMapper;
 import com.magicrepokit.chat.service.IGptConversationDetailService;
 import com.magicrepokit.chat.service.IGptConversationService;
+import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.mp.base.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class GptConversationServiceImpl extends BaseServiceImpl<GptConversationMapper, GptConversation> implements IGptConversationService {
@@ -42,10 +46,21 @@ public class GptConversationServiceImpl extends BaseServiceImpl<GptConversationM
         contentDetail.setParentMessageId(parentMessageId);
         contentDetail.setType(2);
         contentDetail.setMessage(pastLine);
-        askDetail.setCreateTime(now);
+        contentDetail.setCreateTime(now);
         //2.保存
         boolean askResult = gptConversationDetailService.save(askDetail);
         boolean contentResult = gptConversationDetailService.save(contentDetail);
         return askResult && contentResult;
+    }
+
+    @Override
+    public PageResult<GptConversation> page(GptConversationPageDTO gptConversationPageDTO) {
+        return selectPage(gptConversationPageDTO, new LambdaQueryWrapper<GptConversation>().eq(GptConversation::getUserId, gptConversationPageDTO.getUserId()));
+    }
+
+    @Override
+    public List<GptConversationDetail> listConversationDetail(String conversationId) {
+        return gptConversationDetailService.list(new LambdaQueryWrapper<GptConversationDetail>().eq(GptConversationDetail::getConversationId, conversationId)
+                .orderByAsc(GptConversationDetail::getCreateTime));
     }
 }

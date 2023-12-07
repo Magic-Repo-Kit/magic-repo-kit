@@ -12,13 +12,17 @@ import com.magicrepokit.chat.component.SseEmitterComponent;
 import com.magicrepokit.chat.constant.ChatResultCode;
 import com.magicrepokit.chat.constant.StatusConstant;
 import com.magicrepokit.chat.dto.*;
+import com.magicrepokit.chat.entity.GptConversation;
+import com.magicrepokit.chat.entity.GptConversationDetail;
 import com.magicrepokit.chat.service.IConversationService;
 import com.magicrepokit.chat.service.IGptConversationService;
 import com.magicrepokit.chat.service.IGptService;
 import com.magicrepokit.chat.service.IUserGptService;
+import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.common.utils.AuthUtil;
 import com.magicrepokit.jwt.entity.MRKUser;
 import com.magicrepokit.log.exceotion.ServiceException;
+import com.magicrepokit.mp.base.PageParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -70,6 +74,26 @@ public class GptServiceImpl implements IGptService {
         return sseEmitter;
     }
 
+    @Override
+    public PageResult<GptConversation> listConversationByPage(PageParam pageParam) {
+        //获取用户信息
+        MRKUser user = AuthUtil.getUser();
+        if (user == null) {
+            throw new ServiceException(ChatResultCode.NOT_AUTHORIZED);
+        }
+        GptConversationPageDTO gptConversationPageDTO = new GptConversationPageDTO();
+        gptConversationPageDTO.setUserId(user.getUserId());
+        gptConversationPageDTO.setPageNo(pageParam.getPageNo());
+        gptConversationPageDTO.setPageSize(pageParam.getPageSize());
+        gptConversationPageDTO.setPageNo(pageParam.getPageNo());
+        return gptConversationService.page(gptConversationPageDTO);
+    }
+
+    @Override
+    public List<GptConversationDetail> listConversationDetail(String conversationId) {
+        return gptConversationService.listConversationDetail(conversationId);
+    }
+
     /**
      * 校验数据
      *
@@ -98,6 +122,11 @@ public class GptServiceImpl implements IGptService {
         }
     }
 
+    /**
+     * 检测是否为uuid
+     * @param uuid uuid
+     * @return 是否为uuid
+     */
     private Boolean checkIsUUID(String uuid) {
         try {
             UUID.fromString(uuid);
