@@ -1,4 +1,4 @@
-package com.magicrepokit.mp.utils;
+package com.magicrepokit.mb.utils;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.magicrepokit.mp.base.PageParam;
-import com.magicrepokit.mp.base.SortingField;
+import com.magicrepokit.mb.base.PageParam;
+import com.magicrepokit.mb.base.SortingField;
 import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;

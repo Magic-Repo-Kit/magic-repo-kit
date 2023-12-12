@@ -1,4 +1,4 @@
-package com.magicrepokit.mp.base;
+package com.magicrepokit.mb.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

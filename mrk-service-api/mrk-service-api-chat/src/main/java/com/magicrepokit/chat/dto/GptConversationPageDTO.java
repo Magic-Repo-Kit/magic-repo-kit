@@ -1,6 +1,6 @@
 package com.magicrepokit.chat.dto;
 
-import com.magicrepokit.mp.base.PageParam;
+import com.magicrepokit.mb.base.PageParam;
 import lombok.Data;
 
 @Data

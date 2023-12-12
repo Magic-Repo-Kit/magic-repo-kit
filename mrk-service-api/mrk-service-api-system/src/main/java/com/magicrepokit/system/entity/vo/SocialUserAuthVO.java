@@ -1,6 +1,6 @@
 package com.magicrepokit.system.entity.vo;
 
-import com.magicrepokit.mp.base.BaseEntity;
+import com.magicrepokit.mb.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

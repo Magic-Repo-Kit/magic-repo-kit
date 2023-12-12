@@ -1,8 +1,7 @@
 package com.magicrepokit.system.service;
 
-import com.magicrepokit.mp.base.BaseService;
+import com.magicrepokit.mb.base.BaseService;
 import com.magicrepokit.system.entity.User;
-import com.magicrepokit.system.entity.dto.UserDTO;
 import com.magicrepokit.system.entity.vo.UserInfoVO;
 
 /**

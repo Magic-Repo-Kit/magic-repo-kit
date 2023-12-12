@@ -2,7 +2,7 @@ package com.magicrepokit.chat.service;
 
 import com.magicrepokit.chat.dto.GptTokenGetDTO;
 import com.magicrepokit.chat.entity.UserGpt;
-import com.magicrepokit.mp.base.BaseService;
+import com.magicrepokit.mb.base.BaseService;
 
 public interface IUserGptService extends BaseService<UserGpt> {
     /**

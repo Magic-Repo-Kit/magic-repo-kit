@@ -1,11 +1,10 @@
 package com.magicrepokit.system.service.impl;
 
 import cn.hutool.core.lang.UUID;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import cn.hutool.json.JSONUtil;
 import com.magicrepokit.log.exceotion.ServiceException;
-import com.magicrepokit.mp.base.BaseServiceImpl;
+import com.magicrepokit.mb.base.BaseServiceImpl;
 import com.magicrepokit.system.constant.SocialTypeEnum;
 import com.magicrepokit.social.factory.MRKAuthRequestFactory;
 import com.magicrepokit.system.constant.SystemResultCode;

@@ -8,7 +8,7 @@ import com.magicrepokit.chat.mapper.GptConversationMapper;
 import com.magicrepokit.chat.service.IGptConversationDetailService;
 import com.magicrepokit.chat.service.IGptConversationService;
 import com.magicrepokit.common.api.PageResult;
-import com.magicrepokit.mp.base.BaseServiceImpl;
+import com.magicrepokit.mb.base.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

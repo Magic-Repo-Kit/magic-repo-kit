@@ -1,9 +1,8 @@
 package com.magicrepokit.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.magicrepokit.mp.base.BaseEntity;
+import com.magicrepokit.mb.base.BaseEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;

@@ -2,7 +2,7 @@ package com.magicrepokit.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.magicrepokit.log.exceotion.ServiceException;
-import com.magicrepokit.mp.base.BaseServiceImpl;
+import com.magicrepokit.mb.base.BaseServiceImpl;
 import com.magicrepokit.system.build.IBuildUserService;
 import com.magicrepokit.system.constant.SystemResultCode;
 import com.magicrepokit.system.entity.User;

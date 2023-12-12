@@ -1,4 +1,4 @@
-package com.magicrepokit.mp.base;
+package com.magicrepokit.mb.base;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

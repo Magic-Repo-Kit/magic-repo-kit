@@ -1,12 +1,10 @@
 package com.magicrepokit.chat.service;
 
-import com.magicrepokit.chat.dto.GptChatDTO;
 import com.magicrepokit.chat.dto.GptConversationPageDTO;
 import com.magicrepokit.chat.entity.GptConversation;
 import com.magicrepokit.chat.entity.GptConversationDetail;
 import com.magicrepokit.common.api.PageResult;
-import com.magicrepokit.mp.base.BaseService;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import com.magicrepokit.mb.base.BaseService;
 
 import java.util.List;
 

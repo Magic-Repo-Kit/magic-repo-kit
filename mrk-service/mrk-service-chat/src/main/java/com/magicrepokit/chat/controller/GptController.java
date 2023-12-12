@@ -1,14 +1,12 @@
 package com.magicrepokit.chat.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.magicrepokit.chat.dto.GptChatDTO;
-import com.magicrepokit.chat.dto.GptConversationPageDTO;
 import com.magicrepokit.chat.entity.GptConversation;
 import com.magicrepokit.chat.entity.GptConversationDetail;
 import com.magicrepokit.chat.service.IGptService;
 import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.common.api.R;
-import com.magicrepokit.mp.base.PageParam;
+import com.magicrepokit.mb.base.PageParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

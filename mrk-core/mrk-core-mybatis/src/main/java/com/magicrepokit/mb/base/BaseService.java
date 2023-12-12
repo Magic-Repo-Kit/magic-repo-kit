@@ -1,11 +1,10 @@
-package com.magicrepokit.mp.base;
+package com.magicrepokit.mb.base;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.magicrepokit.common.api.PageResult;
-import com.magicrepokit.mp.utils.MyBatisUtils;
+import com.magicrepokit.mb.utils.MyBatisUtils;
 import org.apache.ibatis.annotations.Param;
 
 /**

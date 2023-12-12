@@ -1,11 +1,9 @@
 package com.magicrepokit.chat.service.impl;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.text.UnicodeUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.magicrepokit.chat.component.SseEmitterComponent;
@@ -22,7 +20,7 @@ import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.common.utils.AuthUtil;
 import com.magicrepokit.jwt.entity.MRKUser;
 import com.magicrepokit.log.exceotion.ServiceException;
-import com.magicrepokit.mp.base.PageParam;
+import com.magicrepokit.mb.base.PageParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;

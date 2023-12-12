@@ -1,10 +1,9 @@
 package com.magicrepokit.chat.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.magicrepokit.mp.base.BaseEntity;
+import com.magicrepokit.mb.base.BaseEntity;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)

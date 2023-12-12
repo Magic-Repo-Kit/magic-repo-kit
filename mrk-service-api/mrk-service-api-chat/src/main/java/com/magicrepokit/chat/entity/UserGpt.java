@@ -1,7 +1,7 @@
 package com.magicrepokit.chat.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.magicrepokit.mp.base.BaseEntity;
+import com.magicrepokit.mb.base.BaseEntity;
 import lombok.*;
 
 

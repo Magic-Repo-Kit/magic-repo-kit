@@ -3,7 +3,7 @@ package com.magicrepokit.system.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.magicrepokit.mp.base.BaseEntity;
+import com.magicrepokit.mb.base.BaseEntity;
 import lombok.*;
 
 

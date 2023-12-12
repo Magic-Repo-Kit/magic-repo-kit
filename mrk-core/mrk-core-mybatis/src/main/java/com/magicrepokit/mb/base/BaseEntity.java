@@ -1,7 +1,6 @@
-package com.magicrepokit.mp.base;
+package com.magicrepokit.mb.base;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -26,6 +25,7 @@ public class BaseEntity implements Serializable {
      * 创建人
      */
     @JsonSerialize(using = ToStringSerializer.class)
+    @TableField(fill = FieldFill.INSERT)
     private Long createUser;
 
 
@@ -33,22 +33,27 @@ public class BaseEntity implements Serializable {
      * 创建时间
      */
     @JsonFormat(pattern = DateUtil.PATTERN_DATETIME)
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**
      * 更新人
      */
     @JsonSerialize(using = ToStringSerializer.class)
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateUser;
 
     /**
      * 更新时间
      */
     @JsonFormat(pattern = DateUtil.PATTERN_DATETIME)
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     /**
      * 状态[0:未删除,1:删除]
      */
+    @TableLogic(delval = "1", value = "0")
+    @TableField(fill = FieldFill.INSERT)
     private Integer deleteFlag;
 }
