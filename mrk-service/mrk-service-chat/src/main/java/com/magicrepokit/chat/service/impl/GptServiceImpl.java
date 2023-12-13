@@ -21,6 +21,7 @@ import com.magicrepokit.common.utils.AuthUtil;
 import com.magicrepokit.jwt.entity.MRKUser;
 import com.magicrepokit.log.exceotion.ServiceException;
 import com.magicrepokit.mb.base.PageParam;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -33,15 +34,12 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @Service
+@AllArgsConstructor
 public class GptServiceImpl implements IGptService {
-    @Autowired
-    private SseEmitterComponent sseEmitterComponent;
-    @Autowired
-    private IConversationService conversationService;
-    @Autowired
-    private IUserGptService userGptService;
-    @Autowired
-    private IGptConversationService gptConversationService;
+    private final SseEmitterComponent sseEmitterComponent;
+    private final IConversationService conversationService;
+    private final IUserGptService userGptService;
+    private final IGptConversationService gptConversationService;
 
     @Override
     public SseEmitter chat(GptChatDTO gptChatDTO) {
@@ -90,6 +88,11 @@ public class GptServiceImpl implements IGptService {
     @Override
     public List<GptConversationDetail> listConversationDetail(String conversationId) {
         return gptConversationService.listConversationDetail(conversationId);
+    }
+
+    @Override
+    public PageResult<GptConversationDetail> listConversationDetailByPage(PageParam pageParam, String conversationId) {
+        return null;
     }
 
     /**

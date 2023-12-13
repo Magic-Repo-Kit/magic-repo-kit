@@ -7,9 +7,11 @@ import com.magicrepokit.chat.entity.UserGpt;
 import com.magicrepokit.chat.mapper.UserGptMapper;
 import com.magicrepokit.chat.service.IUserGptService;
 import com.magicrepokit.mb.base.BaseServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class UserGptServiceImpl extends BaseServiceImpl<UserGptMapper, UserGpt> implements IUserGptService {
     /**
      * 获取用户的gpt token

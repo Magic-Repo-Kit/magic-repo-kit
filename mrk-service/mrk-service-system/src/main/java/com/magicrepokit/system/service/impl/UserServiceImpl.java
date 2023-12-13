@@ -9,13 +9,14 @@ import com.magicrepokit.system.entity.User;
 import com.magicrepokit.system.mapper.UserMapper;
 import com.magicrepokit.system.service.IUserService;
 import com.magicrepokit.system.entity.vo.UserInfoVO;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implements IUserService {
-    @Autowired
     private IBuildUserService userBuild;
 
     /**

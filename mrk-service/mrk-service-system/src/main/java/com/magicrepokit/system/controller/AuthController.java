@@ -5,6 +5,7 @@ import com.magicrepokit.system.entity.dto.AuthLoginDTO;
 import com.magicrepokit.system.entity.dto.AuthSocialLoginDTO;
 import com.magicrepokit.system.entity.vo.AuthTokenVO;
 import com.magicrepokit.system.service.IAuthService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +19,8 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("auth")
+@AllArgsConstructor
 public class AuthController {
-    @Autowired
     private IAuthService authService;
 
 

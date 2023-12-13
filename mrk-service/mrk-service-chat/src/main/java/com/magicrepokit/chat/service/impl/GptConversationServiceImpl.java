@@ -9,6 +9,7 @@ import com.magicrepokit.chat.service.IGptConversationDetailService;
 import com.magicrepokit.chat.service.IGptConversationService;
 import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.mb.base.BaseServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class GptConversationServiceImpl extends BaseServiceImpl<GptConversationMapper, GptConversation> implements IGptConversationService {
-    @Autowired
-    private IGptConversationDetailService gptConversationDetailService;
+    private final IGptConversationDetailService gptConversationDetailService;
     @Override
     public boolean addConversation(Long userId, String conversationId, String title) {
         GptConversation gptConversation = new GptConversation();
@@ -55,7 +56,7 @@ public class GptConversationServiceImpl extends BaseServiceImpl<GptConversationM
 
     @Override
     public PageResult<GptConversation> page(GptConversationPageDTO gptConversationPageDTO) {
-        return selectPage(gptConversationPageDTO, new LambdaQueryWrapper<GptConversation>().eq(GptConversation::getUserId, gptConversationPageDTO.getUserId()));
+        return selectPage(gptConversationPageDTO, new LambdaQueryWrapper<GptConversation>().eq(GptConversation::getUserId, gptConversationPageDTO.getUserId()).orderByDesc(GptConversation::getCreateTime));
     }
 
     @Override

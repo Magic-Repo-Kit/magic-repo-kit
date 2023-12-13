@@ -21,6 +21,7 @@ import com.xingyuv.jushauth.model.AuthCallback;
 import com.xingyuv.jushauth.model.AuthResponse;
 import com.xingyuv.jushauth.model.AuthUser;
 import com.xingyuv.jushauth.request.AuthRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,15 +33,11 @@ import java.util.Arrays;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class SocialUserServiceImpl extends BaseServiceImpl<SocialUserMapper, SocialUser> implements ISocialUserService {
-    @Autowired
-    private SocialUserMapper socialUserMapper;
-    @Autowired
-    private MRKAuthRequestFactory mrkAuthRequestFactory;
-    @Autowired
-    private SocialUserBindMapper socialUserBindMapper;
-    @Autowired
-    private IUserService userService;
+    private final MRKAuthRequestFactory mrkAuthRequestFactory;
+    private final SocialUserBindMapper socialUserBindMapper;
+    private final IUserService userService;
 
     /**
      * 获取社交账户信息
@@ -90,11 +87,11 @@ public class SocialUserServiceImpl extends BaseServiceImpl<SocialUserMapper, Soc
     @Transactional
     public SocialUser getSocialUser(Integer type, String code, String state) {
         //1.从数据库中获取
-        SocialUser socialUser = socialUserMapper.selectByTypeAndCodeAndCode(type, code, state);
+        SocialUser socialUser = baseMapper.selectByTypeAndCodeAndCode(type, code, state);
         if(socialUser==null){
             //2.三方平台获取
             AuthUser authUser = authUser(type, code, state);
-            socialUser = socialUserMapper.selectByOpenid(authUser.getUuid());
+            socialUser = baseMapper.selectByOpenid(authUser.getUuid());
             if(socialUser==null){
                 socialUser = new SocialUser();
             }
@@ -102,9 +99,9 @@ public class SocialUserServiceImpl extends BaseServiceImpl<SocialUserMapper, Soc
                     .setOpenid(authUser.getUuid()).setToken(authUser.getToken().getAccessToken()).setUsername(authUser.getUsername())
                     .setNickName(authUser.getNickname()).setAvatar(authUser.getAvatar());
             if(socialUser.getId()==null){
-                socialUserMapper.insert(socialUser);
+                baseMapper.insert(socialUser);
             }else{
-                socialUserMapper.updateById(socialUser);
+                baseMapper.updateById(socialUser);
             }
         }
         return socialUser;

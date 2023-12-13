@@ -7,7 +7,7 @@ import com.magicrepokit.common.api.R;
 import com.magicrepokit.common.utils.*;
 import com.magicrepokit.jwt.utils.JWTUtil;
 import com.magicrepokit.redis.utils.MRKRedisUtils;
-import com.magicrepokit.system.feign.SystemClient;
+import com.magicrepokit.system.feign.ISystemClient;
 import com.magicrepokit.system.entity.vo.UserInfoVO;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 @Service
 public class MRKUserDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    private SystemClient systemClient;
+    private ISystemClient ISystemClient;
     @Autowired
     private MRKRedisUtils mrkRedisUtils;
 
@@ -57,7 +57,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
         judgeFail(account);
 
         //查询数据库
-        R<UserInfoVO> result = systemClient.userInfo(account);
+        R<UserInfoVO> result = ISystemClient.userInfo(account);
         if (result.isSuccess()) {
             UserInfoVO userInfoVO = result.getData();
             if(ObjectUtil.isEmpty(userInfoVO)||ObjectUtil.isEmpty(userInfoVO.getUser())||(grantType.equals(MRKAuthConstant.PASSWORD)&&!BCrypt.checkpw(password, userInfoVO.getUser().getPassword()))){

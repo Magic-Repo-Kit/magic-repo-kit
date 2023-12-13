@@ -28,4 +28,6 @@ public interface IGptService {
      * @return
      */
     List<GptConversationDetail> listConversationDetail(String conversationId);
+
+    PageResult<GptConversationDetail> listConversationDetailByPage(PageParam pageParam, String conversationId);
 }

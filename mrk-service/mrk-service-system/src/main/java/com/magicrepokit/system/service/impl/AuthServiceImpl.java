@@ -25,6 +25,8 @@ import com.magicrepokit.system.entity.vo.UserInfoVO;
 import com.xingyuv.jushauth.request.AuthRequest;
 import com.xingyuv.jushauth.utils.AuthStateUtils;
 import io.jsonwebtoken.Claims;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,21 +51,17 @@ import java.util.Map;
  */
 @Service
 @Slf4j
+@AllArgsConstructor
 public class AuthServiceImpl implements IAuthService {
-    @Autowired
-    private IUserService userService;
-    @Autowired
-    private LoadBalancerClient loadBalancerClient;
-    @Autowired
-    private MRKAuthRequestFactory mrkAuthRequestFactory;
-    @Autowired
-    private ISocialUserService socialUserService;
-    @Autowired
-    private RestTemplate restTemplate;
+    private final IUserService userService;
+    private final LoadBalancerClient loadBalancerClient;
+    private final MRKAuthRequestFactory mrkAuthRequestFactory;
+    private final ISocialUserService socialUserService;
+    private final RestTemplate restTemplate;
     @Value("${mrk.auth.local.client-id}")
-    private String clientId;
+    private final String clientId = null;
     @Value("${mrk.auth.local.client-secret}")
-    private String clientSecret;
+    private final String clientSecret = null;
 
     /**
      *  登录

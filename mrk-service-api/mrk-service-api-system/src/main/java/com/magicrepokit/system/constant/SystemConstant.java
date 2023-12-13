@@ -9,5 +9,5 @@ public interface SystemConstant {
     String OAUTH_TOKEN_URL = "/oauth/token";
 
     //当前服务名
-    String APPLICATION_USER_NAME = "mrk-system";
+    String APPLICATION_NAME = "mrk-system";
 }

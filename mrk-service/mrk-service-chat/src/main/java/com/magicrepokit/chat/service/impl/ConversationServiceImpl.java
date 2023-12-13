@@ -11,6 +11,7 @@ import com.magicrepokit.chat.dto.ChatMessageResponseDTO;
 import com.magicrepokit.chat.service.IConversationService;
 import com.magicrepokit.common.utils.WebUtil;
 import com.magicrepokit.log.exceotion.ServiceException;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -28,7 +29,9 @@ import java.util.function.Consumer;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class ConversationServiceImpl implements IConversationService {
+    private final RestTemplate restTemplate;
     private static final String AUTH_BEARER = "Bearer";
 
     private static final String APPLICATION_JSON = "application/json";
@@ -37,8 +40,7 @@ public class ConversationServiceImpl implements IConversationService {
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
     private static String token;
 
-    @Autowired
-    private RestTemplate restTemplate;
+
 
     private void setToken(String token){
         ConversationServiceImpl.token = token;

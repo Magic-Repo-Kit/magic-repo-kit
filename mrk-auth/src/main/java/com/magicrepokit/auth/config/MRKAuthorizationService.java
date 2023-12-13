@@ -3,11 +3,9 @@ package com.magicrepokit.auth.config;
 import com.magicrepokit.auth.constant.MRKAuthConstant;
 import com.magicrepokit.auth.granter.MRKTokenGranter;
 import com.magicrepokit.auth.service.MRKClientDetailsServiceImpl;
-import com.magicrepokit.auth.support.MRKJwtTokenEnhancer;
 import com.magicrepokit.jwt.properties.JWTProperties;
-import com.magicrepokit.system.feign.SystemClient;
+import com.magicrepokit.system.feign.ISystemClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,13 +20,11 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
-import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.*;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -58,7 +54,7 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
     @Autowired
     private JWTProperties jwtProperties;
     @Autowired
-    private SystemClient systemClient;
+    private ISystemClient ISystemClient;
     @Autowired
     private MRKOAuthRequestFactory mrkoAuthRequestFactory;
     /**
@@ -85,7 +81,7 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         //获取自定义tokenGranter
-        TokenGranter tokenGranter = MRKTokenGranter.getTokenGranter(authenticationManager, endpoints, systemClient);
+        TokenGranter tokenGranter = MRKTokenGranter.getTokenGranter(authenticationManager, endpoints, ISystemClient);
         //令牌增强器
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
         List<TokenEnhancer> enhancerList = new ArrayList<>();

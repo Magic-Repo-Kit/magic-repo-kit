@@ -7,7 +7,7 @@ import com.magicrepokit.system.constant.SocialTypeEnum;
 import com.magicrepokit.system.entity.dto.AuthSocialLoginDTO;
 import com.magicrepokit.system.entity.vo.SocialUserAuthVO;
 import com.magicrepokit.system.entity.vo.UserInfoVO;
-import com.magicrepokit.system.feign.SystemClient;
+import com.magicrepokit.system.feign.ISystemClient;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,12 +23,12 @@ import java.util.Map;
 
 public class SocialTokenGranter extends AbstractTokenGranter {
     private static final String GRANT_TYPE = "social";
-    private final SystemClient systemClient;
+    private final ISystemClient ISystemClient;
 
 
-    protected SocialTokenGranter(AuthorizationServerTokenServices tokenServices, ClientDetailsService clientDetailsService, OAuth2RequestFactory requestFactory,SystemClient systemClient) {
+    protected SocialTokenGranter(AuthorizationServerTokenServices tokenServices, ClientDetailsService clientDetailsService, OAuth2RequestFactory requestFactory, ISystemClient ISystemClient) {
         super(tokenServices, clientDetailsService, requestFactory, GRANT_TYPE);
-        this.systemClient = systemClient;
+        this.ISystemClient = ISystemClient;
     }
 
     @Override
@@ -46,12 +46,12 @@ public class SocialTokenGranter extends AbstractTokenGranter {
         String state = parameters.get("state");
         //获取账户平台绑定信息
         AuthSocialLoginDTO authSocialLoginDTO = new AuthSocialLoginDTO(socialTypeEnum.getType(),code,state);
-        R<SocialUserAuthVO> socialUserAuthVOR = systemClient.authSocialUser(authSocialLoginDTO);
+        R<SocialUserAuthVO> socialUserAuthVOR = ISystemClient.authSocialUser(authSocialLoginDTO);
         UserInfoVO userInfoVO = null;
         if(socialUserAuthVOR.isSuccess()){
             SocialUserAuthVO socialUserAuthVO = socialUserAuthVOR.getData();
             if(socialUserAuthVO!=null){
-                R<UserInfoVO> userInfoVOR = systemClient.userInfo(socialUserAuthVO.getUserId());
+                R<UserInfoVO> userInfoVOR = ISystemClient.userInfo(socialUserAuthVO.getUserId());
                 if(userInfoVOR.isSuccess()){
                     userInfoVO = userInfoVOR.getData();
                 }
