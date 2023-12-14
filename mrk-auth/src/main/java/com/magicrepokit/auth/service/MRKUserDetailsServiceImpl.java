@@ -8,7 +8,7 @@ import com.magicrepokit.common.utils.*;
 import com.magicrepokit.jwt.utils.JWTUtil;
 import com.magicrepokit.redis.utils.MRKRedisUtils;
 import com.magicrepokit.system.feign.ISystemClient;
-import com.magicrepokit.system.entity.vo.UserInfoVO;
+import com.magicrepokit.system.vo.user.UserInfoVO;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

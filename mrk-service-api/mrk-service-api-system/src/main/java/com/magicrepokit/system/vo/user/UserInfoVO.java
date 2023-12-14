@@ -1,6 +1,6 @@
-package com.magicrepokit.system.entity.vo;
+package com.magicrepokit.system.vo.user;
 
-import com.magicrepokit.system.entity.User;
+import com.magicrepokit.system.entity.user.User;
 import lombok.Data;
 
 import java.io.Serializable;

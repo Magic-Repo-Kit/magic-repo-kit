@@ -1,6 +1,6 @@
-package com.magicrepokit.system.entity.dto;
+package com.magicrepokit.system.dto.user;
 
-import com.magicrepokit.system.entity.User;
+import com.magicrepokit.system.entity.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

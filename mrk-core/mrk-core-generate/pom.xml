@@ -12,7 +12,7 @@
     <artifactId>mrk-core-generate</artifactId>
     <description>代码自动生成器</description>
     <name>${project.artifactId}</name>
-    <version>${mrk.project.version}</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <dependencies>

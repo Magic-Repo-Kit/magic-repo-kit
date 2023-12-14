@@ -1,4 +1,4 @@
-package com.magicrepokit.system.entity;
+package com.magicrepokit.system.entity.user;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;

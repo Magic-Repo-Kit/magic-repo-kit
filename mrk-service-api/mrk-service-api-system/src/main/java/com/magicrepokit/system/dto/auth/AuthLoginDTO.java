@@ -1,4 +1,4 @@
-package com.magicrepokit.system.entity.dto;
+package com.magicrepokit.system.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,8 +1,8 @@
 package com.magicrepokit.system.service;
 
 import com.magicrepokit.mb.base.BaseService;
-import com.magicrepokit.system.entity.User;
-import com.magicrepokit.system.entity.vo.UserInfoVO;
+import com.magicrepokit.system.entity.user.User;
+import com.magicrepokit.system.vo.user.UserInfoVO;
 
 /**
  * user服务类

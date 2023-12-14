@@ -8,7 +8,7 @@
     </parent>
     <artifactId>mrk-service-api-chat</artifactId>
     <name>${project.artifactId}</name>
-    <version>${mrk.project.version}</version>
+    <version>1.0.0</version>
     <description>MagicRepoKit聊天api</description>
     <packaging>jar</packaging>
 </project>

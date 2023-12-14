@@ -1,6 +1,6 @@
 package com.magicrepokit.auth.service;
 
-import com.magicrepokit.system.entity.vo.UserInfoVO;
+import com.magicrepokit.system.vo.user.UserInfoVO;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;

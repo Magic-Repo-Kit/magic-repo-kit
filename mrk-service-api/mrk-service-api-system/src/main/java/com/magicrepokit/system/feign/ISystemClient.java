@@ -2,9 +2,9 @@ package com.magicrepokit.system.feign;
 
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.system.constant.SystemConstant;
-import com.magicrepokit.system.entity.dto.AuthSocialLoginDTO;
-import com.magicrepokit.system.entity.vo.SocialUserAuthVO;
-import com.magicrepokit.system.entity.vo.UserInfoVO;
+import com.magicrepokit.system.dto.auth.AuthSocialLoginDTO;
+import com.magicrepokit.system.vo.auth.SocialUserAuthVO;
+import com.magicrepokit.system.vo.user.UserInfoVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

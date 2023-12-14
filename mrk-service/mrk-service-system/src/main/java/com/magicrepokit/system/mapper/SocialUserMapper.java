@@ -2,7 +2,7 @@ package com.magicrepokit.system.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.magicrepokit.system.entity.SocialUser;
+import com.magicrepokit.system.entity.social.SocialUser;
 
 public interface SocialUserMapper extends BaseMapper<SocialUser> {
     default SocialUser selectByTypeAndCodeAndCode(Integer type,String code,String state){

@@ -1,8 +1,8 @@
 package com.magicrepokit.system.service;
 
-import com.magicrepokit.system.entity.dto.AuthLoginDTO;
-import com.magicrepokit.system.entity.dto.AuthSocialLoginDTO;
-import com.magicrepokit.system.entity.vo.AuthTokenVO;
+import com.magicrepokit.system.dto.auth.AuthLoginDTO;
+import com.magicrepokit.system.dto.auth.AuthSocialLoginDTO;
+import com.magicrepokit.system.vo.auth.AuthTokenVO;
 
 import javax.validation.Valid;
 

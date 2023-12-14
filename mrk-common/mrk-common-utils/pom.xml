@@ -21,13 +21,11 @@
         <dependency>
             <groupId>org.auoralpixel</groupId>
             <artifactId>mrk-core-i18n</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.auoralpixel</groupId>
             <artifactId>mrk-core-jwt</artifactId>
-            <version>1.0.0</version>
         </dependency>
     </dependencies>
 

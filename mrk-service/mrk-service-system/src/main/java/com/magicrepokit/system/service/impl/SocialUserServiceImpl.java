@@ -6,13 +6,12 @@ import cn.hutool.json.JSONUtil;
 import com.magicrepokit.log.exceotion.ServiceException;
 import com.magicrepokit.mb.base.BaseServiceImpl;
 import com.magicrepokit.system.constant.SocialTypeEnum;
-import com.magicrepokit.social.factory.MRKAuthRequestFactory;
 import com.magicrepokit.system.constant.SystemResultCode;
 import com.magicrepokit.system.constant.SystemUserStatus;
-import com.magicrepokit.system.entity.SocialUser;
-import com.magicrepokit.system.entity.SocialUserBind;
-import com.magicrepokit.system.entity.User;
-import com.magicrepokit.system.entity.vo.SocialUserAuthVO;
+import com.magicrepokit.system.entity.social.SocialUser;
+import com.magicrepokit.system.entity.social.SocialUserBind;
+import com.magicrepokit.system.entity.user.User;
+import com.magicrepokit.system.vo.auth.SocialUserAuthVO;
 import com.magicrepokit.system.mapper.SocialUserBindMapper;
 import com.magicrepokit.system.mapper.SocialUserMapper;
 import com.magicrepokit.system.service.ISocialUserService;
@@ -21,9 +20,9 @@ import com.xingyuv.jushauth.model.AuthCallback;
 import com.xingyuv.jushauth.model.AuthResponse;
 import com.xingyuv.jushauth.model.AuthUser;
 import com.xingyuv.jushauth.request.AuthRequest;
+import com.xingyuv.justauth.AuthRequestFactory;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +34,7 @@ import java.util.Arrays;
 @Slf4j
 @AllArgsConstructor
 public class SocialUserServiceImpl extends BaseServiceImpl<SocialUserMapper, SocialUser> implements ISocialUserService {
-    private final MRKAuthRequestFactory mrkAuthRequestFactory;
+    private final AuthRequestFactory authRequestFactory;
     private final SocialUserBindMapper socialUserBindMapper;
     private final IUserService userService;
 
@@ -120,7 +119,7 @@ public class SocialUserServiceImpl extends BaseServiceImpl<SocialUserMapper, Soc
         if(socialTypeEnum==null){
             throw new ServiceException(SystemResultCode.NOT_FOUND_SOCIAL_TYPE);
         }
-        AuthRequest authRequest = mrkAuthRequestFactory.get(socialTypeEnum.getSource());
+        AuthRequest authRequest = authRequestFactory.get(socialTypeEnum.getSource());
         AuthCallback authCallback = AuthCallback.builder().code(code).state(state).build();
         AuthResponse<?> authResponse = authRequest.login(authCallback);
         log.info("[getAuthUser][请求社交平台 type({}) request({}) response({})]", type,

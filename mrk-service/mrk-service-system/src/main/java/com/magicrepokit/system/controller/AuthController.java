@@ -1,12 +1,11 @@
 package com.magicrepokit.system.controller;
 
 import com.magicrepokit.common.api.R;
-import com.magicrepokit.system.entity.dto.AuthLoginDTO;
-import com.magicrepokit.system.entity.dto.AuthSocialLoginDTO;
-import com.magicrepokit.system.entity.vo.AuthTokenVO;
+import com.magicrepokit.system.dto.auth.AuthLoginDTO;
+import com.magicrepokit.system.dto.auth.AuthSocialLoginDTO;
+import com.magicrepokit.system.vo.auth.AuthTokenVO;
 import com.magicrepokit.system.service.IAuthService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

@@ -1,4 +1,4 @@
-package com.magicrepokit.system.entity.vo;
+package com.magicrepokit.system.vo.auth;
 
 import com.magicrepokit.mb.base.BaseEntity;
 import lombok.AllArgsConstructor;

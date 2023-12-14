@@ -5,12 +5,11 @@ import com.magicrepokit.log.exceotion.ServiceException;
 import com.magicrepokit.mb.base.BaseServiceImpl;
 import com.magicrepokit.system.build.IBuildUserService;
 import com.magicrepokit.system.constant.SystemResultCode;
-import com.magicrepokit.system.entity.User;
+import com.magicrepokit.system.entity.user.User;
 import com.magicrepokit.system.mapper.UserMapper;
 import com.magicrepokit.system.service.IUserService;
-import com.magicrepokit.system.entity.vo.UserInfoVO;
+import com.magicrepokit.system.vo.user.UserInfoVO;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 

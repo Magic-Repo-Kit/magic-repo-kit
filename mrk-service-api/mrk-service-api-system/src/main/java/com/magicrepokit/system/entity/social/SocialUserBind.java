@@ -1,4 +1,4 @@
-package com.magicrepokit.system.entity;
+package com.magicrepokit.system.entity.social;
 
 
 import com.baomidou.mybatisplus.annotation.TableName;
