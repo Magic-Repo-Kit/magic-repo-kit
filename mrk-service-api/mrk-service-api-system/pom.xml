@@ -8,7 +8,7 @@
     </parent>
     <artifactId>mrk-service-api-system</artifactId>
     <name>${project.artifactId}</name>
-    <version>${mrk.project.version}</version>
+    <version>1.0.0</version>
     <description>MagicRepoKit用户服务api</description>
     <packaging>jar</packaging>
 </project>

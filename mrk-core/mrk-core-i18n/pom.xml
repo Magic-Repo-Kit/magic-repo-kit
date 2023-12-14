@@ -8,7 +8,7 @@
     </parent>
     <artifactId>mrk-core-i18n</artifactId>
     <name>${project.artifactId}</name>
-    <version>${mrk.project.version}</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <dependencies>

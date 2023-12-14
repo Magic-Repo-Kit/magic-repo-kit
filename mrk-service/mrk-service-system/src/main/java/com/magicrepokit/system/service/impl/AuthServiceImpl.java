@@ -9,26 +9,22 @@ import com.magicrepokit.jwt.constant.JWTConstant;
 import com.magicrepokit.jwt.utils.JWTUtil;
 import com.magicrepokit.log.exceotion.ServiceException;
 import com.magicrepokit.system.constant.SocialTypeEnum;
-import com.magicrepokit.social.factory.MRKAuthRequestFactory;
 import com.magicrepokit.system.constant.SystemConstant;
 import com.magicrepokit.system.constant.SystemResultCode;
 import com.magicrepokit.system.constant.SystemUserStatus;
-import com.magicrepokit.system.entity.User;
-import com.magicrepokit.system.entity.dto.AuthLoginDTO;
-import com.magicrepokit.system.entity.dto.AuthSocialLoginDTO;
-import com.magicrepokit.system.entity.vo.AuthTokenVO;
-import com.magicrepokit.system.entity.vo.SocialUserAuthVO;
+import com.magicrepokit.system.dto.auth.AuthLoginDTO;
+import com.magicrepokit.system.dto.auth.AuthSocialLoginDTO;
+import com.magicrepokit.system.vo.auth.AuthTokenVO;
 import com.magicrepokit.system.service.IAuthService;
 import com.magicrepokit.system.service.ISocialUserService;
 import com.magicrepokit.system.service.IUserService;
-import com.magicrepokit.system.entity.vo.UserInfoVO;
+import com.magicrepokit.system.vo.user.UserInfoVO;
 import com.xingyuv.jushauth.request.AuthRequest;
 import com.xingyuv.jushauth.utils.AuthStateUtils;
+import com.xingyuv.justauth.AuthRequestFactory;
 import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
@@ -55,7 +51,7 @@ import java.util.Map;
 public class AuthServiceImpl implements IAuthService {
     private final IUserService userService;
     private final LoadBalancerClient loadBalancerClient;
-    private final MRKAuthRequestFactory mrkAuthRequestFactory;
+    private final AuthRequestFactory authRequestFactory;
     private final ISocialUserService socialUserService;
     private final RestTemplate restTemplate;
     @Value("${mrk.auth.local.client-id}")
@@ -113,7 +109,7 @@ public class AuthServiceImpl implements IAuthService {
             throw new ServiceException(SystemResultCode.NOT_FOUND_SOCIAL_TYPE);
         }
         // 获得对应的 AuthRequest 实现
-        AuthRequest authRequest = mrkAuthRequestFactory.get(socialTypeEnum.getSource());
+        AuthRequest authRequest = authRequestFactory.get(socialTypeEnum.getSource());
         // 生成跳转地址
         String authorizeUri = authRequest.authorize(AuthStateUtils.createState());
         return WebUtil.replaceUrlQuery(authorizeUri, "redirect_uri", redirectUri);

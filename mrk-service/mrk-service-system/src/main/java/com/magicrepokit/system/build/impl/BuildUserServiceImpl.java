@@ -2,8 +2,8 @@ package com.magicrepokit.system.build.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.magicrepokit.system.build.IBuildUserService;
-import com.magicrepokit.system.entity.User;
-import com.magicrepokit.system.entity.vo.UserInfoVO;
+import com.magicrepokit.system.entity.user.User;
+import com.magicrepokit.system.vo.user.UserInfoVO;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,7 +1,7 @@
 package com.magicrepokit.system.service;
 
-import com.magicrepokit.system.entity.SocialUser;
-import com.magicrepokit.system.entity.vo.SocialUserAuthVO;
+import com.magicrepokit.system.entity.social.SocialUser;
+import com.magicrepokit.system.vo.auth.SocialUserAuthVO;
 
 /**
  * 社交账号管理

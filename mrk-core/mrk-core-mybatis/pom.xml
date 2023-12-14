@@ -8,7 +8,7 @@
     </parent>
     <artifactId>mrk-core-mybatis</artifactId>
     <name>${project.artifactId}</name>
-    <version>${mrk.project.version}</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -23,9 +23,13 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
         <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.auoralpixel</groupId>
             <artifactId>mrk-common-utils</artifactId>
-            <version>${mrk.project.version}</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>

@@ -12,7 +12,7 @@
     <artifactId>mrk-core-log</artifactId>
     <description>全局日志管理</description>
     <name>${project.artifactId}</name>
-    <version>${mrk.project.version}</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <dependencies>

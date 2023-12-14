@@ -8,7 +8,7 @@
     </parent>
     <artifactId>mrk-service-system</artifactId>
     <name>${project.artifactId}</name>
-    <version>${mrk.project.version}</version>
+    <version>1.0.0</version>
     <description>MagicRepoKit系统服务</description>
     <packaging>jar</packaging>
 
@@ -18,74 +18,6 @@
             <groupId>org.auoralpixel</groupId>
             <artifactId>mrk-service-api-system</artifactId>
             <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-i18n</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-social</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-
-
-        <dependency>
-            <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-jwt</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <!-- springboot启动web-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!-- Nacos服务注册发现依赖 -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
-
-        <!-- mybatis依赖 -->
-        <dependency>
-            <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-mybatis</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <!-- mysql-connector-java -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-generate</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-log</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
     </dependencies>

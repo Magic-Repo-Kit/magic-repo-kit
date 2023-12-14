@@ -16,21 +16,12 @@
         <module>mrk-core-generate</module>
         <module>mrk-core-i18n</module>
         <module>mrk-core-log</module>
-        <module>mrk-core-social</module>
     </modules>
     <dependencies>
         <!--        springboot组件-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId>
         </dependency>
     </dependencies>
 </project>
