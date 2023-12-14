@@ -5,6 +5,8 @@ import com.magicrepokit.system.dto.auth.AuthLoginDTO;
 import com.magicrepokit.system.dto.auth.AuthSocialLoginDTO;
 import com.magicrepokit.system.vo.auth.AuthTokenVO;
 import com.magicrepokit.system.service.IAuthService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +21,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("auth")
 @AllArgsConstructor
+@Api(value = "登录认证接口", tags = "登录认证接口")
 public class AuthController {
     private IAuthService authService;
 
@@ -30,6 +33,7 @@ public class AuthController {
      * @return 令牌信息
      */
     @PostMapping("/login")
+    @ApiOperation(value = "用户登录", notes = "用户登录")
     public R<AuthTokenVO> Login(@RequestBody @Valid AuthLoginDTO authLoginDTO){
         return R.data(authService.login(authLoginDTO));
     }
@@ -41,6 +45,7 @@ public class AuthController {
      * @return 令牌信息
      */
     @PostMapping("/refresh-token")
+    @ApiOperation(value = "刷新token", notes = "刷新token")
     public R<AuthTokenVO> refreshToken(@RequestParam("refreshToken") String refreshToken){
         return R.data(authService.refreshToken(refreshToken));
     }
@@ -54,6 +59,7 @@ public class AuthController {
      * @return 三方请求地址
      */
     @GetMapping("/social-login-redirect")
+    @ApiOperation(value = "获得三方登录跳转地址", notes = "获得三方登录跳转地址")
     public R<String> socialLoginRedirect(@RequestParam("type") Integer type,
                                          @RequestParam("redirectUri") String redirectUri){
         return R.data(authService.socialLoginRedirect(type,redirectUri));
@@ -66,6 +72,7 @@ public class AuthController {
      * @return 令牌信息
      */
     @PostMapping("/social-login")
+    @ApiOperation(value = "三方授权码登录", notes = "三方授权码登录")
     public R<AuthTokenVO> socialLogin(@RequestBody AuthSocialLoginDTO authSocialLoginDTO){
         return R.data(authService.socialLogin(authSocialLoginDTO));
     }

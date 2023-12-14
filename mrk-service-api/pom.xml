@@ -72,6 +72,11 @@
             <artifactId>spring-boot-starter-justauth</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+        </dependency>
+
     </dependencies>
 
 
