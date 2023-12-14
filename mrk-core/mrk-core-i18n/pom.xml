@@ -34,7 +34,6 @@
         <dependency>
             <groupId>org.auoralpixel</groupId>
             <artifactId>mrk-core-redis</artifactId>
-            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>

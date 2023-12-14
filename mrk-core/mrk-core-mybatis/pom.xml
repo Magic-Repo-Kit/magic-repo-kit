@@ -29,7 +29,6 @@
         <dependency>
             <groupId>org.auoralpixel</groupId>
             <artifactId>mrk-common-utils</artifactId>
-            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>
