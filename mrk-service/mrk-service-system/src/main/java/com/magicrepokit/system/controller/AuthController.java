@@ -7,6 +7,7 @@ import com.magicrepokit.system.vo.auth.AuthTokenVO;
 import com.magicrepokit.system.service.IAuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +47,7 @@ public class AuthController {
      */
     @PostMapping("/refresh-token")
     @ApiOperation(value = "刷新token", notes = "刷新token")
-    public R<AuthTokenVO> refreshToken(@RequestParam("refreshToken") String refreshToken){
+    public R<AuthTokenVO> refreshToken(@RequestParam("refreshToken") @ApiParam(value = "刷新token",required = true) String refreshToken){
         return R.data(authService.refreshToken(refreshToken));
     }
 
@@ -60,8 +61,8 @@ public class AuthController {
      */
     @GetMapping("/social-login-redirect")
     @ApiOperation(value = "获得三方登录跳转地址", notes = "获得三方登录跳转地址")
-    public R<String> socialLoginRedirect(@RequestParam("type") Integer type,
-                                         @RequestParam("redirectUri") String redirectUri){
+    public R<String> socialLoginRedirect(@RequestParam("type") @ApiParam(value = "社交平台枚举[10：github 20:google 30:gitee]",required = true) Integer type,
+                                         @RequestParam("redirectUri") @ApiParam(value = "重定向地址") String redirectUri){
         return R.data(authService.socialLoginRedirect(type,redirectUri));
     }
 

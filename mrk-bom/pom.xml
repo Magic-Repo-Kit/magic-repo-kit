@@ -24,6 +24,11 @@
             <!-- 自定义 组件 -->
             <dependency>
                 <groupId>org.auoralpixel</groupId>
+                <artifactId>mrk-core-swagger</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.auoralpixel</groupId>
                 <artifactId>mrk-common-utils</artifactId>
                 <version>1.0.0</version>
             </dependency>
@@ -205,7 +210,6 @@
                 <artifactId>knife4j-gateway-spring-boot-starter</artifactId>
                 <version>4.3.0</version>
             </dependency>
-
 
         </dependencies>
     </dependencyManagement>

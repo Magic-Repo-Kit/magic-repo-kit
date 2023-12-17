@@ -42,25 +42,8 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 @MapperScan("com.magicrepokit.**.mapper")
 @EnableFeignClients({"com.magicrepokit"})
 @EnableCaching
-@EnableSwagger2
 public class MRKSystemApplication {
     public static void main(String[] args) {
         SpringApplication.run(MRKSystemApplication.class);
-    }
-
-    @Bean
-    public Docket docket() {
-        return new Docket(DocumentationType.OAS_30)
-                .apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage("com.magicrepokit"))
-                .paths(PathSelectors.any()).build().pathMapping("/").directModelSubstitute(LocalDate.class, String.class);
-
-    }
-
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("技术学习实践整合")
-                .description("新技术整合学习及配置案例DEMO")
-                .contact(new Contact("治功", "https://juejin.cn/user/2806404106423112", "邮箱"))
-                .version("V1.0")
-                .build();
     }
 }
