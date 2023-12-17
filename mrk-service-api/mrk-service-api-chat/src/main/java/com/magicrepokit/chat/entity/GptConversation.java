@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.magicrepokit.mb.base.BaseEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
@@ -12,18 +14,22 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Data
+@ApiModel(value = "会话列表",description = "会话列表")
 public class GptConversation extends BaseEntity {
     /**
      * 会话id
      */
+    @ApiModelProperty(value = "会话id")
     private String conversationId;
     /**
      * 用户id
      */
     @JsonSerialize(using = ToStringSerializer.class)
+    @ApiModelProperty(value = "用户id")
     private Long userId;
     /**
      * 会话标题
      */
+    @ApiModelProperty(value = "会话标题")
     private String title;
 }

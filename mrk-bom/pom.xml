@@ -24,6 +24,11 @@
             <!-- 自定义 组件 -->
             <dependency>
                 <groupId>org.auoralpixel</groupId>
+                <artifactId>mrk-core-swagger</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.auoralpixel</groupId>
                 <artifactId>mrk-common-utils</artifactId>
                 <version>1.0.0</version>
             </dependency>
@@ -193,6 +198,18 @@
                 <version>5.8.22</version>
             </dependency>
 
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-boot-starter</artifactId>
+                <version>3.0.0</version>
+            </dependency>
+
+            <!-- knife4j -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-gateway-spring-boot-starter</artifactId>
+                <version>4.3.0</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

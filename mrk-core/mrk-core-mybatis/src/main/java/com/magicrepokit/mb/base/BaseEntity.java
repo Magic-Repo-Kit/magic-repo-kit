@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.magicrepokit.common.utils.DateUtil;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 
@@ -12,6 +14,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
+@ApiModel(value = "基础实体类", description = "基础实体类")
 public class BaseEntity implements Serializable {
     /**
      * 主键id
@@ -19,6 +22,7 @@ public class BaseEntity implements Serializable {
 
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @JsonSerialize(using = ToStringSerializer.class)
+    @ApiModelProperty(value = "主键id")
     private Long id;
 
     /**
@@ -26,6 +30,7 @@ public class BaseEntity implements Serializable {
      */
     @JsonSerialize(using = ToStringSerializer.class)
     @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty(value = "创建人")
     private Long createUser;
 
 
@@ -34,6 +39,7 @@ public class BaseEntity implements Serializable {
      */
     @JsonFormat(pattern = DateUtil.PATTERN_DATETIME)
     @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 
     /**
@@ -41,6 +47,7 @@ public class BaseEntity implements Serializable {
      */
     @JsonSerialize(using = ToStringSerializer.class)
     @TableField(fill = FieldFill.INSERT_UPDATE)
+    @ApiModelProperty(value = "更新人")
     private Long updateUser;
 
     /**
@@ -48,6 +55,7 @@ public class BaseEntity implements Serializable {
      */
     @JsonFormat(pattern = DateUtil.PATTERN_DATETIME)
     @TableField(fill = FieldFill.INSERT_UPDATE)
+    @ApiModelProperty(value = "更新时间")
     private LocalDateTime updateTime;
 
     /**
@@ -55,5 +63,6 @@ public class BaseEntity implements Serializable {
      */
     @TableLogic(delval = "1", value = "0")
     @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty(value = "状态[0:未删除,1:删除]")
     private Integer deleteFlag;
 }

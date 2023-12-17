@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class SocialUserAuthVO extends BaseEntity {
     /**
      * 社交用户 openid

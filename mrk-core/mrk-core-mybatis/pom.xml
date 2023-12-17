@@ -23,12 +23,12 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>org.auoralpixel</groupId>
+            <artifactId>mrk-common-utils</artifactId>
         </dependency>
         <dependency>
             <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-common-utils</artifactId>
+            <artifactId>mrk-core-swagger</artifactId>
         </dependency>
     </dependencies>
 </project>
