@@ -39,3 +39,8 @@ mybatis-plus:
 mrk:
   token:
     sing-key: mrkmrkisapowerfulmicroservicearchitectureupgradedandoptimizedfromacommercialproject
+  langchain:
+    elastic-username: elastic
+    elastic-password: 123456
+    elastic-host: 154.204.60.125
+    elastic-port: 9200

@@ -31,6 +31,11 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER # 解决 SpringFox 与 SpringBoot 2.6.x 不兼容的问题，参见 SpringFoxHandlerProviderBeanPostProcessor 类
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
 # magicRepoKit服务配置
 mrk:
   token:
@@ -62,12 +67,6 @@ justauth:
       client-secret: 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
       redirect-uri: https://mrk.auroralpixel.world/auth
       ignore-check-redirect-uri: true
-
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-
   http-config:
     proxy:
       GITHUB:
@@ -77,4 +76,13 @@ mybatis-plus:
       GOOGLE:
         hostname: 127.0.0.1
         port: 7890
-        type: HTTP
+oss:
+  access-key: ku5ENxlbBfnVKvoPejJmC73R48dr0GnCu5htG8bk
+  secret-key: OIiBcXoyBQgMAR0BYWzrwsoHsi1_beXVE79Gp6fs
+  endpoint: s6ie5kuog.hd-bkt.clouddn.com
+  bucket-name: system
+  region: huadong
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

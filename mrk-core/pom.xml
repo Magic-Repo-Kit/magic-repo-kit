@@ -17,6 +17,8 @@
         <module>mrk-core-i18n</module>
         <module>mrk-core-log</module>
         <module>mrk-core-swagger</module>
+        <module>mrk-core-langchain</module>
+        <module>mrk-core-oss</module>
     </modules>
     <dependencies>
         <!--        springboot组件-->

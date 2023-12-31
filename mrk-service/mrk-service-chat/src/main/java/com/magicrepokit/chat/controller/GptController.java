@@ -32,7 +32,7 @@ public class GptController {
 
 
     /**
-     * gpt聊天
+     * gpt普通会话聊天
      * @param gptChatDTO
      * @return
      */
