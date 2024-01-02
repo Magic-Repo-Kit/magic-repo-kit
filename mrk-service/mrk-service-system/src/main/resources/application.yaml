@@ -77,6 +77,7 @@ justauth:
         hostname: 127.0.0.1
         port: 7890
 oss:
+  enabled: true
   access-key: ku5ENxlbBfnVKvoPejJmC73R48dr0GnCu5htG8bk
   secret-key: OIiBcXoyBQgMAR0BYWzrwsoHsi1_beXVE79Gp6fs
   endpoint: s6ie5kuog.hd-bkt.clouddn.com

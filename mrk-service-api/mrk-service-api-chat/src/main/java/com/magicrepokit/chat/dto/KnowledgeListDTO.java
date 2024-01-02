@@ -7,9 +7,9 @@ import lombok.Data;
 
 @Data
 @ApiModel(value = "知识库分页实体",description = "知识库分页")
-public class KnowledgePageDTO extends PageParam {
-    @ApiModelProperty(value = "知识库id")
-    private Long id;
+public class KnowledgeListDTO extends PageParam {
+    @ApiModelProperty(value = "知识库父id")
+    private Long parentId;
     @ApiModelProperty(value = "关键字")
     private String keywords;
 }

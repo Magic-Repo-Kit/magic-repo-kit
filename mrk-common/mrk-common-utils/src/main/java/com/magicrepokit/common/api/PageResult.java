@@ -38,9 +38,9 @@ public final class PageResult<T> implements Serializable {
         return new PageResult<>(total);
     }
 
-    public  <T> PageResult<T> convert(Function<? super T, ? extends R> mapper) {
-        List<R> collect = this.list().stream().map(mapper).collect(toList());
-        return ((IPage<R>) this).setRecords(collect);
+    public  <R> PageResult<R> convert(Function<? super T, ? extends R> mapper) {
+        List<R> collect = this.list.stream().map(mapper).collect(toList());
+        return new PageResult<>(collect, this.total);
     }
 
 }

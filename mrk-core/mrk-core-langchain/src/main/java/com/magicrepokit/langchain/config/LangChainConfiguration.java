@@ -25,6 +25,9 @@ public class LangChainConfiguration {
      */
     @Bean
     public ElasticsearchClient elasticDataOperation(ConfigProperties configProperties) {
+        if(!configProperties.getEnabled()){
+            return null;
+        }
         String elasticUrl = configProperties.getElasticHost();
         Integer elasticPort = configProperties.getElasticPort();
         if(ObjectUtil.isEmpty(configProperties.getElasticHost())||ObjectUtil.isEmpty(configProperties.getElasticPort())){

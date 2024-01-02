@@ -33,4 +33,10 @@ public class KnowledgeCreateDTO {
      */
     @ApiModelProperty(value = "级别类型[1:文件夹 2:文件]")
     private Integer type;
+
+    /**
+     * 图片url
+     */
+    @ApiModelProperty(value = "图片url[只有文件类型才有图片url]")
+    private String imageUrl;
 }

@@ -79,13 +79,11 @@
         <dependency>
             <groupId>org.auoralpixel</groupId>
             <artifactId>mrk-core-jwt</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.auoralpixel</groupId>
             <artifactId>mrk-core-redis</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <dependency>
@@ -95,6 +93,10 @@
                 <exclusion>
                     <groupId>org.auoralpixel</groupId>
                     <artifactId>mrk-core-swagger</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.auoralpixel</groupId>
+                    <artifactId>mrk-core-langchain</artifactId>
                 </exclusion>
             </exclusions>
             <version>1.0.0</version>

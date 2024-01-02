@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 @Setter
 public class ConfigProperties {
     /**
+     * 是否启用
+     */
+    private Boolean enabled=false;
+    /**
      * elasticSearch的地址
      */
     private String elasticHost;

@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-@ApiModel(value = "知识库实体",description = "知识库")
-public class KnowledgeVO {
+@ApiModel(value = "知识库分页",description = "分页")
+public class KnowledgeListVO {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty(value = "知识库id")
     private Long id;

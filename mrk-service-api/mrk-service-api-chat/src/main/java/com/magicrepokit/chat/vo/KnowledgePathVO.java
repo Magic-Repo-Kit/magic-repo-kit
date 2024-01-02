@@ -12,29 +12,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-@ApiModel(value = "知识库分页",description = "分页")
-public class KnowledgePageVO {
+@ApiModel(value = "知识库目录路径实体",description = "知识库目录路径")
+public class KnowledgePathVO {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @ApiModelProperty(value = "知识库id")
-    private Long id;
+    @ApiModelProperty(value = "知识库父级id")
+    private Long parentId;
 
     /**
      * 知识库名称
      */
-    private String name;
+    private String parentName;
 
-    /**
-     * 知识库描述
-     */
-    private String description;
-
-    /**
-     * 级别类型[1:文件夹 2:文件]
-     */
-    private Integer type;
-
-    /**
-     * 图片url
-     */
-    private String imageUrl;
 }

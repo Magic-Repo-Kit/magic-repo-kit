@@ -41,6 +41,11 @@ public enum ChatResultCode implements IResultCode {
      */
     CHAT_ADD_CONVERSATION_ERROR(20010304, "CHAT_ADD_CONVERSATION_ERROR"),
 
+    /**
+     * id不存在
+     */
+    ID_NOT_EXIST(20010305, "ID_NOT_EXIST"),
+
     //=====警告级别================
     /**
      * 没有gpt账户
@@ -61,7 +66,12 @@ public enum ChatResultCode implements IResultCode {
      */
     PARENT_MESSAGE_ID_NULL(20010204, "PARENT_MESSAGE_ID_NULL"),
 
-    PARENT_ID_NOT_EXIST(20010205, "PARENT_ID_NOT_EXIST");
+    /**
+     * 父id不存在
+     */
+    PARENT_ID_NOT_EXIST(20010205, "PARENT_ID_NOT_EXIST"),
+
+    ;
 
     /**
      * code编码
