@@ -7,9 +7,6 @@ import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "mrk_gpt_knowledge",autoResultMap = true)
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Data
 @ApiModel(value = "知识库管理表",description = "知识库管理表")
 public class Knowledge extends BaseEntity {
