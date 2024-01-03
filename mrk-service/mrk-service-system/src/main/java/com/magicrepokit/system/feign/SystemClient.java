@@ -43,8 +43,8 @@ public class SystemClient implements ISystemClient{
      * @return
      */
     @Override
-    @GetMapping(Auth_Social)
-    public R<SocialUserAuthVO> authSocialUser(@RequestBody AuthSocialLoginDTO authSocialLoginDTO) {
+    @PostMapping(Auth_Social)
+    public R<SocialUserAuthVO> authSocialUser(AuthSocialLoginDTO authSocialLoginDTO) {
         return R.data(socialUserService.authSocialUser(authSocialLoginDTO.getType(),authSocialLoginDTO.getCode(), authSocialLoginDTO.getState()));
     }
 }
