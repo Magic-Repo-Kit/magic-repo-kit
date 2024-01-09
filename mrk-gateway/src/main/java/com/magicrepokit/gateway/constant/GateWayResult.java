@@ -3,7 +3,7 @@ package com.magicrepokit.gateway.constant;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum MRKI18nEnum {
+public enum GateWayResult {
 
     NOT_FOUND_JWT("NOT_FOUND_JWT"),
 

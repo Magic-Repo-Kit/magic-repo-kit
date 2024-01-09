@@ -37,4 +37,9 @@ public class KnowledgeVO {
      * 图片url
      */
     private String imageUrl;
+
+    /**
+     * els索引名称
+     */
+    private String indexName;
 }

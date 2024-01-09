@@ -3,7 +3,9 @@ package com.magicrepokit.chat.controller;
 import com.magicrepokit.chat.dto.KnowledgeCreateDTO;
 import com.magicrepokit.chat.dto.KnowledgeListDTO;
 import com.magicrepokit.chat.dto.KnowledgeMoveDTO;
+import com.magicrepokit.chat.dto.KnowledgeProcessDTO;
 import com.magicrepokit.chat.service.IKnowledgeService;
+import com.magicrepokit.chat.vo.KnowledgeFileVO;
 import com.magicrepokit.chat.vo.KnowledgeListVO;
 import com.magicrepokit.chat.vo.KnowledgePathVO;
 import com.magicrepokit.chat.vo.KnowledgeVO;
@@ -63,5 +65,63 @@ public class KnowledgeController {
     public R<Boolean> move(@RequestBody KnowledgeMoveDTO knowledgeMoveDTO){
         return R.status(knowledgeService.move(knowledgeMoveDTO));
     }
+
+    /**
+     * 删除文件或文件夹
+     */
+    @DeleteMapping("/delete/{id}")
+    @ApiOperation(value = "删除文件或文件夹")
+    public R<Boolean> delete(@PathVariable("id") Long id){
+        return R.status(knowledgeService.delete(id));
+    }
+
+    /**
+     * 文件处理
+     */
+    @PostMapping("/process")
+    @ApiOperation(value = "文件处理")
+    public R<Boolean> process(KnowledgeProcessDTO knowledgeProcessDTO){
+        return R.status(knowledgeService.process(knowledgeProcessDTO));
+    }
+
+    /**
+     * 文件列表
+     */
+    @GetMapping("/list-file/{knowledgeId}")
+    @ApiOperation(value = "文件列表")
+    public R<List<KnowledgeFileVO>> listFile(@PathVariable("knowledgeId") Long knowledgeId){
+        return R.data(knowledgeService.listFile(knowledgeId));
+    }
+
+
+    /**
+     * 文件详情
+     */
+    @GetMapping("/detail-file/{id}")
+    @ApiOperation(value = "文件详情")
+    public R<KnowledgeFileVO> detailFile(@PathVariable("id") Long id){
+        return R.data(knowledgeService.detailFile(id));
+    }
+
+
+    /**
+     * 文件处理状态详情列表
+     */
+    @GetMapping("/list-file-status")
+    @ApiOperation(value = "文件处理状态详情列表")
+    public R<List<KnowledgeFileVO>> listFileStatus(){
+        return R.data(knowledgeService.listFileStatus());
+    }
+
+    /**
+     * 文件重新处理
+     */
+    @PostMapping("/reprocess/{knowledgeDetailId}")
+    @ApiOperation(value = "文件重新处理")
+    public R<Boolean> reprocess(@PathVariable("knowledgeDetailId") Long knowledgeDetailId){
+        return R.status(knowledgeService.reprocess(knowledgeDetailId));
+    }
+
+
 
 }

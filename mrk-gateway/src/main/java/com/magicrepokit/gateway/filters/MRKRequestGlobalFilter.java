@@ -3,12 +3,15 @@ package com.magicrepokit.gateway.filters;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.magicrepokit.gateway.constant.GateWayConstant;
-import com.magicrepokit.gateway.constant.MRKI18nEnum;
+import com.magicrepokit.gateway.constant.GateWayResult;
+import com.magicrepokit.gateway.props.AuthProperties;
+import com.magicrepokit.gateway.provider.AuthProvider;
 import com.magicrepokit.gateway.provider.ResponseProvider;
 import com.magicrepokit.jwt.constant.JWTConstant;
 import com.magicrepokit.jwt.constant.UserType;
 import com.magicrepokit.jwt.utils.JWTUtil;
 import io.jsonwebtoken.Claims;
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -17,6 +20,7 @@ import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -28,7 +32,11 @@ import java.nio.charset.StandardCharsets;
  */
 @Component
 @Log4j2
+@AllArgsConstructor
 public class MRKRequestGlobalFilter implements GlobalFilter, Ordered {
+    private final AuthProperties authProperties;
+    private final AntPathMatcher antPathMatcher = new AntPathMatcher();
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         //获得当前路径
@@ -43,21 +51,21 @@ public class MRKRequestGlobalFilter implements GlobalFilter, Ordered {
         String userType = exchange.getRequest().getHeaders().getFirst(GateWayConstant.USER_TYPE);
         UserType userTypeEnum = UserType.getByUserType(userType);
         if (userTypeEnum == null) {
-            return unAuth(response, MRKI18nEnum.NOT_FOUND_USER_TYPE.getMessage());
+            return unAuth(response, GateWayResult.NOT_FOUND_USER_TYPE.getMessage());
         }
         if (StrUtil.isBlank(token)) {
-            return unAuth(response, MRKI18nEnum.NOT_FOUND_JWT.getMessage());
+            return unAuth(response, GateWayResult.NOT_FOUND_JWT.getMessage());
         }
         //解析令牌
         Claims claims = JWTUtil.parseJWT(token);
         if (claims == null) {
-            return unAuth(response, MRKI18nEnum.UNAUTHORIZED.getMessage());
+            return unAuth(response, GateWayResult.UNAUTHORIZED.getMessage());
         }
         //判断token状态
         String userId = String.valueOf(claims.get(JWTConstant.USER_ID));
         String accessToken = JWTUtil.getAccessToken(Long.valueOf(userId),userType);
         if (!token.equalsIgnoreCase(accessToken)) {
-            return unAuth(response, MRKI18nEnum.INVALID_TOKEN.getMessage());
+            return unAuth(response, GateWayResult.INVALID_TOKEN.getMessage());
         }
 
         return chain.filter(exchange);
@@ -79,7 +87,8 @@ public class MRKRequestGlobalFilter implements GlobalFilter, Ordered {
      * @return
      */
     private boolean isSkip(String path){
-        return true;
+        return AuthProvider.getDefaultSkipUrl().stream().anyMatch(pattern -> antPathMatcher.match(pattern, path))
+                || authProperties.getSkipUrl().stream().anyMatch(pattern -> antPathMatcher.match(pattern, path));
     }
 
     /**

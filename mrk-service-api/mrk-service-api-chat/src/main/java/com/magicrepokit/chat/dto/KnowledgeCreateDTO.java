@@ -39,4 +39,10 @@ public class KnowledgeCreateDTO {
      */
     @ApiModelProperty(value = "图片url[只有文件类型才有图片url]")
     private String imageUrl;
+
+    /**
+     * 知识库索引名称（必须英文全小写，空为自动生成）
+     */
+    @ApiModelProperty(value = "知识库索引名称[只有文件类型才有,必须英文全小写，空为自动生成]")
+    private String indexName;
 }

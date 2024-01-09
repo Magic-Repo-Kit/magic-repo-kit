@@ -71,7 +71,25 @@ public enum ChatResultCode implements IResultCode {
      */
     PARENT_ID_NOT_EXIST(20010205, "PARENT_ID_NOT_EXIST"),
 
-    ;
+    /**
+     * 有子目录
+     */
+    HAS_CHILD(20010206, "HAS_CHILD"),
+
+    /**
+     * 文件类型错误
+     */
+    FILE_TYPE_ERROR(20010207, "FILE_TYPE_ERROR"),
+
+    /**
+     * 知识库类型不是文件
+     */
+    TYPE_NOT_FILE(20010208, "TYPE_NOT_FILE"),
+
+    /**
+     * 文件已存在
+     */
+    FILE_EXIST(20010209, "FILE_EXIST");
 
     /**
      * code编码

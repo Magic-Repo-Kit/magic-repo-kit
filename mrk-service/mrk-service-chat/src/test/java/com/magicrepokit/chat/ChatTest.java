@@ -1,15 +1,25 @@
 package com.magicrepokit.chat;
 
 
+
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.magicrepokit.chat.agent.CustomerSupportAgent;
 import com.magicrepokit.chat.service.tool.CalculatorService;
 import com.magicrepokit.langchain.ElasticOperation;
 import com.magicrepokit.oss.OssTemplate;
+import dev.langchain4j.data.document.Document;
+import dev.langchain4j.data.document.DocumentSplitter;
+import dev.langchain4j.data.document.loader.UrlDocumentLoader;
+import dev.langchain4j.data.document.parser.TextDocumentParser;
+import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
@@ -23,6 +33,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+
+import static dev.langchain4j.model.openai.OpenAiModelName.GPT_3_5_TURBO;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
@@ -130,6 +142,19 @@ public class ChatTest {
         System.out.println(elasticOperation.getDocumentById("mrk_gpt_knowledge2", "62c3470d-6f38-4b52-959e-988dc0721b01"));
         //3.删除索引
         System.out.println(elasticOperation.deleteIndex("mrk_gpt_knowledge2"));
+    }
+
+    @Test
+    public void loadFromURL() {
+        Document document = UrlDocumentLoader.load("http://s6ie5kuog.hd-bkt.clouddn.com/raipiot_user.txt", new TextDocumentParser());
+        System.out.println(document.text());
+        DocumentSplitter documentSplitter = DocumentSplitters.recursive(500, 100, new OpenAiTokenizer(GPT_3_5_TURBO));
+        List<TextSegment> split = documentSplitter.split(document);
+        ObjectMapper objectMapper = ObjectMapper.of(split);
+        JSONArray jsonArray = new JSONArray();
+        objectMapper.map(jsonArray,null);
+        System.out.println(jsonArray.toString());
+
     }
 
 }

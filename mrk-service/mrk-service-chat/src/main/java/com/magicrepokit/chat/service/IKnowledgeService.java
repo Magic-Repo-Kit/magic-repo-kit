@@ -3,7 +3,9 @@ package com.magicrepokit.chat.service;
 import com.magicrepokit.chat.dto.KnowledgeCreateDTO;
 import com.magicrepokit.chat.dto.KnowledgeListDTO;
 import com.magicrepokit.chat.dto.KnowledgeMoveDTO;
+import com.magicrepokit.chat.dto.KnowledgeProcessDTO;
 import com.magicrepokit.chat.entity.Knowledge;
+import com.magicrepokit.chat.vo.KnowledgeFileVO;
 import com.magicrepokit.chat.vo.KnowledgeListVO;
 import com.magicrepokit.chat.vo.KnowledgePathVO;
 import com.magicrepokit.chat.vo.KnowledgeVO;
@@ -41,4 +43,46 @@ public interface IKnowledgeService extends BaseService<Knowledge> {
      * @return
      */
     boolean move(KnowledgeMoveDTO knowledgeMoveDTO);
+
+    /**
+     * 删除文件或文件夹
+     * @param id
+     * @return
+     */
+    boolean delete(Long id);
+
+    /**
+     * 文件处理
+     * @param knowledgeProcessDTO
+     * @return
+     */
+    boolean process(KnowledgeProcessDTO knowledgeProcessDTO);
+
+    /**
+     * 获取文件详情
+     * @param id
+     * @return
+     */
+    KnowledgeFileVO detailFile(Long id);
+
+    /**
+     * 文件处理状态列表
+     * @return
+     */
+    List<KnowledgeFileVO> listFileStatus();
+
+    /**
+     * 文件列表
+     * @param knowledgeId
+     * @return
+     */
+    List<KnowledgeFileVO> listFile(Long knowledgeId);
+
+
+    /**
+     * 重新处理
+     * @param knowledgeDetailId
+     * @return
+     */
+    boolean reprocess(Long knowledgeDetailId);
 }

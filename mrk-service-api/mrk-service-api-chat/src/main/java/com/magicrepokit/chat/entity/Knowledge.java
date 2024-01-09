@@ -40,6 +40,11 @@ public class Knowledge extends BaseEntity {
     private String imageUrl;
 
     /**
+     * els索引名称
+     */
+    private String indexName;
+
+    /**
      * 知识库路径
      */
     @TableField(typeHandler = LongListTypeHandler.class)
