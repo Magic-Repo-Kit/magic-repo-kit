@@ -11,6 +11,7 @@ public class AuthProvider {
         DEFAULT_SKIP_URL.add("/system/auth/refresh-token/**");
         DEFAULT_SKIP_URL.add("/system/auth/social-login-redirect/**");
         DEFAULT_SKIP_URL.add("/system/auth/social-login");
+        DEFAULT_SKIP_URL.add("/**/v2/api-docs/**");
     }
 
 
