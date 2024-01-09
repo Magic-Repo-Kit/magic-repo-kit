@@ -55,6 +55,8 @@ public class MRKRequestGlobalFilter implements GlobalFilter, Ordered {
         }
         if (StrUtil.isBlank(token)) {
             return unAuth(response, GateWayResult.NOT_FOUND_JWT.getMessage());
+        }else{
+            token = token.replace(GateWayConstant.TOKEN_PREFIX, "");
         }
         //解析令牌
         Claims claims = JWTUtil.parseJWT(token);
