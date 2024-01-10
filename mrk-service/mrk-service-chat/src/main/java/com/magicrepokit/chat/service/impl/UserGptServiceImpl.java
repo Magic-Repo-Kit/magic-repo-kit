@@ -2,7 +2,7 @@ package com.magicrepokit.chat.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.magicrepokit.chat.constant.StatusConstant;
-import com.magicrepokit.chat.dto.GptTokenGetDTO;
+import com.magicrepokit.chat.dto.gpt.GptTokenGetDTO;
 import com.magicrepokit.chat.entity.UserGpt;
 import com.magicrepokit.chat.mapper.UserGptMapper;
 import com.magicrepokit.chat.service.IUserGptService;

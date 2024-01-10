@@ -1,4 +1,4 @@
-package com.magicrepokit.chat.dto;
+package com.magicrepokit.chat.dto.gpt;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

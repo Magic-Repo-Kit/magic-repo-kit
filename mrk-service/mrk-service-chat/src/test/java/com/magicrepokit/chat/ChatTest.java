@@ -2,12 +2,14 @@ package com.magicrepokit.chat;
 
 
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.magicrepokit.chat.agent.CustomerSupportAgent;
 import com.magicrepokit.chat.service.tool.CalculatorService;
 import com.magicrepokit.langchain.ElasticOperation;
+import com.magicrepokit.langchain.config.ConfigProperties;
 import com.magicrepokit.oss.OssTemplate;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentSplitter;
@@ -54,6 +56,9 @@ public class ChatTest {
 
     @Autowired
     OssTemplate ossTemplate;
+
+    @Autowired
+    ConfigProperties langchainConfigProperties;
 
     @Test
     public void testOssTemplate(){
@@ -113,19 +118,33 @@ public class ChatTest {
         System.out.println("==========================================================================================");
     }
 
+    private ElasticsearchEmbeddingStore getElasticsearchEmbeddingStore(String indexName){
+        if(langchainConfigProperties.getEnabled()){
+            log.error("未开启elasticsearch");
+            return null;
+        }
+        String elasticHost = langchainConfigProperties.getElasticHost();
+        int elasticPort = langchainConfigProperties.getElasticPort();
+        String url = StrUtil.format("{}:{}", elasticHost, elasticPort);
+        return ElasticsearchEmbeddingStore.builder()
+                .serverUrl(url)
+                .userName(langchainConfigProperties.getElasticUsername())
+                .password(langchainConfigProperties.getElasticPassword())
+                .indexName(indexName)
+                .dimension(1536)
+                .build();
+    }
+
     /**
      * 创建EmbeddingStore with Elasticsearch
      */
     @Test
     public void createEmbeddingStoreWithElasticsearch() {
+
         //1.elsaticstore
-        EmbeddingStore<TextSegment> embeddingStore = ElasticsearchEmbeddingStore.builder()
-                .indexName("multi_index_1")
-                .serverUrl("http://154.204.60.125:9200")
-                .build();
+        ElasticsearchEmbeddingStore embeddingStore = getElasticsearchEmbeddingStore("c2267fb9-7539-46b7-8aab-c1c8c532cbd5");
 
-
-        Embedding content = embeddingModel.embed("今天是几月几号").content();
+        Embedding content = embeddingModel.embed("这里石昊是谁").content();
         List<EmbeddingMatch<TextSegment>> relevant = embeddingStore.findRelevant(content, 1, 0.9);
         System.out.println(relevant.get(0).score());
         System.out.println(relevant.get(0).embedded());

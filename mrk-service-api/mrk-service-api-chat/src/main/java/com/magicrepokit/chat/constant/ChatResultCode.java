@@ -89,7 +89,27 @@ public enum ChatResultCode implements IResultCode {
     /**
      * 文件已存在
      */
-    FILE_EXIST(20010209, "FILE_EXIST");
+    FILE_EXIST(20010209, "FILE_EXIST"),
+
+    /**
+     * 知识库文件不存在
+     */
+    KNOWLEDGE_FILE_NOT_EXIST(20010210, "KNOWLEDGE_FILE_NOT_EXIST"),
+
+    /**
+     * 存在文件内容
+     */
+    HAS_FILE(20010211,"HAS_FILE"),
+
+    /**
+     * 文件不存在
+     */
+    FILE_NOT_EXIST(20010212, "FILE_NOT_EXIST"),
+
+    /**
+     * 删除索引失败
+     */
+    DELETE_INDEX_ERROR(20010213, "DELETE_INDEX_ERROR");
 
     /**
      * code编码

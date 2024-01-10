@@ -1,18 +1,15 @@
 package com.magicrepokit.chat.converter;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.magicrepokit.chat.dto.KnowledgeCreateDTO;
+import com.magicrepokit.chat.dto.knowledge.KnowledgeCreateDTO;
 import com.magicrepokit.chat.entity.Knowledge;
 import com.magicrepokit.chat.entity.KnowledgeDetail;
-import com.magicrepokit.chat.vo.KnowledgeFileVO;
-import com.magicrepokit.chat.vo.KnowledgeListVO;
-import com.magicrepokit.chat.vo.KnowledgePathVO;
-import com.magicrepokit.chat.vo.KnowledgeVO;
-import org.mapstruct.MapMapping;
+import com.magicrepokit.chat.vo.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,6 +21,7 @@ public interface KnowledgeConverter {
 
     KnowledgeVO entityToVO(Knowledge knowledge);
 
+    KnowledgeListVO entityToKnowledgeListVO(Knowledge knowledge);
 
     List<KnowledgeListVO> entityListToVOList(List<Knowledge> knowledges);
 
@@ -38,6 +36,8 @@ public interface KnowledgeConverter {
 
 
     KnowledgeFileVO entityToKnowledgeFileVO(Knowledge knowledge);
+
+    KnowledgeFileListVO entityToKnowledgeFileListVO(Knowledge knowledge);
 
     @Mappings({
             @Mapping(source = "knowledgeDetail.knowledgeId", target = "id"),
@@ -71,18 +71,23 @@ public interface KnowledgeConverter {
 
 
 
-    default KnowledgeFileVO entityToKnowledgeFileVO(Knowledge knowledge, KnowledgeDetail knowledgeDetail){
-        KnowledgeFileVO knowledgeFileVO = entityToKnowledgeFileVO(knowledge);
+    default KnowledgeFileListVO entityToKnowledgeFileVO(Knowledge knowledge, List<KnowledgeDetail> knowledgeDetail){
+        KnowledgeFileListVO knowledgeFileListVO = entityToKnowledgeFileListVO(knowledge);
         if(ObjectUtil.isNotNull(knowledgeDetail)){
-            knowledgeFileVO.setDetailId(knowledgeDetail.getId());
-            knowledgeFileVO.setFileName(knowledgeDetail.getName());
-            knowledgeFileVO.setFileType(knowledgeDetail.getType());
-            knowledgeFileVO.setFileUrl(knowledgeDetail.getFileUrl());
-            knowledgeFileVO.setStatus(knowledgeDetail.getStatus());
-            knowledgeFileVO.setErrorMsg(knowledgeDetail.getErrorMsg());
-            knowledgeFileVO.setCreateTime(knowledgeDetail.getCreateTime());
+            List<KnowledgeFileListVO.FileDetailVO> fileDetailVOS = new ArrayList<>();
+            for (KnowledgeDetail detail : knowledgeDetail) {
+                KnowledgeFileListVO.FileDetailVO fileDetailVO = new KnowledgeFileListVO.FileDetailVO();
+                fileDetailVO.setDetailId(detail.getId());
+                fileDetailVO.setFileName(detail.getName());
+                fileDetailVO.setFileType(detail.getType());
+                fileDetailVO.setFileUrl(detail.getFileUrl());
+                fileDetailVO.setStatus(detail.getStatus());
+                fileDetailVO.setErrorMsg(detail.getErrorMsg());
+                fileDetailVO.setCreateTime(detail.getCreateTime());
+            }
+            knowledgeFileListVO.setFileDetails(fileDetailVOS);
         }
-        return knowledgeFileVO;
+        return knowledgeFileListVO;
     }
 
     default List<KnowledgeFileVO> entityListToKnowledgeFileVOList(List<KnowledgeDetail> listNotCompleted, List<Knowledge> knowledgeList){

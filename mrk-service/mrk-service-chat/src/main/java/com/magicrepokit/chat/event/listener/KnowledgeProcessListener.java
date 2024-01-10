@@ -41,6 +41,31 @@ public class KnowledgeProcessListener implements ApplicationListener<KnowledgePr
     @Override
     @Async
     public void onApplicationEvent(KnowledgeProcessEvent event) {
+        Integer type = event.getType();
+        if(type.equals(1)){
+            processSingle(event);
+        }else if(type.equals(2)){
+            processBatch(event);
+        }
+    }
+
+    /**
+     * 批量处理
+     * @param event
+     */
+    private void processBatch(KnowledgeProcessEvent event) {
+        List<KnowledgeDetail> knowledgeDetailList = event.getKnowledgeDetailList();
+
+        for (KnowledgeDetail knowledgeDetail : knowledgeDetailList) {
+            processSingle(new KnowledgeProcessEvent(event.getIndexName(),knowledgeDetail));
+        }
+    }
+
+    /**
+     * 单文件处理
+     * @param event 事件
+     */
+    private void processSingle(KnowledgeProcessEvent event) {
         long start = System.currentTimeMillis();
         KnowledgeDetail knowledgeDetail = event.getKnowledgeDetail();
         try {
@@ -70,10 +95,18 @@ public class KnowledgeProcessListener implements ApplicationListener<KnowledgePr
     }
 
 
+    /**
+     * 获取分词模型
+     */
     private EmbeddingModel getEmbeddingModel(){
         return OpenAiEmbeddingModel.builder().apiKey("sk-gRbZ9FJz2E7c7mwO5JOvp2u2rtoWoAbg12CxDy3Y25eLeDvd").baseUrl("https://api.chatanywhere.tech/v1").build();
     }
 
+    /**
+     * 获取elasticsearch存储
+     * @param indexName 索引名称
+     * @return ElasticsearchEmbeddingStore
+     */
     private ElasticsearchEmbeddingStore getElasticsearchEmbeddingStore(String indexName){
         if(langchainConfigProperties.getEnabled()){
             log.error("未开启elasticsearch");
@@ -91,6 +124,12 @@ public class KnowledgeProcessListener implements ApplicationListener<KnowledgePr
                 .build();
     }
 
+    /**
+     * 改变状态
+     * @param knowledgeDetail  知识库详情
+     * @param statusType 状态类型
+     * @param error 错误信息
+     */
     private void changeStatus(KnowledgeDetail knowledgeDetail, Integer statusType,String error) {
         knowledgeDetail.setStatus(statusType);
         knowledgeDetail.setErrorMsg("");
@@ -100,6 +139,11 @@ public class KnowledgeProcessListener implements ApplicationListener<KnowledgePr
         knowledgeDetailService.updateById(knowledgeDetail);
     }
 
+    /**
+     * 获取文档解析器
+     * @param fileType 文件类型
+     * @return DocumentParser
+     */
     private DocumentParser getDocumentParser(String fileType){
         if(fileType.equals("pdf")){
             return new ApachePdfBoxDocumentParser();

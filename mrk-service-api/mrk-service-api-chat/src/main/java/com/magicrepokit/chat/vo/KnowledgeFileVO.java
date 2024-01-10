@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Data
-@ApiModel(value = "知识库文件详情",description = "知识库文件详情")
+@ApiModel(value = "文件内容详情",description = "文件内容详情")
 public class KnowledgeFileVO {
     /**
      * 知识库id

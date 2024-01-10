@@ -1,14 +1,8 @@
 package com.magicrepokit.chat.service;
 
-import com.magicrepokit.chat.dto.KnowledgeCreateDTO;
-import com.magicrepokit.chat.dto.KnowledgeListDTO;
-import com.magicrepokit.chat.dto.KnowledgeMoveDTO;
-import com.magicrepokit.chat.dto.KnowledgeProcessDTO;
+import com.magicrepokit.chat.dto.knowledge.*;
 import com.magicrepokit.chat.entity.Knowledge;
-import com.magicrepokit.chat.vo.KnowledgeFileVO;
-import com.magicrepokit.chat.vo.KnowledgeListVO;
-import com.magicrepokit.chat.vo.KnowledgePathVO;
-import com.magicrepokit.chat.vo.KnowledgeVO;
+import com.magicrepokit.chat.vo.*;
 import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.mb.base.BaseService;
 
@@ -28,7 +22,7 @@ public interface IKnowledgeService extends BaseService<Knowledge> {
      * @param knowledgeListDTO
      * @return
      */
-    List<KnowledgeListVO> list(KnowledgeListDTO knowledgeListDTO);
+    PageResult<KnowledgeListVO> page(KnowledgeListDTO knowledgeListDTO);
 
     /**
      * 根据父节点id查询当前路径
@@ -46,10 +40,10 @@ public interface IKnowledgeService extends BaseService<Knowledge> {
 
     /**
      * 删除文件或文件夹
-     * @param id
+     * @param knowledgeIds
      * @return
      */
-    boolean delete(Long id);
+    boolean delete(String knowledgeIds);
 
     /**
      * 文件处理
@@ -59,11 +53,25 @@ public interface IKnowledgeService extends BaseService<Knowledge> {
     boolean process(KnowledgeProcessDTO knowledgeProcessDTO);
 
     /**
+     * 文件内容上传处理(多文件处理)
+     * @param knowledgeProcessBatchDTO
+     * @return
+     */
+    boolean processBatch(KnowledgeProcessBatchDTO knowledgeProcessBatchDTO);
+
+    /**
+     * 重新处理
+     * @param knowledgeDetailId
+     * @return
+     */
+    boolean reprocess(Long knowledgeDetailId);
+
+    /**
      * 获取文件详情
      * @param id
      * @return
      */
-    KnowledgeFileVO detailFile(Long id);
+    KnowledgeFileListVO detailFile(Long id);
 
     /**
      * 文件处理状态列表
@@ -80,9 +88,9 @@ public interface IKnowledgeService extends BaseService<Knowledge> {
 
 
     /**
-     * 重新处理
-     * @param knowledgeDetailId
+     * 删除文件内容
+     * @param knowledgeIds
      * @return
      */
-    boolean reprocess(Long knowledgeDetailId);
+    boolean deleteFile(String knowledgeIds);
 }

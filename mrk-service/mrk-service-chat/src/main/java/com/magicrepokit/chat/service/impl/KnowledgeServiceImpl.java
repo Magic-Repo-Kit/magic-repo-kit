@@ -1,36 +1,33 @@
 package com.magicrepokit.chat.service.impl;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.magicrepokit.chat.constant.ChatResultCode;
 import com.magicrepokit.chat.constant.KnowledgeConstant;
 import com.magicrepokit.chat.converter.KnowledgeConverter;
-import com.magicrepokit.chat.dto.KnowledgeCreateDTO;
-import com.magicrepokit.chat.dto.KnowledgeListDTO;
-import com.magicrepokit.chat.dto.KnowledgeMoveDTO;
-import com.magicrepokit.chat.dto.KnowledgeProcessDTO;
+import com.magicrepokit.chat.dto.knowledge.*;
 import com.magicrepokit.chat.entity.Knowledge;
 import com.magicrepokit.chat.entity.KnowledgeDetail;
 import com.magicrepokit.chat.event.KnowledgeProcessEvent;
 import com.magicrepokit.chat.mapper.KnowledgeMapper;
 import com.magicrepokit.chat.service.IKnowledgeDetailService;
 import com.magicrepokit.chat.service.IKnowledgeService;
-import com.magicrepokit.chat.vo.KnowledgeFileVO;
-import com.magicrepokit.chat.vo.KnowledgeListVO;
-import com.magicrepokit.chat.vo.KnowledgePathVO;
-import com.magicrepokit.chat.vo.KnowledgeVO;
+import com.magicrepokit.chat.vo.*;
+import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.common.utils.AuthUtil;
+import com.magicrepokit.common.utils.StringUtil;
 import com.magicrepokit.jwt.entity.MRKUser;
+import com.magicrepokit.langchain.ElasticOperation;
 import com.magicrepokit.log.exceotion.ServiceException;
 import com.magicrepokit.mb.base.BaseServiceImpl;
-import com.magicrepokit.oss.OssTemplate;
-import com.magicrepokit.oss.model.MRKFile;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +37,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowledge> implements IKnowledgeService {
     private final KnowledgeConverter knowledgeConverter;
-    private final OssTemplate ossTemplate;
     private final IKnowledgeDetailService knowledgeDetailService;
-    private ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
+    private final ElasticOperation elasticOperation;
 
     /**
      * 创建文件夹或文件
@@ -71,6 +68,9 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
             if(ObjectUtil.isEmpty(knowledge.getIndexName())){
                 knowledge.setIndexName(mkIndexName());
             }
+        }else{
+            knowledge.setIndexName(null);
+            knowledge.setImageUrl(null);
         }
         this.save(knowledge);
         return knowledgeConverter.entityToVO(knowledge);
@@ -83,7 +83,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
      */
 
     @Override
-    public List<KnowledgeListVO> list(KnowledgeListDTO knowledgeListDTO) {
+    public PageResult<KnowledgeListVO> page(KnowledgeListDTO knowledgeListDTO) {
         LambdaQueryWrapper<Knowledge> lambdaQueryWrapper = new LambdaQueryWrapper<Knowledge>();
         //1.id为空查询父一级
         if (ObjectUtil.isEmpty(knowledgeListDTO.getParentId())) {
@@ -101,8 +101,8 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
             return null;
         }
         lambdaQueryWrapper.eq(Knowledge::getCreateUser,user.getUserId());
-        List<Knowledge> knowledgeList = list(lambdaQueryWrapper);
-        return knowledgeConverter.entityListToVOList(knowledgeList);
+        PageResult<Knowledge> knowledgePageResult = selectPage(knowledgeListDTO, lambdaQueryWrapper);
+        return knowledgePageResult.convert(knowledgeConverter::entityToKnowledgeListVO);
     }
 
     /**
@@ -182,23 +182,32 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
 
     /**
      * 删除文件或文件夹
-     * @param id 文件或文件夹id
+     * @param knowledgeIds 文件或文件夹id
      * @return 删除结果
      */
     @Override
-    public boolean delete(Long id) {
-        //1.查询当前id是否存在
-        Knowledge knowledgeById = getKnowledgeById(id);
-        if (ObjectUtil.isNull(knowledgeById)) {
-            throw new ServiceException(ChatResultCode.ID_NOT_EXIST);
+    public boolean delete(String knowledgeIds) {
+        List<Long> ids = StringUtil.splitToLong(knowledgeIds, StrUtil.COMMA);
+        if(ObjectUtil.isEmpty(ids)){
+            return false;
         }
-        //2.查询是否有子节点
-        if(checkIsChildById(id)){
-            throw new ServiceException(ChatResultCode.HAS_CHILD);
+        for (Long id : ids) {
+            //1.查询当前id是否存在
+            Knowledge knowledgeById = getKnowledgeById(id);
+            if (ObjectUtil.isNull(knowledgeById)) {
+                return true;
+            }
+            //2.查询是否有子节点
+            if(checkIsChildById(id)){
+                throw new ServiceException(ChatResultCode.HAS_CHILD);
+            }
+            //3.如果是文件查询是否有文件
+            if(knowledgeDetailService.checkHasFile(id)){
+                throw new ServiceException(ChatResultCode.HAS_FILE);
+            }
         }
-        //3.TODO 如果是文件查询是否有文件
         //4.删除
-        return removeById(id);
+        return removeByIds(ids);
     }
 
     /**
@@ -209,13 +218,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
     @Override
     public boolean process(KnowledgeProcessDTO knowledgeProcessDTO) {
         //1.查询当前id是否存在
-        Knowledge knowledgeById = getKnowledgeById(knowledgeProcessDTO.getId());
-        if(ObjectUtil.isNull(knowledgeById)){
-            throw new ServiceException(ChatResultCode.ID_NOT_EXIST);
-        }
-        if(!knowledgeById.getType().equals(KnowledgeConstant.FILE)){
-            throw new ServiceException(ChatResultCode.TYPE_NOT_FILE);
-        }
+        Knowledge knowledgeById = getProcessKnowledge(knowledgeProcessDTO.getId());
         String fileName = knowledgeProcessDTO.getFileName();
         if(knowledgeDetailService.checkIsFileExist(knowledgeProcessDTO.getId(),fileName)){
             throw new ServiceException(ChatResultCode.FILE_EXIST);
@@ -242,12 +245,55 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
 
 
     /**
+     * 文件内容上传处理(多文件处理)
+     * @param knowledgeProcessBatchDTO
+     * @return
+     */
+    @Override
+    public boolean processBatch(KnowledgeProcessBatchDTO knowledgeProcessBatchDTO) {
+        Knowledge processKnowledge = getProcessKnowledge(knowledgeProcessBatchDTO.getId());
+        List<KnowledgeProcessBatchDTO.FileVO> files = knowledgeProcessBatchDTO.getFiles();
+        if(ObjectUtil.isEmpty(files)){
+            throw new ServiceException(ChatResultCode.FILE_NOT_EXIST);
+        }
+        //1.批量检验文件是否存在
+        List<String> fileNames = files.stream().map(KnowledgeProcessBatchDTO.FileVO::getFileName).collect(Collectors.toList());
+        if(knowledgeDetailService.checkIsFileBatchExist(knowledgeProcessBatchDTO.getId(),fileNames)){
+            throw new ServiceException(ChatResultCode.FILE_EXIST);
+        }
+        //2.批量检验文件类型
+        for (KnowledgeProcessBatchDTO.FileVO file : files) {
+            String fileNameSuffix = getFileNameSuffix(file.getFileName());
+            if(!checkIsTxtMdPdf(fileNameSuffix)){
+                throw new ServiceException(ChatResultCode.FILE_TYPE_ERROR);
+            }
+        }
+        //3.批量保存文件信息
+        List<KnowledgeDetail> knowledgeDetails = new ArrayList<>();
+        for (KnowledgeProcessBatchDTO.FileVO file : files) {
+            KnowledgeDetail knowledgeDetail = new KnowledgeDetail();
+            knowledgeDetail.setKnowledgeId(knowledgeProcessBatchDTO.getId());
+            knowledgeDetail.setName(file.getFileName());
+            knowledgeDetail.setFileUrl(file.getFileUrl());
+            knowledgeDetail.setStatus(KnowledgeConstant.NOT_STARTED);
+            knowledgeDetail.setType(getFileNameSuffix(file.getFileName()));
+            knowledgeDetails.add(knowledgeDetail);
+        }
+        boolean saveBatch = knowledgeDetailService.saveBatch(knowledgeDetails);
+        //4.推送流程任务处理
+        KnowledgeProcessEvent knowledgeProcessEvent = new KnowledgeProcessEvent(processKnowledge.getIndexName(),knowledgeDetails);
+        applicationEventPublisher.publishEvent(knowledgeProcessEvent);
+        return saveBatch;
+    }
+
+
+    /**
      * 文件详情
      * @param id 文件id
      * @return 文件详情
      */
     @Override
-    public KnowledgeFileVO detailFile(Long id) {
+    public KnowledgeFileListVO detailFile(Long id) {
         //1.查询当前id是否存在
         Knowledge knowledgeById = getKnowledgeById(id);
         if(ObjectUtil.isNull(knowledgeById)){
@@ -256,7 +302,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
         if(!knowledgeById.getType().equals(KnowledgeConstant.FILE)){
             return null;
         }
-        return knowledgeConverter.entityToKnowledgeFileVO(knowledgeById,getKnowledgeDetailByKnowledgeId(id));
+        return knowledgeConverter.entityToKnowledgeFileVO(knowledgeById,knowledgeDetailService.listByKnowledgeId(id));
     }
 
     /**
@@ -290,6 +336,26 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteFile(String knowledgeIds) {
+        List<Long> ids = StringUtil.splitToLong(knowledgeIds, StrUtil.COMMA);
+        List<Knowledge> knowledgeList = getKnowledgeFileList(ids);
+        if(ObjectUtil.isEmpty(knowledgeList)){
+            return true;
+        }
+        List<Long> knowledgeIdList = knowledgeList.stream().map(Knowledge::getId).collect(Collectors.toList());
+        List<String> indexName = knowledgeList.stream().map(Knowledge::getIndexName).collect(Collectors.toList());
+        //1.删除文件
+        boolean flag = knowledgeDetailService.deleteByKnowledgeIds(knowledgeIdList);
+        //2.删除索引
+        if(!elasticOperation.deleteIndex(indexName)){
+            throw new ServiceException(ChatResultCode.DELETE_INDEX_ERROR);
+        }
+        return flag;
+    }
+
+
+    @Override
     public boolean reprocess(Long knowledgeDetailId) {
         //1.查询当前id是否存在
         KnowledgeDetail knowledgeDetailById = knowledgeDetailService.getById(knowledgeDetailId);
@@ -304,7 +370,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
         //2.推送流程任务处理
         KnowledgeProcessEvent knowledgeProcessEvent = new KnowledgeProcessEvent(knowledgeById.getIndexName(),knowledgeDetailById);
         applicationEventPublisher.publishEvent(knowledgeProcessEvent);
-        knowledgeDetailService.save(knowledgeDetailById);
+        knowledgeDetailService.saveOrUpdate(knowledgeDetailById);
         return true;
     }
 
@@ -401,16 +467,6 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
         return this.list(new LambdaQueryWrapper<Knowledge>().in(Knowledge::getId, ids));
     }
 
-
-    /**
-     * 根据id查询文件详情
-     * @param id 文件id
-     * @return 文件详情
-     */
-    private KnowledgeDetail getKnowledgeDetailByKnowledgeId(Long id) {
-        return knowledgeDetailService.getOne(new LambdaQueryWrapper<KnowledgeDetail>().eq(KnowledgeDetail::getKnowledgeId, id));
-    }
-
     /**
      * 查询所有子节点
      * @param parentId 父节点id
@@ -426,5 +482,42 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
             }
         }
         return result;
+    }
+
+
+    /**
+     * 文件处理-获取文件
+     * @param id 文件知识库id
+     * @return
+     */
+    private Knowledge getProcessKnowledge(Long id) {
+        if(ObjectUtil.isNull(id)){
+            throw new ServiceException(ChatResultCode.ID_NOT_EXIST);
+        }
+        Knowledge knowledgeById = getKnowledgeById(id);
+        if(ObjectUtil.isNull(knowledgeById)){
+            throw new ServiceException(ChatResultCode.ID_NOT_EXIST);
+        }
+        if(!knowledgeById.getType().equals(KnowledgeConstant.FILE)){
+            throw new ServiceException(ChatResultCode.TYPE_NOT_FILE);
+        }
+        return knowledgeById;
+    }
+
+    /**
+     * 获取知识库文件列表
+     * @param ids
+     * @return
+     */
+    private List<Knowledge> getKnowledgeFileList(List<Long> ids) {
+        List<Knowledge> knowledgeListByIds = getKnowledgeListByIds(ids);
+        if(ObjectUtil.isEmpty(knowledgeListByIds)){
+            return null;
+        }
+        List<Knowledge> collect = knowledgeListByIds.stream().filter(knowledge -> knowledge.getType().equals(KnowledgeConstant.FILE)).collect(Collectors.toList());
+        if(ObjectUtil.isEmpty(collect)){
+            return null;
+        }
+        return collect;
     }
 }

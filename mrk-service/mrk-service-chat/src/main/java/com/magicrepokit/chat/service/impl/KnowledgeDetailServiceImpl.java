@@ -35,6 +35,26 @@ public class KnowledgeDetailServiceImpl extends BaseServiceImpl<KnowledgeDetailM
         return this.count(new LambdaQueryWrapper<KnowledgeDetail>().eq(KnowledgeDetail::getKnowledgeId, knowledgeId).eq(KnowledgeDetail::getName, fileName)) > 0;
     }
 
+    @Override
+    public boolean checkHasFile(Long knowledgeId) {
+        return this.count(new LambdaQueryWrapper<KnowledgeDetail>().eq(KnowledgeDetail::getKnowledgeId, knowledgeId)) > 0;
+    }
+
+    @Override
+    public boolean checkIsFileBatchExist(Long id, List<String> fileNames) {
+        return this.count(new LambdaQueryWrapper<>(KnowledgeDetail.class)
+                .eq(KnowledgeDetail::getKnowledgeId, id)
+                .in(KnowledgeDetail::getName, fileNames))> 0;
+    }
+
+    @Override
+    public boolean deleteByKnowledgeIds(List<Long> knowledgeIdList) {
+        if (ObjectUtil.isEmpty(knowledgeIdList)) {
+            return false;
+        }
+        return this.remove(new LambdaQueryWrapper<KnowledgeDetail>().in(KnowledgeDetail::getKnowledgeId, knowledgeIdList));
+    }
+
     private List<KnowledgeDetail> listNotCompleted(Long userId) {
         return this.list(new LambdaQueryWrapper<KnowledgeDetail>()
                 .eq(KnowledgeDetail::getCreateUser, userId)

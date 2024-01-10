@@ -1,4 +1,4 @@
-package com.magicrepokit.chat.dto;
+package com.magicrepokit.chat.dto.knowledge;
 
 import com.magicrepokit.mb.base.PageParam;
 import io.swagger.annotations.ApiModel;

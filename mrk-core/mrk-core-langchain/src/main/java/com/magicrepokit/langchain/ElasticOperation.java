@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -58,6 +59,19 @@ public class ElasticOperation {
             return true;
         } catch (IOException e) {
             log.error("删除索引失败", e);
+            return false;
+        }
+    }
+
+    /**
+     * 批量删除索引
+     */
+    public boolean deleteIndex(List<String> indexNames) {
+        try {
+            elasticsearchClient.indices().delete(r -> r.index(indexNames));
+            return true;
+        } catch (IOException e) {
+            log.error("批量删除索引失败", e);
             return false;
         }
     }

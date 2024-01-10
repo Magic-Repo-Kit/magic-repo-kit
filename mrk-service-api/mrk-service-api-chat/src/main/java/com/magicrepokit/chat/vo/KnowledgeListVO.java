@@ -19,6 +19,13 @@ public class KnowledgeListVO {
     private Long id;
 
     /**
+     * 父节点id
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @ApiModelProperty(value = "知识库id")
+    private Long parentId;
+
+    /**
      * 知识库名称
      */
     private String name;
