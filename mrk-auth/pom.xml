@@ -58,6 +58,17 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
 
+        <!-- Nacos服务配置依赖 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
@@ -79,13 +90,11 @@
         <dependency>
             <groupId>org.auoralpixel</groupId>
             <artifactId>mrk-core-jwt</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.auoralpixel</groupId>
             <artifactId>mrk-core-redis</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <dependency>
@@ -95,6 +104,10 @@
                 <exclusion>
                     <groupId>org.auoralpixel</groupId>
                     <artifactId>mrk-core-swagger</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.auoralpixel</groupId>
+                    <artifactId>mrk-core-langchain</artifactId>
                 </exclusion>
             </exclusions>
             <version>1.0.0</version>

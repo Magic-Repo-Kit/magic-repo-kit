@@ -1,15 +1,27 @@
 package com.magicrepokit.chat;
 
 
+
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.magicrepokit.chat.agent.CustomerSupportAgent;
 import com.magicrepokit.chat.service.tool.CalculatorService;
 import com.magicrepokit.langchain.ElasticOperation;
+import com.magicrepokit.langchain.config.ConfigProperties;
 import com.magicrepokit.oss.OssTemplate;
+import dev.langchain4j.data.document.Document;
+import dev.langchain4j.data.document.DocumentSplitter;
+import dev.langchain4j.data.document.loader.UrlDocumentLoader;
+import dev.langchain4j.data.document.parser.TextDocumentParser;
+import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
@@ -23,6 +35,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+
+import static dev.langchain4j.model.openai.OpenAiModelName.GPT_3_5_TURBO;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
@@ -42,6 +56,9 @@ public class ChatTest {
 
     @Autowired
     OssTemplate ossTemplate;
+
+    @Autowired
+    ConfigProperties langchainConfigProperties;
 
     @Test
     public void testOssTemplate(){
@@ -101,19 +118,33 @@ public class ChatTest {
         System.out.println("==========================================================================================");
     }
 
+    private ElasticsearchEmbeddingStore getElasticsearchEmbeddingStore(String indexName){
+        if(langchainConfigProperties.getEnabled()){
+            log.error("未开启elasticsearch");
+            return null;
+        }
+        String elasticHost = langchainConfigProperties.getElasticHost();
+        int elasticPort = langchainConfigProperties.getElasticPort();
+        String url = StrUtil.format("{}:{}", elasticHost, elasticPort);
+        return ElasticsearchEmbeddingStore.builder()
+                .serverUrl(url)
+                .userName(langchainConfigProperties.getElasticUsername())
+                .password(langchainConfigProperties.getElasticPassword())
+                .indexName(indexName)
+                .dimension(1536)
+                .build();
+    }
+
     /**
      * 创建EmbeddingStore with Elasticsearch
      */
     @Test
     public void createEmbeddingStoreWithElasticsearch() {
+
         //1.elsaticstore
-        EmbeddingStore<TextSegment> embeddingStore = ElasticsearchEmbeddingStore.builder()
-                .indexName("multi_index_1")
-                .serverUrl("http://154.204.60.125:9200")
-                .build();
+        ElasticsearchEmbeddingStore embeddingStore = getElasticsearchEmbeddingStore("c2267fb9-7539-46b7-8aab-c1c8c532cbd5");
 
-
-        Embedding content = embeddingModel.embed("今天是几月几号").content();
+        Embedding content = embeddingModel.embed("这里石昊是谁").content();
         List<EmbeddingMatch<TextSegment>> relevant = embeddingStore.findRelevant(content, 1, 0.9);
         System.out.println(relevant.get(0).score());
         System.out.println(relevant.get(0).embedded());
@@ -130,6 +161,19 @@ public class ChatTest {
         System.out.println(elasticOperation.getDocumentById("mrk_gpt_knowledge2", "62c3470d-6f38-4b52-959e-988dc0721b01"));
         //3.删除索引
         System.out.println(elasticOperation.deleteIndex("mrk_gpt_knowledge2"));
+    }
+
+    @Test
+    public void loadFromURL() {
+        Document document = UrlDocumentLoader.load("http://s6ie5kuog.hd-bkt.clouddn.com/raipiot_user.txt", new TextDocumentParser());
+        System.out.println(document.text());
+        DocumentSplitter documentSplitter = DocumentSplitters.recursive(500, 100, new OpenAiTokenizer(GPT_3_5_TURBO));
+        List<TextSegment> split = documentSplitter.split(document);
+        ObjectMapper objectMapper = ObjectMapper.of(split);
+        JSONArray jsonArray = new JSONArray();
+        objectMapper.map(jsonArray,null);
+        System.out.println(jsonArray.toString());
+
     }
 
 }

@@ -1,6 +1,6 @@
 package com.magicrepokit.chat.service;
 
-import com.magicrepokit.chat.dto.GptConversationPageDTO;
+import com.magicrepokit.chat.dto.gpt.GptConversationPageDTO;
 import com.magicrepokit.chat.entity.GptConversation;
 import com.magicrepokit.chat.entity.GptConversationDetail;
 import com.magicrepokit.common.api.PageResult;

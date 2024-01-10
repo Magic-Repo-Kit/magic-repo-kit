@@ -1,6 +1,6 @@
 package com.magicrepokit.chat.controller;
 
-import com.magicrepokit.chat.dto.GptChatDTO;
+import com.magicrepokit.chat.dto.gpt.GptChatDTO;
 import com.magicrepokit.chat.entity.GptConversation;
 import com.magicrepokit.chat.entity.GptConversationDetail;
 import com.magicrepokit.chat.service.IGptService;
@@ -11,7 +11,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -72,5 +71,16 @@ public class GptController {
     @ApiOperation(value = "gpt会话详情分页", notes = "gpt会话详情分页")
     public R<PageResult<GptConversationDetail>> listConversationDetailByPage(PageParam pageParam,@ApiParam(value = "会话id",required = true) String conversationId){
         return R.data(gptService.listConversationDetailByPage(pageParam, conversationId));
+    }
+
+    /**
+     * 知识库聊天
+     * @param GptChatDTO
+     */
+    @CrossOrigin("*")
+    @PostMapping(path = "/chat-knowledge/{knowledgeId}", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
+    @ApiOperation(value = "gpt知识库聊天", notes = "gpt知识库聊天[返回:text/event-stream]")
+    public SseEmitter chatKnowledge(@PathVariable("knowledgeId")Long knowledgeId, @RequestBody GptChatDTO GptChatDTO) {
+        return gptService.chat(knowledgeId,GptChatDTO);
     }
 }

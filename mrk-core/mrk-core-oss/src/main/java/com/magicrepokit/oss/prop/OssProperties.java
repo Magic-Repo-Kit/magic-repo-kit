@@ -36,27 +36,27 @@ public class OssProperties {
 	/**
 	 * 是否启用
 	 */
-	private Boolean enabled;
+	private Boolean enabled=false;
 
 	/**
 	 * 对象存储服务的URL
 	 */
-	private String endpoint;
+	private String endpoint="";
 
 	/**
 	 * 区域简称 TencentCOS/Amazon S3 需要
 	 */
-	private String region;
+	private String region="";
 
 	/**
 	 * Access key就像用户ID，可以唯一标识你的账户
 	 */
-	private String accessKey;
+	private String accessKey="";
 
 	/**
 	 * Secret key是你账户的密码
 	 */
-	private String secretKey;
+	private String secretKey="";
 
 	/**
 	 * 默认的存储桶名称

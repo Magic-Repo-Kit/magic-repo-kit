@@ -1,16 +1,6 @@
-server:
-  port: 1000
-
 spring:
-  application:
-    name: mrk-gateway
   cloud:
     # 注册中心配置
-    nacos:
-      discovery:
-        server-addr: 124.222.46.195:8848
-      config:
-        server-addr: 124.222.46.195:8848
     gateway:
       # 全局的跨域配置
       globalcors:
@@ -61,21 +51,6 @@ spring:
             - Path=/chat/**
           filters:
             - StripPrefix=1
-
-  # redis
-  redis:
-    ##redis 单机环境配置
-    host: 124.222.46.195
-    port: 6379
-    password: apollotest
-    database: 0
-    ssl: false
-# magicRepoKit服务配置
-mrk:
-  token:
-    sing-key: mrkmrkisapowerfulmicroservicearchitectureupgradedandoptimizedfromacommercialproject
-
-
 knife4j:
   gateway:
     # 是否开启

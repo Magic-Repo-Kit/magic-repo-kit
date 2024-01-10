@@ -1,6 +1,6 @@
 package com.magicrepokit.chat.service;
 
-import com.magicrepokit.chat.dto.ChatMessagePagesDTO;
+import com.magicrepokit.chat.dto.chatMessage.ChatMessagePagesDTO;
 
 import java.io.InputStream;
 import java.util.function.Consumer;

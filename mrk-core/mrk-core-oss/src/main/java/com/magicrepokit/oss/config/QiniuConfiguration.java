@@ -72,7 +72,10 @@ public class QiniuConfiguration {
 
 	@Bean
 	public Auth auth() {
-		return Auth.create(ossProperties.getAccessKey(), ossProperties.getSecretKey());
+		if(ossProperties.getEnabled()){
+			return Auth.create(ossProperties.getAccessKey(), ossProperties.getSecretKey());
+		}
+		return null;
 	}
 
 	@Bean
@@ -82,7 +85,10 @@ public class QiniuConfiguration {
 
 	@Bean
 	public BucketManager bucketManager(com.qiniu.storage.Configuration cfg) {
-		return new BucketManager(Auth.create(ossProperties.getAccessKey(), ossProperties.getSecretKey()), cfg);
+		if(ossProperties.getEnabled()){
+			return new BucketManager(Auth.create(ossProperties.getAccessKey(), ossProperties.getSecretKey()), cfg);
+		}
+		return null;
 	}
 
 	@Bean

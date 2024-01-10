@@ -1,4 +1,4 @@
-package com.magicrepokit.chat.dto;
+package com.magicrepokit.chat.dto.gpt;
 
 import com.magicrepokit.mb.base.PageParam;
 import lombok.Data;

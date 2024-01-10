@@ -6,6 +6,7 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
+import dev.langchain4j.store.embedding.elasticsearch.ElasticsearchEmbeddingStore;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -25,6 +26,9 @@ public class LangChainConfiguration {
      */
     @Bean
     public ElasticsearchClient elasticDataOperation(ConfigProperties configProperties) {
+        if(!configProperties.getEnabled()){
+            return null;
+        }
         String elasticUrl = configProperties.getElasticHost();
         Integer elasticPort = configProperties.getElasticPort();
         if(ObjectUtil.isEmpty(configProperties.getElasticHost())||ObjectUtil.isEmpty(configProperties.getElasticPort())){

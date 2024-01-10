@@ -1,0 +1,20 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: mrk-system
+  # 配置中心
+  cloud:
+    # 注册中心配置
+    nacos:
+      discovery:
+        server-addr: 124.222.46.195:8848
+        namespace: 123456
+      config:
+        server-addr: 124.222.46.195:8848
+        namespace: 123456
+        # 配置文件格式
+        file-extension: yml
+        shared-configs[0]:
+          dataId: application.yml
+          refresh: true

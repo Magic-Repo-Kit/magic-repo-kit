@@ -1,4 +1,4 @@
-package com.magicrepokit.chat.dto;
+package com.magicrepokit.chat.dto.chatMessage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

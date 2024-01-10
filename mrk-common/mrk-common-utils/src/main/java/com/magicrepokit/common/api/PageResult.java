@@ -5,6 +5,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toList;
 
 @Data
 public final class PageResult<T> implements Serializable {
@@ -33,6 +36,11 @@ public final class PageResult<T> implements Serializable {
 
     public static <T> PageResult<T> empty(Long total) {
         return new PageResult<>(total);
+    }
+
+    public  <R> PageResult<R> convert(Function<? super T, ? extends R> mapper) {
+        List<R> collect = this.list.stream().map(mapper).collect(toList());
+        return new PageResult<>(collect, this.total);
     }
 
 }

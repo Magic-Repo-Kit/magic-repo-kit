@@ -41,6 +41,11 @@ public enum ChatResultCode implements IResultCode {
      */
     CHAT_ADD_CONVERSATION_ERROR(20010304, "CHAT_ADD_CONVERSATION_ERROR"),
 
+    /**
+     * id不存在
+     */
+    ID_NOT_EXIST(20010305, "ID_NOT_EXIST"),
+
     //=====警告级别================
     /**
      * 没有gpt账户
@@ -61,13 +66,50 @@ public enum ChatResultCode implements IResultCode {
      */
     PARENT_MESSAGE_ID_NULL(20010204, "PARENT_MESSAGE_ID_NULL"),
 
-    FILE_NAME_IS_NULL(20010205, "FILE_NAME_IS_NULL"),
+    /**
+     * 父id不存在
+     */
+    PARENT_ID_NOT_EXIST(20010205, "PARENT_ID_NOT_EXIST"),
 
-    FILE_TYPE_ERROR(20010206, "FILE_TYPE_ERROR"),
+    /**
+     * 有子目录
+     */
+    HAS_CHILD(20010206, "HAS_CHILD"),
 
-    FILE_SIZE_ERROR(20010207, "FILE_SIZE_ERROR"),
+    /**
+     * 文件类型错误
+     */
+    FILE_TYPE_ERROR(20010207, "FILE_TYPE_ERROR"),
 
-    FILE_UPLOAD_ERROR(20010208, "20010208");
+    /**
+     * 知识库类型不是文件
+     */
+    TYPE_NOT_FILE(20010208, "TYPE_NOT_FILE"),
+
+    /**
+     * 文件已存在
+     */
+    FILE_EXIST(20010209, "FILE_EXIST"),
+
+    /**
+     * 知识库文件不存在
+     */
+    KNOWLEDGE_FILE_NOT_EXIST(20010210, "KNOWLEDGE_FILE_NOT_EXIST"),
+
+    /**
+     * 存在文件内容
+     */
+    HAS_FILE(20010211,"HAS_FILE"),
+
+    /**
+     * 文件不存在
+     */
+    FILE_NOT_EXIST(20010212, "FILE_NOT_EXIST"),
+
+    /**
+     * 删除索引失败
+     */
+    DELETE_INDEX_ERROR(20010213, "DELETE_INDEX_ERROR");
 
     /**
      * code编码

@@ -9,20 +9,19 @@ import cn.hutool.json.JSONUtil;
 import com.magicrepokit.chat.component.SseEmitterComponent;
 import com.magicrepokit.chat.constant.ChatResultCode;
 import com.magicrepokit.chat.constant.StatusConstant;
-import com.magicrepokit.chat.dto.*;
+import com.magicrepokit.chat.dto.gpt.GptChatDTO;
+import com.magicrepokit.chat.dto.gpt.GptConversationPageDTO;
+import com.magicrepokit.chat.dto.gpt.GptTokenGetDTO;
 import com.magicrepokit.chat.entity.GptConversation;
 import com.magicrepokit.chat.entity.GptConversationDetail;
-import com.magicrepokit.chat.service.IConversationService;
-import com.magicrepokit.chat.service.IGptConversationService;
-import com.magicrepokit.chat.service.IGptService;
-import com.magicrepokit.chat.service.IUserGptService;
+import com.magicrepokit.chat.service.*;
+import com.magicrepokit.chat.vo.KnowledgeFileVO;
 import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.common.utils.AuthUtil;
 import com.magicrepokit.jwt.entity.MRKUser;
 import com.magicrepokit.log.exceotion.ServiceException;
 import com.magicrepokit.mb.base.PageParam;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -40,6 +39,7 @@ public class GptServiceImpl implements IGptService {
     private final IConversationService conversationService;
     private final IUserGptService userGptService;
     private final IGptConversationService gptConversationService;
+    private final IKnowledgeService knowledgeService;
 
     @Override
     public SseEmitter chat(GptChatDTO gptChatDTO) {
@@ -68,6 +68,14 @@ public class GptServiceImpl implements IGptService {
         );
         sseEmitterComponent.close(user.getAccount());
         return sseEmitter;
+    }
+
+    @Override
+    public SseEmitter chat(Long knowledgeId, GptChatDTO gptChatDTO) {
+
+
+
+        return null;
     }
 
     @Override
@@ -122,6 +130,8 @@ public class GptServiceImpl implements IGptService {
             throw new ServiceException(ChatResultCode.CHAT_UUID_ERROR);
         }
     }
+
+
 
     /**
      * 检测是否为uuid
