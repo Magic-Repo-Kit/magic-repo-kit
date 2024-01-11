@@ -3,6 +3,9 @@ server:
 spring:
   application:
     name: mrk-system
+  config:
+    activate:
+      on-profile: pro
   # 配置中心
   cloud:
     # 注册中心配置
@@ -16,3 +19,4 @@ spring:
         shared-configs[0]:
           dataId: application.yml
           refresh: true
+

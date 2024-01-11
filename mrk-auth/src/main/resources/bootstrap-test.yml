@@ -3,6 +3,9 @@ server:
 spring:
   application:
     name: mrk-auth
+  config:
+    activate:
+      on-profile: test
   # 配置中心
   cloud:
     # 注册中心配置

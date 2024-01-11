@@ -4,6 +4,9 @@ server:
 spring:
   application:
     name: mrk-gateway
+  config:
+    activate:
+      on-profile: test
   cloud:
     # 注册中心配置
     nacos:
