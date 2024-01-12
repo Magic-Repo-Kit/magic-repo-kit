@@ -15,7 +15,6 @@ import com.magicrepokit.chat.dto.gpt.GptTokenGetDTO;
 import com.magicrepokit.chat.entity.GptConversation;
 import com.magicrepokit.chat.entity.GptConversationDetail;
 import com.magicrepokit.chat.service.*;
-import com.magicrepokit.chat.vo.KnowledgeFileVO;
 import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.common.utils.AuthUtil;
 import com.magicrepokit.jwt.entity.MRKUser;

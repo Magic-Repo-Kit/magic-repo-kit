@@ -1,4 +1,4 @@
-package com.magicrepokit.chat.vo;
+package com.magicrepokit.chat.vo.knowledge;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
