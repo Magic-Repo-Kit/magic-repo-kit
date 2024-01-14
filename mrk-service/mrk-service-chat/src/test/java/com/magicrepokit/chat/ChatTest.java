@@ -7,7 +7,9 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.magicrepokit.chat.agent.CustomerSupportAgent;
+import com.magicrepokit.chat.component.LangchainComponent;
 import com.magicrepokit.chat.service.tool.CalculatorService;
+import com.magicrepokit.chat.vo.knowledge.KnowledgeFileListVO;
 import com.magicrepokit.langchain.ElasticOperation;
 import com.magicrepokit.langchain.config.ConfigProperties;
 import com.magicrepokit.oss.OssTemplate;
@@ -27,6 +29,7 @@ import dev.langchain4j.model.StreamingResponseHandler;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.input.structured.StructuredPrompt;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
@@ -42,25 +45,31 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static dev.langchain4j.model.openai.OpenAiModelName.GPT_3_5_TURBO;
+import static java.util.stream.Collectors.joining;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @Slf4j
 @ActiveProfiles("test")
+@ComponentScan(basePackages = {"com.magicrepokit"})
 public class ChatTest {
     @Autowired
     private ChatLanguageModel model;
 
-//    @Autowired
-//    CustomerSupportAgent agent;
+    @Autowired
+    CustomerSupportAgent agent;
 
     @Autowired
     EmbeddingModel embeddingModel;
@@ -73,6 +82,9 @@ public class ChatTest {
 
     @Autowired
     ConfigProperties langchainConfigProperties;
+
+    @Autowired
+    LangchainComponent langchainComponent;
 
     @Test
     public void testOssTemplate(){
@@ -105,22 +117,22 @@ public class ChatTest {
         System.out.println(answer);
     }
 
-//    @Test
-//    public void should_provide_booking_details_and_explain_why_cancellation_is_not_possible() {
-//
-//        // Please define API keys in application.properties before running this test.
-//        // Tip: Use gpt-4 for this example, as gpt-3.5-turbo tends to hallucinate often and invent name and surname.
-//
-//        interact(agent, "Hi, I forgot when my booking is.");
-//        interact(agent, "123-457");
-//        interact(agent, "I'm sorry I'm so inattentive today. Klaus Heisler.");
-//        interact(agent, "My bad, it's 123-456");
-////
-////        // Here, information about the cancellation policy is automatically retrieved and injected into the prompt.
-////        // Although the LLM sometimes attempts to cancel the booking, it fails to do so and will explain
-////        // the reason why the booking cannot be cancelled, based on the injected cancellation policy.
-////        interact(agent, "My plans have changed, can I cancel my booking?");
-//    }
+    @Test
+    public void should_provide_booking_details_and_explain_why_cancellation_is_not_possible() {
+
+        // Please define API keys in application.properties before running this test.
+        // Tip: Use gpt-4 for this example, as gpt-3.5-turbo tends to hallucinate often and invent name and surname.
+
+        interact(agent, "你好，我忘记我的预订信息");
+        interact(agent, "123-457");
+        interact(agent, "I'm sorry I'm so inattentive today. Klaus Heisler.");
+        interact(agent, "My bad, it's 123-456");
+
+        // Here, information about the cancellation policy is automatically retrieved and injected into the prompt.
+        // Although the LLM sometimes attempts to cancel the booking, it fails to do so and will explain
+        // the reason why the booking cannot be cancelled, based on the injected cancellation policy.
+        interact(agent, "My plans have changed, can I cancel my booking?");
+    }
 
     private static void interact(CustomerSupportAgent agent, String userMessage) {
         System.out.println("==========================================================================================");
@@ -225,6 +237,24 @@ public class ChatTest {
 
         Thread.sleep(10000);
 
+    }
+
+    @Test
+    public void testTemplate(){
+        PromptTemplate promptTemplate = new PromptTemplate("你可以根据知识库内容回答用户相关问题\n" +
+                "知识库：\n"+
+                "{{knowledge}} \n"+
+                "用户问题：\n" +
+                "{{question}} \n"
+        );
+        //3.检索知识库
+        List<TextSegment> relevant = langchainComponent.findRelevant("mrk_gpt_knowledge2","你好，我忘记我的预订信息?");
+        String relevantContext = relevant.stream().map(TextSegment::text).collect(joining("\n\n"));
+        Map<String,Object> promtMap = new HashMap<>();
+        promtMap.put("knowledge",relevantContext);
+        promtMap.put("question","H你好，我忘记我的预订信息?");
+        Prompt apply = promptTemplate.apply(promtMap);
+        System.out.println(apply.text());
     }
 
 }

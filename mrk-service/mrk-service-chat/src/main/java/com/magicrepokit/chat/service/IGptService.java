@@ -19,11 +19,10 @@ public interface IGptService {
 
     /**
      * gpt角色聊天
-     * @param roleId 角色id
      * @param gptChatDTO 聊天内容
      * @return SseEmitter
      */
-    SseEmitter chat(Long roleId, GptChatDTO gptChatDTO);
+    SseEmitter chatRole(GptChatDTO gptChatDTO);
 
     /**
      * 分页查询会话列表

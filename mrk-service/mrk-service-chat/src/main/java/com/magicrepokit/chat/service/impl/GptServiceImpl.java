@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.magicrepokit.chat.component.LangchainComponent;
 import com.magicrepokit.chat.component.SseEmitterComponent;
 import com.magicrepokit.chat.constant.ChatResultCode;
 import com.magicrepokit.chat.constant.StatusConstant;
@@ -17,17 +18,28 @@ import com.magicrepokit.chat.entity.GptConversation;
 import com.magicrepokit.chat.entity.GptConversationDetail;
 import com.magicrepokit.chat.service.*;
 import com.magicrepokit.chat.vo.gptRole.GptRoleVO;
+import com.magicrepokit.chat.vo.knowledge.KnowledgeFileListVO;
 import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.common.utils.AuthUtil;
 import com.magicrepokit.jwt.entity.MRKUser;
 import com.magicrepokit.log.exceotion.ServiceException;
 import com.magicrepokit.mb.base.PageParam;
 import dev.langchain4j.chain.ConversationalRetrievalChain;
+import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.SystemMessage;
+import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.model.StreamingResponseHandler;
 import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.StreamingChatLanguageModel;
+import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
+import dev.langchain4j.model.output.Response;
 import dev.langchain4j.service.AiServices;
-import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.store.embedding.elasticsearch.ElasticsearchEmbeddingStore;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -36,8 +48,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+
+import static com.alibaba.nacos.shaded.org.checkerframework.checker.units.UnitsTools.g;
+import static java.util.stream.Collectors.joining;
 
 @Service
 @AllArgsConstructor
@@ -47,6 +65,7 @@ public class GptServiceImpl implements IGptService {
     private final IUserGptService userGptService;
     private final IGptConversationService gptConversationService;
     private final IGptRoleService gptRoleService;
+    private final LangchainComponent langchainComponent;
 
     @Override
     public SseEmitter chat(GptChatDTO gptChatDTO) {
@@ -78,21 +97,69 @@ public class GptServiceImpl implements IGptService {
     }
 
     @Override
-    public SseEmitter chat(Long roleId, GptChatDTO gptChatDTO) {
-        GptRoleVO gptRoleVO = gptRoleService.detailById(roleId);
+    public SseEmitter chatRole(GptChatDTO gptChatDTO) {
+        //获取用户信息
+        MRKUser user = AuthUtil.getUser();
+        //获取连接
+        SseEmitter sseEmitter = sseEmitterComponent.SseEmitterConnect(user.getAccount());
+
+        GptRoleVO gptRoleVO = gptRoleService.detailById(gptChatDTO.getRoleId());
         if (ObjectUtil.isEmpty(gptRoleVO)) {
             throw new ServiceException(ChatResultCode.GPT_ROLE_NOT_EXIST);
         }
         //1.建立模型
-        ChatLanguageModel model = chatLanguageModel();
+        StreamingChatLanguageModel streamingChatLanguageModel = streamingChatLanguageModel();
+        List<ChatMessage> chatMessages = new ArrayList<>();
+        //1.系统提示词
+        SystemMessage systemMessage = new SystemMessage(gptRoleVO.getPrompt());
+        chatMessages.add(systemMessage);
+        //2.用户问题
+        PromptTemplate promptTemplate = new PromptTemplate("你可以根据知识库内容回答用户相关问题\n" +
+                "知识库：\n"+
+                "{{knowledge}} \n"
+        );
+        KnowledgeFileListVO knowledge = gptRoleVO.getKnowledgeFileListVO();
+        //3.检索知识库
+        List<TextSegment> relevant = langchainComponent.findRelevant(knowledge.getIndexName(), gptChatDTO.getContent());
+        String relevantContext = relevant.stream().map(TextSegment::text).collect(joining("\n\n"));
+        Map<String,Object> map = new HashMap<>();
+        map.put("knowledge",relevantContext);
+        Prompt prompt = promptTemplate.apply(map);
+        SystemMessage systemMessage1 = new SystemMessage(prompt.text());
+        chatMessages.add(systemMessage1);
+        //4.用户问题
+        UserMessage userMessage = new UserMessage(gptChatDTO.getContent());
+        chatMessages.add(userMessage);
+        //5.聊天
+        streamingChatLanguageModel.generate(chatMessages, new StreamingResponseHandler<AiMessage>() {
+            @Override
+            public void onNext(String token) {
+                sseEmitterComponent.SseEmitterSendMessage(token, user.getAccount());
+            }
 
+            @Override
+            public void onError(Throwable error) {
+                throw new ServiceException(ChatResultCode.CHAT_ERROR+" "+error.getMessage());
+            }
 
+            @Override
+            public void onComplete(Response<AiMessage> response) {
+                sseEmitterComponent.SseEmitterSendComplateMessage(response.toString(), user.getAccount());
+                sseEmitterComponent.close(user.getAccount());
+                StreamingResponseHandler.super.onComplete(response);
 
-        return null;
+            }
+        });
+
+        return sseEmitter;
     }
 
     private ChatLanguageModel chatLanguageModel(){
         return OpenAiChatModel.builder().apiKey("sk-gRbZ9FJz2E7c7mwO5JOvp2u2rtoWoAbg12CxDy3Y25eLeDvd").baseUrl("https://api.chatanywhere.tech/").build();
+    }
+
+    private StreamingChatLanguageModel streamingChatLanguageModel(){
+        return OpenAiStreamingChatModel.builder().apiKey("sk-gRbZ9FJz2E7c7mwO5JOvp2u2rtoWoAbg12CxDy3Y25eLeDvd").baseUrl("https://api.chatanywhere.tech/").build();
     }
 
     @Override

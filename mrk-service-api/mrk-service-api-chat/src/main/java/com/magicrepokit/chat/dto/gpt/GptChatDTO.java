@@ -14,6 +14,12 @@ import lombok.Data;
 @ApiModel(value = "会话聊天模型", description = "开始会话聊天参数")
 public class GptChatDTO {
     /**
+     * 角色id
+     */
+    @ApiModelProperty(value = "角色id",required = true)
+    private Long roleId;
+
+    /**
      * 会话uuid(新会话时为空)
      */
     @ApiModelProperty(value="会话id[uuid格式,不传开始新的会话，传入已存在的uuid继续上一次会话]")

@@ -78,9 +78,9 @@ public class GptController {
      * @param GptChatDTO
      */
     @CrossOrigin("*")
-    @PostMapping(path = "/chat-role/{roleId}", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
+    @PostMapping(path = "/chat-role", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
     @ApiOperation(value = "gpt知识库聊天", notes = "gpt知识库聊天[返回:text/event-stream]")
-    public SseEmitter chatKnowledge(@PathVariable("roleId")Long roleId, @RequestBody GptChatDTO GptChatDTO) {
-        return gptService.chat(roleId,GptChatDTO);
+    public SseEmitter chatKnowledge(@RequestBody GptChatDTO GptChatDTO) {
+        return gptService.chatRole(GptChatDTO);
     }
 }
