@@ -14,6 +14,7 @@ import com.magicrepokit.chat.service.IGptRoleService;
 import com.magicrepokit.chat.service.IKnowledgeService;
 import com.magicrepokit.chat.vo.gptRole.GptRolePageVO;
 import com.magicrepokit.chat.vo.gptRole.GptRoleVO;
+import com.magicrepokit.chat.vo.knowledge.KnowledgeFileListVO;
 import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.common.utils.AuthUtil;
 import com.magicrepokit.common.utils.ObjectUtil;
@@ -66,7 +67,10 @@ public class GptRoleServiceImpl extends BaseServiceImpl<GptRoleMapper, GptRole> 
     public GptRoleVO detailById(Long id) {
         GptRole gptRole = this.getById(id);
         if (ObjectUtil.isNotEmpty(gptRole)) {
-            return gptRoleConverter.entity2VO(gptRole);
+            KnowledgeFileListVO knowledgeFileListVO = knowledgeService.detailFile(gptRole.getKnowledgeId());
+            GptRoleVO gptRoleVO = gptRoleConverter.entity2VO(gptRole);
+            gptRoleVO.setKnowledgeFileListVO(knowledgeFileListVO);
+            return gptRoleVO;
         }
         return null;
     }

@@ -2,6 +2,7 @@ package com.magicrepokit.chat.service.impl;
 
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.text.UnicodeUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
@@ -15,11 +16,18 @@ import com.magicrepokit.chat.dto.gpt.GptTokenGetDTO;
 import com.magicrepokit.chat.entity.GptConversation;
 import com.magicrepokit.chat.entity.GptConversationDetail;
 import com.magicrepokit.chat.service.*;
+import com.magicrepokit.chat.vo.gptRole.GptRoleVO;
 import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.common.utils.AuthUtil;
 import com.magicrepokit.jwt.entity.MRKUser;
 import com.magicrepokit.log.exceotion.ServiceException;
 import com.magicrepokit.mb.base.PageParam;
+import dev.langchain4j.chain.ConversationalRetrievalChain;
+import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.input.PromptTemplate;
+import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.service.AiServices;
+import dev.langchain4j.service.SystemMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -38,7 +46,7 @@ public class GptServiceImpl implements IGptService {
     private final IConversationService conversationService;
     private final IUserGptService userGptService;
     private final IGptConversationService gptConversationService;
-    private final IKnowledgeService knowledgeService;
+    private final IGptRoleService gptRoleService;
 
     @Override
     public SseEmitter chat(GptChatDTO gptChatDTO) {
@@ -70,11 +78,21 @@ public class GptServiceImpl implements IGptService {
     }
 
     @Override
-    public SseEmitter chat(Long knowledgeId, GptChatDTO gptChatDTO) {
+    public SseEmitter chat(Long roleId, GptChatDTO gptChatDTO) {
+        GptRoleVO gptRoleVO = gptRoleService.detailById(roleId);
+        if (ObjectUtil.isEmpty(gptRoleVO)) {
+            throw new ServiceException(ChatResultCode.GPT_ROLE_NOT_EXIST);
+        }
+        //1.建立模型
+        ChatLanguageModel model = chatLanguageModel();
 
 
 
         return null;
+    }
+
+    private ChatLanguageModel chatLanguageModel(){
+        return OpenAiChatModel.builder().apiKey("sk-gRbZ9FJz2E7c7mwO5JOvp2u2rtoWoAbg12CxDy3Y25eLeDvd").baseUrl("https://api.chatanywhere.tech/").build();
     }
 
     @Override

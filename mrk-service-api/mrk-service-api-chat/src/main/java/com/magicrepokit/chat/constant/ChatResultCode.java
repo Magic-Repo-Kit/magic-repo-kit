@@ -114,7 +114,12 @@ public enum ChatResultCode implements IResultCode {
     /**
      * 模型名称错误
      */
-    GPT_MODEL_NAME_ERROR(20010214, "GPT_MODEL_NAME_ERROR");
+    GPT_MODEL_NAME_ERROR(20010214, "GPT_MODEL_NAME_ERROR"),
+
+    /**
+     * 角色不存在
+     */
+    GPT_ROLE_NOT_EXIST(20010215, "GPT_ROLE_NOT_EXIST");
 
     /**
      * code编码

@@ -18,12 +18,12 @@ public interface IGptService {
     SseEmitter chat(GptChatDTO gptChatDTO);
 
     /**
-     * 知识库聊天
-     * @param knowledgeId 知识库id
+     * gpt角色聊天
+     * @param roleId 角色id
      * @param gptChatDTO 聊天内容
      * @return SseEmitter
      */
-    SseEmitter chat(Long knowledgeId, GptChatDTO gptChatDTO);
+    SseEmitter chat(Long roleId, GptChatDTO gptChatDTO);
 
     /**
      * 分页查询会话列表

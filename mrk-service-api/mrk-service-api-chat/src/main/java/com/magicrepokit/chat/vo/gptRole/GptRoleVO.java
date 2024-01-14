@@ -2,6 +2,9 @@ package com.magicrepokit.chat.vo.gptRole;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.magicrepokit.chat.vo.knowledge.KnowledgeFileListVO;
+import com.magicrepokit.chat.vo.knowledge.KnowledgeFileVO;
+import com.magicrepokit.chat.vo.knowledge.KnowledgeVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -59,16 +62,21 @@ public class GptRoleVO {
     private List<String> conversationStarters;
 
     /**
+     * 插件列表。
+     */
+    @ApiModelProperty(value = "插件列表")
+    private List<String> listPlugin;
+
+    /**
      * 知识库id。
      */
     @ApiModelProperty(value = "知识库id")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long knowledgeId;
 
-
     /**
-     * 插件列表。
+     * 知识库信息
      */
-    @ApiModelProperty(value = "插件列表")
-    private List<String> listPlugin;
+    @ApiModelProperty(value = "知识库信息")
+    private KnowledgeFileListVO knowledgeFileListVO;
 }
