@@ -23,6 +23,7 @@ import dev.langchain4j.model.Tokenizer;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -104,8 +105,14 @@ public class GptConversationServiceImpl extends BaseServiceImpl<GptConversationM
             maxCount = DEFAULT_MAX_COUNT;
         }
         //1.查询倒数maxCount条记录
-        return gptConversationDetailService.list(new LambdaQueryWrapper<GptConversationDetail>().eq(GptConversationDetail::getConversationId, conversationId)
+        List<GptConversationDetail> list = gptConversationDetailService.list(new LambdaQueryWrapper<GptConversationDetail>().eq(GptConversationDetail::getConversationId, conversationId)
                 .orderByDesc(GptConversationDetail::getCreateTime).last("limit " + maxCount));
+        if(ObjectUtil.isNotEmpty(list)){
+            //根据时间正序
+            list.sort(Comparator.comparing(GptConversationDetail::getCreateTime));
+            return list;
+        }
+        return null;
     }
 
     /**
@@ -126,6 +133,7 @@ public class GptConversationServiceImpl extends BaseServiceImpl<GptConversationM
         if(ObjectUtil.isEmpty(list)){
             return null;
         }
+        list.sort(Comparator.comparing(GptConversationDetail::getCreateTime));
         List<ChatMessage> chatMessages =  gptConverter.conversationDetail2ChatMessage(list);
         //计算token
         Tokenizer openAiTokenizer = langchainComponent.getOpenAiTokenizer(gptModel);

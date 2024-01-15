@@ -35,6 +35,7 @@ import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.output.Response;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -62,7 +63,9 @@ public class GptServiceImpl implements IGptService {
     public SseEmitter chatRole(GptChatDTO gptChatDTO) {
         //获取连接
         MRKUser user = AuthUtil.getUser();
-        SseEmitter sseEmitter = sseEmitterComponent.SseEmitterConnect(user.getAccount());
+        Long userId = user.getUserId();
+        String account = user.getAccount();
+        SseEmitter sseEmitter = sseEmitterComponent.SseEmitterConnect(account);
         //查询模型信息
         GptRoleVO gptRoleVO = getGptRole(gptChatDTO.getRoleId());
         //建立模型
@@ -111,7 +114,7 @@ public class GptServiceImpl implements IGptService {
                 sseEmitterComponent.SseEmitterSendComplateMessage(response.toString(), user.getAccount());
                 sseEmitterComponent.close(user.getAccount());
                 //保存聊天记录
-                saveChatHistory(gptChatDTO.getConversationId(),gptChatDTO.getRoleId(),response.content().text(),gptChatDTO.getContent());
+                saveChatHistory(gptChatDTO.getConversationId(),gptChatDTO.getRoleId(),response.content().text(),userId,gptChatDTO.getContent());
                 StreamingResponseHandler.super.onComplete(response);
             }
         });
@@ -119,7 +122,8 @@ public class GptServiceImpl implements IGptService {
         return sseEmitter;
     }
 
-    private void saveChatHistory(String conversationId,Long gptId,String gptContext,String userContext){
+
+    public void saveChatHistory(String conversationId,Long gptId,String gptContext,Long userId,String userContext){
         //1.创建conversation
         if(ObjectUtil.isEmpty(conversationId)){
             conversationId = UUID.randomUUID().toString();
@@ -131,9 +135,17 @@ public class GptServiceImpl implements IGptService {
         }
         //2.保持历史记录
         GptSaveChatMessage gptSaveChatMessage = new GptSaveChatMessage();
-        List<GptSaveChatMessage.MessageContext> messageContexts = new ArrayList<>(2);
-        messageContexts.add(new GptSaveChatMessage.MessageContext(1,userContext,AuthUtil.getUser().getUserId()));
-        messageContexts.add(new GptSaveChatMessage.MessageContext(2,gptContext,gptId));
+        List<GptSaveChatMessage.MessageContext> messageContexts = new ArrayList<>();
+        GptSaveChatMessage.MessageContext messageContext = new GptSaveChatMessage.MessageContext();
+        messageContext.setType(1);
+        messageContext.setMessage(userContext);
+        messageContext.setUserId(userId);
+        messageContexts.add(messageContext);
+        GptSaveChatMessage.MessageContext gptMessage = new GptSaveChatMessage.MessageContext();
+        gptMessage.setType(2);
+        gptMessage.setMessage(gptContext);
+        gptMessage.setUserId(gptId);
+        messageContexts.add(gptMessage);
         gptSaveChatMessage.setConversationId(conversationId);
         gptSaveChatMessage.setMessageContext(messageContexts);
         gptConversationService.saveChatHistory(gptSaveChatMessage);
@@ -154,14 +166,15 @@ public class GptServiceImpl implements IGptService {
      */
     private SystemMessage getHistoryMessage(String conversationId) {
         //知识库内容
-        PromptTemplate promptTemplate = new PromptTemplate("以下是历史记录:\n" +
+        PromptTemplate promptTemplate = new PromptTemplate("以下是你和用户的聊天历史记录，其中you代表你，user代表用户。聊天历史记录是按照create_time时间正序排列的。注意:你也可根据你和用户的历史聊天记录修正你的答案。\n" +
+                "聊天历史：\n"+
                 "{{history}}"
         );
         List<GptConversationDetail> gptConversationDetails = gptConversationService.listConversationHistory(conversationId, null);
         if(ObjectUtil.isNotEmpty(gptConversationDetails)){
             String context = gptConversationDetails.stream().map(item->{
-                String prefix = (item.getType() == 1) ? "user: " : "ai: ";
-                return prefix + item.getMessage();
+                String prefix = (item.getType() == 1) ? "user: " : "you: ";
+                return prefix + item.getMessage()+" create_time:"+item.getCreateTime();
                     }).collect(joining("\n\n"));
             Map<String,Object> map = new HashMap<>();
             map.put("history",context);
