@@ -3,7 +3,9 @@ package com.magicrepokit.chat.dto.gpt;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -24,6 +26,8 @@ public class GptSaveChatMessage {
 
     @Data
     @ApiModel(value = "MessageContext消息内容", description = "消息内容")
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class MessageContext{
         /**
          * 消息类型[1:用户 2:AI]

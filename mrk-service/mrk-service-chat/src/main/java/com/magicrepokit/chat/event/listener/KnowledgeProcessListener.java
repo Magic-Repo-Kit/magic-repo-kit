@@ -1,13 +1,11 @@
 package com.magicrepokit.chat.event.listener;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.magicrepokit.chat.component.LangchainComponent;
 import com.magicrepokit.chat.constant.KnowledgeConstant;
 import com.magicrepokit.chat.entity.KnowledgeDetail;
 import com.magicrepokit.chat.event.KnowledgeProcessEvent;
 import com.magicrepokit.chat.service.IKnowledgeDetailService;
-import com.magicrepokit.langchain.config.ConfigProperties;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentParser;
 import dev.langchain4j.data.document.DocumentSplitter;
@@ -16,15 +14,10 @@ import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.data.document.parser.apache.pdfbox.ApachePdfBoxDocumentParser;
 import dev.langchain4j.data.document.parser.apache.poi.ApachePoiDocumentParser;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
-import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
-import dev.langchain4j.store.embedding.elasticsearch.ElasticsearchEmbeddingStore;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -82,8 +75,8 @@ public class KnowledgeProcessListener implements ApplicationListener<KnowledgePr
             changeStatus(knowledgeDetail,KnowledgeConstant.TRAINING,null);
             EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
                     .documentSplitter(documentSplitter)
-                    .embeddingModel(langchainComponent.getEmbeddingModel())
-                    .embeddingStore(langchainComponent.getElasticsearchEmbeddingStore(event.getIndexName()))
+                    .embeddingModel(langchainComponent.getDefaultEmbeddingModel())
+                    .embeddingStore(langchainComponent.getDefaultElasticsearchEmbeddingStore(event.getIndexName()))
                     .build();
             ingestor.ingest(document);
             changeStatus(knowledgeDetail,KnowledgeConstant.COMPLETE,null);

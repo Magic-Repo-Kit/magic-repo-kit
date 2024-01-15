@@ -1,6 +1,8 @@
 package com.magicrepokit.chat.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.magicrepokit.chat.component.LangchainComponent;
+import com.magicrepokit.chat.constant.GptModel;
 import com.magicrepokit.chat.converter.GptConverter;
 import com.magicrepokit.chat.dto.gpt.GptConversationPageDTO;
 import com.magicrepokit.chat.dto.gpt.GptSaveChatMessage;
@@ -16,6 +18,8 @@ import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.common.utils.ObjectUtil;
 import com.magicrepokit.mb.base.BaseServiceImpl;
 import com.magicrepokit.mb.base.PageParam;
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.model.Tokenizer;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +33,11 @@ public class GptConversationServiceImpl extends BaseServiceImpl<GptConversationM
     private final IGptConversationDetailService gptConversationDetailService;
     private final GptConverter gptConverter;
     private final IGptRoleService gptRoleService;
+    private final LangchainComponent langchainComponent;
     private final static Integer DEFAULT_MAX_COUNT = 20;
-    private final static String DEFAULT_MAX_TOKEN = 1000L + "";
+    private final static Integer DEFAULT_MAX_TOKEN = 1500;
+
+    private final static Integer DEFAULT_WORDS = 25;
 
 
     @Override
@@ -63,7 +70,7 @@ public class GptConversationServiceImpl extends BaseServiceImpl<GptConversationM
     }
 
     @Override
-    public boolean saveConversation(GptSaveChatMessage gptSaveChatMessage) {
+    public boolean saveChatHistory(GptSaveChatMessage gptSaveChatMessage) {
         String conversationId = gptSaveChatMessage.getConversationId();
         List<GptSaveChatMessage.MessageContext> messageContext = gptSaveChatMessage.getMessageContext();
         if (ObjectUtil.isEmpty(messageContext)) {
@@ -80,6 +87,11 @@ public class GptConversationServiceImpl extends BaseServiceImpl<GptConversationM
         return gptConversationDetailService.saveBatch(gptConversationDetails);
     }
 
+    @Override
+    public boolean addConversation(GptConversation gptConversation) {
+        return save(gptConversation);
+    }
+
     /**
      * 获取聊天历史记录
      * @param conversationId 会话id
@@ -91,18 +103,47 @@ public class GptConversationServiceImpl extends BaseServiceImpl<GptConversationM
         if(ObjectUtil.isEmpty(maxCount)){
             maxCount = DEFAULT_MAX_COUNT;
         }
-        return null;
+        //1.查询倒数maxCount条记录
+        return gptConversationDetailService.list(new LambdaQueryWrapper<GptConversationDetail>().eq(GptConversationDetail::getConversationId, conversationId)
+                .orderByDesc(GptConversationDetail::getCreateTime).last("limit " + maxCount));
     }
 
     /**
      * 获取聊天历史记录
      * @param conversationId 会话id
      * @param maxToken 最大token
+     * @param gptModel gpt模型
      * @return 聊天历史记录
      */
     @Override
-    public List<GptConversationDetail> listConversationHistory(String conversationId, String maxToken) {
+    public List<GptConversationDetail> listConversationHistory(String conversationId, Integer maxToken, GptModel gptModel) {
+        if(ObjectUtil.isEmpty(maxToken)){
+            maxToken = DEFAULT_MAX_TOKEN;
+        }
+        //1.默认查询数量
+        List<GptConversationDetail> list = gptConversationDetailService.list(new LambdaQueryWrapper<GptConversationDetail>().eq(GptConversationDetail::getConversationId, conversationId)
+                .orderByDesc(GptConversationDetail::getCreateTime).last("limit " + getSelectCount(maxToken)));
+        if(ObjectUtil.isEmpty(list)){
+            return null;
+        }
+        List<ChatMessage> chatMessages =  gptConverter.conversationDetail2ChatMessage(list);
+        //计算token
+        Tokenizer openAiTokenizer = langchainComponent.getOpenAiTokenizer(gptModel);
+        int token = openAiTokenizer.estimateTokenCountInMessages(chatMessages);
+        //2.如果token小于maxToken，直接返回
+        if(token<=maxToken){
+            return list;
+        }else{
+            while (token>maxToken&&list.size()>1){
+                list.remove(0);
+                chatMessages =  gptConverter.conversationDetail2ChatMessage(list);
+                token = openAiTokenizer.estimateTokenCountInMessages(chatMessages);
+            }
+        }
+        return list;
+    }
 
-        return null;
+    private int getSelectCount(Integer maxToken){
+        return (maxToken / DEFAULT_WORDS)+1;
     }
 }

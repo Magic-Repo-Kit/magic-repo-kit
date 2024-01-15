@@ -1,11 +1,15 @@
 package com.magicrepokit.chat.component;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.nacos.shaded.org.checkerframework.checker.units.qual.C;
+import com.magicrepokit.chat.constant.GptModel;
 import com.magicrepokit.langchain.config.ConfigProperties;
 import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.model.Tokenizer;
+import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
+import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
+import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.retriever.EmbeddingStoreRetriever;
 import dev.langchain4j.store.embedding.elasticsearch.ElasticsearchEmbeddingStore;
 import lombok.AllArgsConstructor;
@@ -22,11 +26,12 @@ public class LangchainComponent {
 
     /**
      * 获取elasticsearch存储
+     *
      * @param indexName 索引名称
      * @return ElasticsearchEmbeddingStore
      */
-    public ElasticsearchEmbeddingStore getElasticsearchEmbeddingStore(String indexName){
-        if(!langchainConfigProperties.getEnabled()){
+    public ElasticsearchEmbeddingStore getDefaultElasticsearchEmbeddingStore(String indexName) {
+        if (!langchainConfigProperties.getEnabled()) {
             log.error("未开启elasticsearch");
             return null;
         }
@@ -45,13 +50,14 @@ public class LangchainComponent {
 
     /**
      * 向量检索
+     *
      * @param indexName 索引名称
-     * @param question 问题
+     * @param question  问题
      * @return List<TextSegment>
      */
-    public List<TextSegment> findRelevant(String indexName,String question){
-        EmbeddingStoreRetriever embeddingStoreRetriever = new EmbeddingStoreRetriever(getElasticsearchEmbeddingStore(indexName),
-                getEmbeddingModel(),
+    public List<TextSegment> findRelevant(String indexName, String question) {
+        EmbeddingStoreRetriever embeddingStoreRetriever = new EmbeddingStoreRetriever(getDefaultElasticsearchEmbeddingStore(indexName),
+                getDefaultEmbeddingModel(),
                 5,
                 0.7
         );
@@ -60,15 +66,16 @@ public class LangchainComponent {
 
     /**
      * 向量检索
+     *
      * @param indexName 索引名称
-     * @param question 问题
+     * @param question  问题
      * @param maxResult 最大结果
-     * @param minScore 最小分数
+     * @param minScore  最小分数
      * @return List<TextSegment>
      */
-    public List<TextSegment> findRelevant(String indexName,String question,int maxResult,double minScore){
-        EmbeddingStoreRetriever embeddingStoreRetriever = new EmbeddingStoreRetriever(getElasticsearchEmbeddingStore(indexName),
-                getEmbeddingModel(),
+    public List<TextSegment> findRelevant(String indexName, String question, int maxResult, double minScore) {
+        EmbeddingStoreRetriever embeddingStoreRetriever = new EmbeddingStoreRetriever(getDefaultElasticsearchEmbeddingStore(indexName),
+                getDefaultEmbeddingModel(),
                 maxResult,
                 minScore
         );
@@ -79,8 +86,42 @@ public class LangchainComponent {
     /**
      * 获取分词模型
      */
-    public EmbeddingModel getEmbeddingModel(){
+    public EmbeddingModel getDefaultEmbeddingModel() {
         return OpenAiEmbeddingModel.builder().apiKey("sk-gRbZ9FJz2E7c7mwO5JOvp2u2rtoWoAbg12CxDy3Y25eLeDvd").baseUrl("https://api.chatanywhere.tech/v1").build();
     }
+
+    /**
+     * 获取分词器
+     *
+     * @param gptModel
+     * @return
+     */
+    public Tokenizer getOpenAiTokenizer(GptModel gptModel) {
+        return new OpenAiTokenizer(gptModel.getAcutualModelName());
+    }
+
+    /**
+     * 获取默认聊天模型
+     *
+     * @return StreamingChatLanguageModel
+     */
+    public StreamingChatLanguageModel getStreamingDefaultChatLanguageModel(GptModel gptModel) {
+        return OpenAiStreamingChatModel.builder()
+                .apiKey("sk-gRbZ9FJz2E7c7mwO5JOvp2u2rtoWoAbg12CxDy3Y25eLeDvd")
+                .baseUrl("https://api.chatanywhere.tech/")
+                .modelName(gptModel.getAcutualModelName())
+                .build();
+    }
+
+    /**
+     * 获取聊天模型
+     *
+     * @return StreamingChatLanguageModel
+     */
+    public StreamingChatLanguageModel getStreamingChatLanguageModel(GptModel gptModel) {
+        //TODO 获取用户信息 1.查询用户key 2.如果有使用用户，如果没有使用默认
+        return getStreamingDefaultChatLanguageModel(gptModel);
+    }
+
 
 }

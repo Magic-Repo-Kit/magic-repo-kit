@@ -5,15 +5,12 @@ package com.magicrepokit.chat;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.ObjectMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.magicrepokit.chat.agent.CustomerSupportAgent;
 import com.magicrepokit.chat.component.LangchainComponent;
 import com.magicrepokit.chat.service.tool.CalculatorService;
-import com.magicrepokit.chat.vo.knowledge.KnowledgeFileListVO;
 import com.magicrepokit.langchain.ElasticOperation;
 import com.magicrepokit.langchain.config.ConfigProperties;
 import com.magicrepokit.oss.OssTemplate;
-import dev.langchain4j.chain.ConversationalChain;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentSplitter;
 import dev.langchain4j.data.document.loader.UrlDocumentLoader;
@@ -31,14 +28,12 @@ import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.PromptTemplate;
-import dev.langchain4j.model.input.structured.StructuredPrompt;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
-import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.elasticsearch.ElasticsearchEmbeddingStore;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -46,11 +41,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -255,6 +249,15 @@ public class ChatTest {
         promtMap.put("question","H你好，我忘记我的预订信息?");
         Prompt apply = promptTemplate.apply(promtMap);
         System.out.println(apply.text());
+    }
+
+    @Test
+    public void testCostToken(){
+        OpenAiTokenizer openAiTokenizer = new OpenAiTokenizer("gpt-3.5-turbo");
+        int i = openAiTokenizer.estimateTokenCountInText("你好，我忘记我的预订信息?");
+        String generate = model.generate("你好，我忘记我的预订信息?");
+        System.out.println(i);
+        System.out.println(generate);
     }
 
 }

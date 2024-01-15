@@ -1,5 +1,6 @@
 package com.magicrepokit.chat.service;
 
+import com.magicrepokit.chat.constant.GptModel;
 import com.magicrepokit.chat.dto.gpt.GptConversationPageDTO;
 import com.magicrepokit.chat.dto.gpt.GptSaveChatMessage;
 import com.magicrepokit.chat.entity.GptConversation;
@@ -30,11 +31,16 @@ public interface IGptConversationService extends BaseService<GptConversation> {
     PageResult<GptConversationDetail> listConversationDetailByPage(PageParam pageParam, String conversationId);
 
     /**
-     * 保存会话
+     * 保存聊天记录
      * @param gptSaveChatMessage
      * @return 保存结果
      */
-    boolean saveConversation(GptSaveChatMessage gptSaveChatMessage);
+    boolean saveChatHistory(GptSaveChatMessage gptSaveChatMessage);
+
+    /**
+     * 新增会话
+     */
+    boolean addConversation(GptConversation gptConversation);
 
     /**
      * 获取聊天历史记录
@@ -48,5 +54,5 @@ public interface IGptConversationService extends BaseService<GptConversation> {
      * @param conversationId 会话id
      * @param maxToken 最大token
      */
-    List<GptConversationDetail> listConversationHistory(String conversationId,String maxToken);
+    List<GptConversationDetail> listConversationHistory(String conversationId, Integer maxToken, GptModel gptModel);
 }

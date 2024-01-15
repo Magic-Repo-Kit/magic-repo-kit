@@ -72,9 +72,11 @@ public class GptRoleServiceImpl extends BaseServiceImpl<GptRoleMapper, GptRole> 
     public GptRoleVO detailById(Long id) {
         GptRole gptRole = this.getById(id);
         if (ObjectUtil.isNotEmpty(gptRole)) {
-            KnowledgeFileListVO knowledgeFileListVO = knowledgeService.detailFile(gptRole.getKnowledgeId());
             GptRoleVO gptRoleVO = gptRoleConverter.entity2VO(gptRole);
-            gptRoleVO.setKnowledgeFileListVO(knowledgeFileListVO);
+            if(ObjectUtil.isNotEmpty(gptRole.getKnowledgeId())){
+                KnowledgeFileListVO knowledgeFileListVO = knowledgeService.detailFile(gptRole.getKnowledgeId());
+                gptRoleVO.setKnowledgeFileListVO(knowledgeFileListVO);
+            }
             return gptRoleVO;
         }
         return null;

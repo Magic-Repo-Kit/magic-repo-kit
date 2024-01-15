@@ -32,13 +32,13 @@ public class GptChatDTO {
     private String content;
 
     /**
-     * 是否联网
+     * 是否联网[1:关闭 2:开启]
      */
     @ApiModelProperty(value = "是否联网[1:关闭 2:开启]",required = true)
     private Integer isOnline;
 
     /**
-     * 是否开启上下文
+     * 是否开启上下文[1:关闭 2:开启]
      */
     @ApiModelProperty(value = "是否开启上下文[1:关闭 2:开启]",required = true)
     private Integer isContext;
