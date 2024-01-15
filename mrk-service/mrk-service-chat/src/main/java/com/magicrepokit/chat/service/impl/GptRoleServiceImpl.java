@@ -23,6 +23,11 @@ import com.magicrepokit.mb.base.BaseServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toMap;
+
 @Service
 @AllArgsConstructor
 public class GptRoleServiceImpl extends BaseServiceImpl<GptRoleMapper, GptRole> implements IGptRoleService {
@@ -90,6 +95,15 @@ public class GptRoleServiceImpl extends BaseServiceImpl<GptRoleMapper, GptRole> 
         PageResult<GptRole> gptRolePageResult = selectPage(pageDTO, lambdaQueryWrapper);
 
         return gptRolePageResult.convert(gptRoleConverter::entity2PageVO);
+    }
+
+    @Override
+    public Map<Long, GptRole> queryIdMap(List<Long> gptRoleIds) {
+        List<GptRole> gptRoles = this.list(new LambdaQueryWrapper<GptRole>().in(GptRole::getId, gptRoleIds));
+        if (ObjectUtil.isNotEmpty(gptRoles)) {
+            return gptRoles.stream().collect(toMap(GptRole::getId, gptRole -> gptRole));
+        }
+        return null;
     }
 
     /**

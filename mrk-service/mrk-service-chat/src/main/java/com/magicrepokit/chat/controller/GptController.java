@@ -1,9 +1,9 @@
 package com.magicrepokit.chat.controller;
 
 import com.magicrepokit.chat.dto.gpt.GptChatDTO;
-import com.magicrepokit.chat.entity.GptConversation;
 import com.magicrepokit.chat.entity.GptConversationDetail;
 import com.magicrepokit.chat.service.IGptService;
+import com.magicrepokit.chat.vo.gpt.GptConversationPage;
 import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.mb.base.PageParam;
@@ -29,26 +29,25 @@ import java.util.List;
 public class GptController {
     private IGptService gptService;
 
-
     /**
-     * gpt普通会话聊天
-     * @param gptChatDTO
-     * @return
+     * gpt角色聊天
+     * @param GptChatDTO
      */
     @CrossOrigin("*")
-    @PostMapping(path = "/chat", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
-    @ApiOperation(value = "gpt聊天", notes = "gpt聊天[返回:text/event-stream]")
-    public SseEmitter chat(@RequestBody GptChatDTO gptChatDTO) {
-        return gptService.chat(gptChatDTO);
+    @PostMapping(path = "/chat-role", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
+    @ApiOperation(value = "gpt知识库聊天", notes = "gpt知识库聊天[返回:text/event-stream]")
+    public SseEmitter chatKnowledge(@RequestBody GptChatDTO GptChatDTO) {
+        return gptService.chatRole(GptChatDTO);
     }
+
 
     /**
      * 分页查询会话列表
      */
-    @GetMapping("/list-conversation-by-page")
+    @GetMapping("/page-conversation")
     @ApiOperation(value = "gpt会话分页", notes = "gpt会话分页")
-    public R<PageResult<GptConversation>> listConversationByPage(PageParam pageParam){
-        return R.data(gptService.listConversationByPage(pageParam));
+    public R<PageResult<GptConversationPage>> pageConversation(PageParam pageParam){
+        return R.data(gptService.pageConversation(pageParam));
     }
 
     /**
@@ -71,16 +70,5 @@ public class GptController {
     @ApiOperation(value = "gpt会话详情分页", notes = "gpt会话详情分页")
     public R<PageResult<GptConversationDetail>> listConversationDetailByPage(PageParam pageParam,@ApiParam(value = "会话id",required = true) String conversationId){
         return R.data(gptService.listConversationDetailByPage(pageParam, conversationId));
-    }
-
-    /**
-     * gpt角色聊天
-     * @param GptChatDTO
-     */
-    @CrossOrigin("*")
-    @PostMapping(path = "/chat-role", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
-    @ApiOperation(value = "gpt知识库聊天", notes = "gpt知识库聊天[返回:text/event-stream]")
-    public SseEmitter chatKnowledge(@RequestBody GptChatDTO GptChatDTO) {
-        return gptService.chatRole(GptChatDTO);
     }
 }

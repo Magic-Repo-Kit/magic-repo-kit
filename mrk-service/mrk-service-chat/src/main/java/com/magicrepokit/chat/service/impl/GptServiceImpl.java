@@ -17,6 +17,7 @@ import com.magicrepokit.chat.dto.gpt.GptTokenGetDTO;
 import com.magicrepokit.chat.entity.GptConversation;
 import com.magicrepokit.chat.entity.GptConversationDetail;
 import com.magicrepokit.chat.service.*;
+import com.magicrepokit.chat.vo.gpt.GptConversationPage;
 import com.magicrepokit.chat.vo.gptRole.GptRoleVO;
 import com.magicrepokit.chat.vo.knowledge.KnowledgeFileListVO;
 import com.magicrepokit.common.api.PageResult;
@@ -40,6 +41,7 @@ import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.store.embedding.elasticsearch.ElasticsearchEmbeddingStore;
+import feign.Client;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -61,41 +63,9 @@ import static java.util.stream.Collectors.joining;
 @AllArgsConstructor
 public class GptServiceImpl implements IGptService {
     private final SseEmitterComponent sseEmitterComponent;
-    private final IConversationService conversationService;
-    private final IUserGptService userGptService;
     private final IGptConversationService gptConversationService;
     private final IGptRoleService gptRoleService;
     private final LangchainComponent langchainComponent;
-
-    @Override
-    public SseEmitter chat(GptChatDTO gptChatDTO) {
-        //获取用户信息
-        MRKUser user = AuthUtil.getUser();
-        if (user == null) {
-            throw new ServiceException(ChatResultCode.NOT_AUTHORIZED);
-        }
-        //获取账户额度
-        GptTokenGetDTO gptToken = userGptService.getGptToken(user.getUserId());
-        if (gptToken.getStatus().equals(StatusConstant.GPT_NO_ACCOUNT)) {
-            throw new ServiceException(ChatResultCode.GPT_NO_ACCOUNT);
-        }
-        if (gptToken.getStatus().equals(StatusConstant.GPT_NO_REGULAR_CREDIT_LIMIT)) {
-            throw new ServiceException(ChatResultCode.GPT_NO_REGULAR_CREDIT_LIMIT);
-        }
-        //获取token
-        String token = gptToken.getToken();
-        //校验数据类型
-        validateGptChatDTO(gptChatDTO);
-        //获取连接
-        SseEmitter sseEmitter = sseEmitterComponent.SseEmitterConnect(user.getAccount());
-        //推送消息
-        conversationService.sendMsg(token, gptChatDTO.getMessageId(), gptChatDTO.getContent(), gptChatDTO.getConversationId(), gptChatDTO.getParentMessageId(),
-                createConsumer(user.getUserId(), user.getAccount(), gptChatDTO.getMessageId(), gptChatDTO.getParentMessageId(), gptChatDTO.getConversationId(), gptChatDTO.getContent())
-        );
-        sseEmitterComponent.close(user.getAccount());
-        return sseEmitter;
-    }
-
     @Override
     public SseEmitter chatRole(GptChatDTO gptChatDTO) {
         //获取用户信息
@@ -163,8 +133,8 @@ public class GptServiceImpl implements IGptService {
     }
 
     @Override
-    public PageResult<GptConversation> listConversationByPage(PageParam pageParam) {
-        //获取用户信息
+    public PageResult<GptConversationPage> pageConversation(PageParam pageParam) {
+        //TODO 后期上角色权限
         MRKUser user = AuthUtil.getUser();
         if (user == null) {
             throw new ServiceException(ChatResultCode.NOT_AUTHORIZED);
@@ -184,35 +154,7 @@ public class GptServiceImpl implements IGptService {
 
     @Override
     public PageResult<GptConversationDetail> listConversationDetailByPage(PageParam pageParam, String conversationId) {
-        return null;
-    }
-
-    /**
-     * 校验数据
-     *
-     * @param gptChatDTO
-     */
-    private void validateGptChatDTO(GptChatDTO gptChatDTO) {
-        //如果会话uuid不为空检测是否为uuid类型
-        if (StrUtil.isNotBlank(gptChatDTO.getConversationId())) {
-            if (!checkIsUUID(gptChatDTO.getConversationId())) {
-                throw new ServiceException(ChatResultCode.CHAT_UUID_ERROR);
-            }
-        }
-        //如果消息uuid不为空检测是否为uuid类型
-        if (StrUtil.isBlank(gptChatDTO.getMessageId())) {
-            throw new ServiceException(ChatResultCode.MESSAGE_ID_NULL);
-        }
-        if (!checkIsUUID(gptChatDTO.getMessageId())) {
-            throw new ServiceException(ChatResultCode.CHAT_UUID_ERROR);
-        }
-        //如果父消息uuid不为空检测是否为uuid类型
-        if (StrUtil.isBlank(gptChatDTO.getParentMessageId())) {
-            throw new ServiceException(ChatResultCode.PARENT_MESSAGE_ID_NULL);
-        }
-        if (!checkIsUUID(gptChatDTO.getParentMessageId())) {
-            throw new ServiceException(ChatResultCode.CHAT_UUID_ERROR);
-        }
+        return gptConversationService.listConversationDetailByPage(pageParam,conversationId);
     }
 
 
@@ -297,9 +239,9 @@ public class GptServiceImpl implements IGptService {
                         if (conversationId == null||conversationId.equals("")) {
                             conversationId = end.getStr("conversation_id");
                             if (conversationId != null&&!conversationId.equals("")) {
-                                if (!gptConversationService.addConversation(userId, conversationId, ask.substring(0, Math.min(ask.length(), 5)) + "...")) {
-                                    throw new ServiceException(ChatResultCode.CHAT_ADD_CONVERSATION_ERROR);
-                                }
+//                                if (!gptConversationService.addConversation(userId, conversationId, ask.substring(0, Math.min(ask.length(), 5)) + "...")) {
+//                                    throw new ServiceException(ChatResultCode.CHAT_ADD_CONVERSATION_ERROR);
+//                                }
                             }
                         }
                         JSONObject message = lastResponse.getJSONObject("message");
@@ -310,9 +252,9 @@ public class GptServiceImpl implements IGptService {
                                 if (parts != null) {
                                     String string = parts.get(0).toString();
                                     //2.存入消息
-                                    if (!gptConversationService.addMessage(conversationId, messageId, parentMessageId, ask, UnicodeUtil.toString(string))) {
-                                        throw new ServiceException(ChatResultCode.CHAT_ADD_CONVERSATION_ERROR);
-                                    }
+//                                    if (!gptConversationService.addMessage(conversationId, messageId, parentMessageId, ask, UnicodeUtil.toString(string))) {
+//                                        throw new ServiceException(ChatResultCode.CHAT_ADD_CONVERSATION_ERROR);
+//                                    }
                                 }
                             }
                         }

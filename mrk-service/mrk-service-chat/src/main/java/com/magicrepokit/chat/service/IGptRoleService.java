@@ -9,6 +9,9 @@ import com.magicrepokit.chat.vo.gptRole.GptRoleVO;
 import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.mb.base.BaseService;
 
+import java.util.List;
+import java.util.Map;
+
 public interface IGptRoleService extends BaseService<GptRole> {
 
     /**
@@ -45,4 +48,11 @@ public interface IGptRoleService extends BaseService<GptRole> {
      * @return Gpt角色分页VO
      */
     PageResult<GptRolePageVO> page(GptRolePageDTO pageDTO);
+
+    /**
+     * id映射Gpt角色
+     * @param gptRoleIds Gpt角色ids
+     * @return
+     */
+    Map<Long, GptRole> queryIdMap(List<Long> gptRoleIds);
 }

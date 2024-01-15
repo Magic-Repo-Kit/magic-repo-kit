@@ -124,14 +124,14 @@ public class ChatTest {
         // Tip: Use gpt-4 for this example, as gpt-3.5-turbo tends to hallucinate often and invent name and surname.
 
         interact(agent, "你好，我忘记我的预订信息");
-        interact(agent, "123-457");
-        interact(agent, "I'm sorry I'm so inattentive today. Klaus Heisler.");
-        interact(agent, "My bad, it's 123-456");
-
-        // Here, information about the cancellation policy is automatically retrieved and injected into the prompt.
-        // Although the LLM sometimes attempts to cancel the booking, it fails to do so and will explain
-        // the reason why the booking cannot be cancelled, based on the injected cancellation policy.
-        interact(agent, "My plans have changed, can I cancel my booking?");
+//        interact(agent, "123-457");
+//        interact(agent, "I'm sorry I'm so inattentive today. Klaus Heisler.");
+//        interact(agent, "My bad, it's 123-456");
+//
+//        // Here, information about the cancellation policy is automatically retrieved and injected into the prompt.
+//        // Although the LLM sometimes attempts to cancel the booking, it fails to do so and will explain
+//        // the reason why the booking cannot be cancelled, based on the injected cancellation policy.
+//        interact(agent, "My plans have changed, can I cancel my booking?");
     }
 
     private static void interact(CustomerSupportAgent agent, String userMessage) {

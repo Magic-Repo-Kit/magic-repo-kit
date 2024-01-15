@@ -21,32 +21,20 @@ public class GptConversationDetail extends BaseEntity {
     private String conversationId;
 
     /**
-     * 消息id
-     */
-    @ApiModelProperty(value = "消息id")
-    private String messageId;
-
-    /**
-     * 父消息id
-     */
-    @ApiModelProperty(value = "父消息id")
-    private String parentMessageId;
-
-    /**
      * 消息内容
      */
     @ApiModelProperty(value = "消息内容")
     private String message;
 
     /**
-     * 消息类型[1:提问 2:回答]
+     * 用户类型[1:用户 2:AI]
      */
-    @ApiModelProperty(value = "消息类型[1:提问 2:回答]")
+    @ApiModelProperty(value = "用户类型[1:用户 2:AI]")
     private Integer type;
 
     /**
-     * 消息状态[1:未完成 2:已完成]
+     * 用户id[可以是用户id或者AI角色id]
      */
-    @ApiModelProperty(value = "消息状态[1:未完成 2:已完成]")
-    private Integer status;
+    @ApiModelProperty(value = "用户id[可以是用户id或者AI角色id]")
+    private Long userId;
 }
