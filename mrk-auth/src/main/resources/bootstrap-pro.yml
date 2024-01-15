@@ -1,0 +1,25 @@
+server:
+  port: 9999
+spring:
+  application:
+    name: mrk-auth
+  config:
+    activate:
+      on-profile: pro
+  # 配置中心
+  cloud:
+    # 注册中心配置
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 124.222.46.195:8848
+        # 配置中心
+      config:
+        # 配置中心地址
+        server-addr: 124.222.46.195:8848
+        # 配置中心
+        # 配置文件格式
+        file-extension: yml
+        shared-configs[0]:
+          dataId: application.yml
+          refresh: true

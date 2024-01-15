@@ -1,8 +1,6 @@
 package com.magicrepokit.chat.service.impl;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.UUID;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -16,7 +14,7 @@ import com.magicrepokit.chat.event.KnowledgeProcessEvent;
 import com.magicrepokit.chat.mapper.KnowledgeMapper;
 import com.magicrepokit.chat.service.IKnowledgeDetailService;
 import com.magicrepokit.chat.service.IKnowledgeService;
-import com.magicrepokit.chat.vo.*;
+import com.magicrepokit.chat.vo.knowledge.*;
 import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.common.utils.AuthUtil;
 import com.magicrepokit.common.utils.StringUtil;
@@ -352,6 +350,30 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
             throw new ServiceException(ChatResultCode.DELETE_INDEX_ERROR);
         }
         return flag;
+    }
+
+    @Override
+    public boolean checkIsFile(Long knowledgeId) {
+        return this.count(new LambdaQueryWrapper<>(Knowledge.class)
+                .eq(Knowledge::getId,knowledgeId)
+                .eq(Knowledge::getType,KnowledgeConstant.FILE)) > 0;
+    }
+
+    @Override
+    public KnowledgeVO updateByDto(KnowledgeUpdateDTO updateDTO) {
+        Knowledge knowledge = getById(updateDTO.getId());
+        if(ObjectUtil.isNull(knowledge)){
+            throw new ServiceException(ChatResultCode.ID_NOT_EXIST);
+        }
+        if(ObjectUtil.isEmpty(updateDTO.getName())){
+            knowledge.setName(updateDTO.getName());
+        }
+        if(knowledge.getType().equals(KnowledgeConstant.FILE)){
+            if(ObjectUtil.isEmpty(updateDTO.getImageUrl())){
+                knowledge.setImageUrl(updateDTO.getImageUrl());
+            }
+        }
+        return updateById(knowledge) ? knowledgeConverter.entityToVO(knowledge) : null;
     }
 
 

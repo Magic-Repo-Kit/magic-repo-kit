@@ -109,7 +109,17 @@ public enum ChatResultCode implements IResultCode {
     /**
      * 删除索引失败
      */
-    DELETE_INDEX_ERROR(20010213, "DELETE_INDEX_ERROR");
+    DELETE_INDEX_ERROR(20010213, "DELETE_INDEX_ERROR"),
+
+    /**
+     * 模型名称错误
+     */
+    GPT_MODEL_NAME_ERROR(20010214, "GPT_MODEL_NAME_ERROR"),
+
+    /**
+     * 角色不存在
+     */
+    GPT_ROLE_NOT_EXIST(20010215, "GPT_ROLE_NOT_EXIST");
 
     /**
      * code编码

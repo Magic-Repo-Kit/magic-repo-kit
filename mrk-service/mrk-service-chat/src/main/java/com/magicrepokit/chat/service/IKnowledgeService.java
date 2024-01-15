@@ -2,7 +2,7 @@ package com.magicrepokit.chat.service;
 
 import com.magicrepokit.chat.dto.knowledge.*;
 import com.magicrepokit.chat.entity.Knowledge;
-import com.magicrepokit.chat.vo.*;
+import com.magicrepokit.chat.vo.knowledge.*;
 import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.mb.base.BaseService;
 
@@ -93,4 +93,18 @@ public interface IKnowledgeService extends BaseService<Knowledge> {
      * @return
      */
     boolean deleteFile(String knowledgeIds);
+
+    /**
+     * 文件内容详情
+     * @param knowledgeId
+     * @return
+     */
+    boolean checkIsFile(Long knowledgeId);
+
+    /**
+     * 修改文件夹或文件
+     * @param updateDTO
+     * @return
+     */
+    KnowledgeVO updateByDto(KnowledgeUpdateDTO updateDTO);
 }

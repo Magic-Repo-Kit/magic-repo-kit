@@ -71,6 +71,24 @@ public class SseEmitterComponent {
     }
 
     /**
+     * 给用户推送消息
+     */
+    public void SseEmitterSendComplateMessage(Object message,String key){
+        SseEmitter sseEmitter = maps.get(key);
+        if(sseEmitter==null){
+            log.info("SSE开始给{}推送消息",key);
+            throw new ServiceException("[SSE]用户客户端不存在=>"+key);
+        }
+        try {
+            sseEmitter.send(message, MediaType.TEXT_EVENT_STREAM);
+            sseEmitter.complete();
+        } catch (IOException e) {
+            removeUser(key);
+            throw new ServiceException("SSE异常=>"+e.getMessage());
+        }
+    }
+
+    /**
      * 发送最后一次关闭
      */
     public void SseEmitterSendEnd(String key){

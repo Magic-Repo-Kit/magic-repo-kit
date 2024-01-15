@@ -1,12 +1,11 @@
 package com.magicrepokit.chat.event.listener;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import com.magicrepokit.chat.component.LangchainComponent;
 import com.magicrepokit.chat.constant.KnowledgeConstant;
 import com.magicrepokit.chat.entity.KnowledgeDetail;
 import com.magicrepokit.chat.event.KnowledgeProcessEvent;
 import com.magicrepokit.chat.service.IKnowledgeDetailService;
-import com.magicrepokit.langchain.config.ConfigProperties;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentParser;
 import dev.langchain4j.data.document.DocumentSplitter;
@@ -15,15 +14,10 @@ import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.data.document.parser.apache.pdfbox.ApachePdfBoxDocumentParser;
 import dev.langchain4j.data.document.parser.apache.poi.ApachePoiDocumentParser;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
-import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
-import dev.langchain4j.store.embedding.elasticsearch.ElasticsearchEmbeddingStore;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -37,7 +31,7 @@ import static dev.langchain4j.model.openai.OpenAiModelName.GPT_3_5_TURBO;
 @AllArgsConstructor
 public class KnowledgeProcessListener implements ApplicationListener<KnowledgeProcessEvent> {
     private final IKnowledgeDetailService knowledgeDetailService;
-    private ConfigProperties langchainConfigProperties;
+    private final LangchainComponent langchainComponent;
     @Override
     @Async
     public void onApplicationEvent(KnowledgeProcessEvent event) {
@@ -81,8 +75,8 @@ public class KnowledgeProcessListener implements ApplicationListener<KnowledgePr
             changeStatus(knowledgeDetail,KnowledgeConstant.TRAINING,null);
             EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
                     .documentSplitter(documentSplitter)
-                    .embeddingModel(getEmbeddingModel())
-                    .embeddingStore(getElasticsearchEmbeddingStore(event.getIndexName()))
+                    .embeddingModel(langchainComponent.getDefaultEmbeddingModel())
+                    .embeddingStore(langchainComponent.getDefaultElasticsearchEmbeddingStore(event.getIndexName()))
                     .build();
             ingestor.ingest(document);
             changeStatus(knowledgeDetail,KnowledgeConstant.COMPLETE,null);
@@ -93,37 +87,6 @@ public class KnowledgeProcessListener implements ApplicationListener<KnowledgePr
         }
         log.info("{}:文件开始处理-完成,耗时{}ms",knowledgeDetail.getName(),System.currentTimeMillis()-start);
     }
-
-
-    /**
-     * 获取分词模型
-     */
-    private EmbeddingModel getEmbeddingModel(){
-        return OpenAiEmbeddingModel.builder().apiKey("sk-gRbZ9FJz2E7c7mwO5JOvp2u2rtoWoAbg12CxDy3Y25eLeDvd").baseUrl("https://api.chatanywhere.tech/v1").build();
-    }
-
-    /**
-     * 获取elasticsearch存储
-     * @param indexName 索引名称
-     * @return ElasticsearchEmbeddingStore
-     */
-    private ElasticsearchEmbeddingStore getElasticsearchEmbeddingStore(String indexName){
-        if(langchainConfigProperties.getEnabled()){
-            log.error("未开启elasticsearch");
-            return null;
-        }
-        String elasticHost = langchainConfigProperties.getElasticHost();
-        int elasticPort = langchainConfigProperties.getElasticPort();
-        String url = StrUtil.format("{}:{}", elasticHost, elasticPort);
-        return ElasticsearchEmbeddingStore.builder()
-                .serverUrl(url)
-                .userName(langchainConfigProperties.getElasticUsername())
-                .password(langchainConfigProperties.getElasticPassword())
-                .indexName(indexName)
-                .dimension(1536)
-                .build();
-    }
-
     /**
      * 改变状态
      * @param knowledgeDetail  知识库详情

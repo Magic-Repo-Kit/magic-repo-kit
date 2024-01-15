@@ -4,7 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.magicrepokit.chat.dto.knowledge.KnowledgeCreateDTO;
 import com.magicrepokit.chat.entity.Knowledge;
 import com.magicrepokit.chat.entity.KnowledgeDetail;
-import com.magicrepokit.chat.vo.*;
+import com.magicrepokit.chat.vo.knowledge.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

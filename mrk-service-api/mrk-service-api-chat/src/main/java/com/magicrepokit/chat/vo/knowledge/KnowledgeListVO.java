@@ -1,4 +1,4 @@
-package com.magicrepokit.chat.vo;
+package com.magicrepokit.chat.vo.knowledge;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -12,11 +12,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-@ApiModel(value = "知识库实体",description = "知识库")
-public class KnowledgeVO {
+@ApiModel(value = "知识库分页",description = "分页")
+public class KnowledgeListVO {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty(value = "知识库id")
     private Long id;
+
+    /**
+     * 父节点id
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @ApiModelProperty(value = "知识库id")
+    private Long parentId;
 
     /**
      * 知识库名称
@@ -37,9 +44,4 @@ public class KnowledgeVO {
      * 图片url
      */
     private String imageUrl;
-
-    /**
-     * els索引名称
-     */
-    private String indexName;
 }

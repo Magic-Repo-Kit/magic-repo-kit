@@ -1,23 +1,21 @@
 server:
-  port: 9999
+  port: 1000
+
 spring:
   application:
-    name: mrk-auth
-  # 配置中心
+    name: mrk-gateway
+  config:
+    activate:
+      on-profile: test
   cloud:
     # 注册中心配置
     nacos:
       discovery:
-        # 服务注册地址
         server-addr: 124.222.46.195:8848
-        # 配置中心
         namespace: 123456
       config:
-        # 配置中心地址
         server-addr: 124.222.46.195:8848
-        # 配置中心
         namespace: 123456
-        # 配置文件格式
         file-extension: yml
         shared-configs[0]:
           dataId: application.yml

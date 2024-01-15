@@ -1,26 +1,26 @@
-package com.magicrepokit.chat.entity;
+package com.magicrepokit.chat.vo.gpt;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.magicrepokit.mb.base.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
 
-@EqualsAndHashCode(callSuper = true)
-@TableName(value = "mrk_gpt_conversation",autoResultMap = true)
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Data
-@ApiModel(value = "会话列表",description = "会话列表")
-public class GptConversation extends BaseEntity {
+@ApiModel(value = "Gpt会话列表返回实体",description = "Gpt会话列表")
+public class GptConversationPage {
     /**
      * 会话id
      */
     @ApiModelProperty(value = "会话id")
     private String conversationId;
+
+    /**
+     * 用户id
+     */
+    @JsonSerialize(using = ToStringSerializer.class)
+    @ApiModelProperty(value = "用户id")
+    private Long userId;
 
     /**
      * 会话标题
@@ -34,4 +34,16 @@ public class GptConversation extends BaseEntity {
     @JsonSerialize(using = ToStringSerializer.class)
     @ApiModelProperty(value = "GPT角色id")
     private Long gptRoleId;
+
+    /**
+     * GPT角色名称
+     */
+    @ApiModelProperty(value = "GPT角色名称")
+    private String gptRoleName;
+
+    /**
+     * GPT角色头像
+     */
+    @ApiModelProperty(value = "GPT角色头像")
+    private String gptRoleImageUrl;
 }

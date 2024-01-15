@@ -23,4 +23,7 @@ public interface StatusConstant {
      * 自己的账户
      */
     Integer GPT_SELF_ACCOUNT = 5;
+    Integer YES = 2;
+
+    Integer NO = 1;
 }
