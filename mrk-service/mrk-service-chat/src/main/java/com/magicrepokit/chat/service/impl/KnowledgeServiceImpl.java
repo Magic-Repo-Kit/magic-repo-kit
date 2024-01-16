@@ -83,6 +83,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
     @Override
     public PageResult<KnowledgeListVO> page(KnowledgeListDTO knowledgeListDTO) {
         LambdaQueryWrapper<Knowledge> lambdaQueryWrapper = new LambdaQueryWrapper<Knowledge>();
+        lambdaQueryWrapper.orderByDesc(Knowledge::getCreateTime);
         //1.id为空查询父一级
         if (ObjectUtil.isEmpty(knowledgeListDTO.getParentId())) {
             lambdaQueryWrapper.eq(Knowledge::getParentId, 0);
