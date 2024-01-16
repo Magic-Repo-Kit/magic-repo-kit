@@ -40,6 +40,7 @@ import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.output.Response;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -125,6 +126,7 @@ public class GptServiceImpl implements IGptService {
         boolean finalIsNewConversation = isNewConversation;
         streamingChatLanguageModel.generate(chatMessages, new StreamingResponseHandler<AiMessage>() {
             @Override
+            @Async
             public void onNext(String token) {
                 gptSSEResponse.setMessage(token);
                 gptSSEResponse.setError(null);
@@ -133,30 +135,32 @@ public class GptServiceImpl implements IGptService {
             }
 
             @Override
+            @Async
             public void onError(Throwable error) {
                 Error error1 = new Error();
                 error1.setCode(ChatResultCode.CHAT_ERROR.getCode()+"");
                 error1.setMessage(ChatResultCode.CHAT_ERROR.getMessage());
                 gptSSEResponse.setError(error1);
                 gptSSEResponse.setIsEnd(true);
-                sseEmitterComponent.SseEmitterSendComplateMessage(gptSSEResponse, user.getAccount());
+                sseEmitterComponent.SseEmitterSendMessage(gptSSEResponse, user.getAccount());
                 sseEmitterComponent.close(user.getAccount());
                 log.error("聊天异常:",error);
             }
 
             @Override
+            @Async
             public void onComplete(Response<AiMessage> response) {
+                StreamingResponseHandler.super.onComplete(response);
                 gptSSEResponse.setError(null);
                 gptSSEResponse.setMessage(response.content().text());
                 if(ObjectUtil.isNotEmpty(finalRelevant)&&gptRoleVO.getIsShowKnowledge().equals(StatusConstant.YES)){
                     gptSSEResponse.ofKnowledgeText(finalRelevant);
                 }
                 gptSSEResponse.setIsEnd(true);
-                sseEmitterComponent.SseEmitterSendComplateMessage(gptSSEResponse, user.getAccount());
+                sseEmitterComponent.SseEmitterSendMessage(gptSSEResponse, user.getAccount());
                 sseEmitterComponent.close(user.getAccount());
                 //保存聊天记录
                 saveChatHistory(gptChatDTO.getConversationId(),gptChatDTO.getRoleId(),response.content().text(),userId,gptChatDTO.getContent(), finalIsNewConversation);
-                StreamingResponseHandler.super.onComplete(response);
             }
         });
 
