@@ -22,6 +22,7 @@ import com.magicrepokit.chat.vo.gpt.GptConversationPage;
 import com.magicrepokit.chat.vo.gpt.GptSSEResponse;
 import com.magicrepokit.chat.vo.gpt.KnowledgeText;
 import com.magicrepokit.chat.vo.gptRole.GptRoleVO;
+import com.magicrepokit.chat.vo.knowledge.KnowledgeFileListVO;
 import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.common.utils.AuthUtil;
 import com.magicrepokit.jwt.entity.MRKUser;
@@ -84,30 +85,35 @@ public class GptServiceImpl implements IGptService {
         //查询模型信息
         GptRoleVO gptRoleVO = getGptRole(gptChatDTO.getRoleId());
         //建立模型
-        StreamingChatLanguageModel streamingChatLanguageModel = langchainComponent.getStreamingChatLanguageModel(getGptModel(gptRoleVO.getModelName()));
+        StreamingChatLanguageModel streamingChatLanguageModel = langchainComponent.getStreamingChatLanguageModel(getGptModel(gptRoleVO.getModelName()),new Double(gptRoleVO.getTemperature()));
         List<ChatMessage> chatMessages = new ArrayList<>();
 
         //1.系统提示词
         SystemMessage systemMessage = new SystemMessage(gptRoleVO.getPrompt());
-        chatMessages.add(systemMessage);
-
         //2.知识库内容
         List<TextSegment> relevant = null;
         if(ObjectUtil.isNotEmpty(gptRoleVO.getKnowledgeFileListVO())){
-            relevant = getRelevant(gptRoleVO.getKnowledgeFileListVO().getIndexName(),gptChatDTO.getContent());
-            if(ObjectUtil.isNotEmpty(relevant)){
-                SystemMessage knowledgeMessage = getKnowledgeMessage(relevant);
-                chatMessages.add(knowledgeMessage);
+            KnowledgeFileListVO knowledge = gptRoleVO.getKnowledgeFileListVO();
+            relevant = getRelevant(knowledge.getIndexName(),gptChatDTO.getContent(),knowledge.getMinScore(),knowledge.getMaxResult());
+            SystemMessage knowledgeMessage = getKnowledgeMessage(relevant);
+            String text = systemMessage.text();
+            if(ObjectUtil.isNotEmpty(knowledgeMessage)){
+                text = text+"\n\n"+knowledgeMessage.text();
+                systemMessage = createSystemMessage(text);
             }
         }
+        chatMessages.add(systemMessage);
+
+
         //3.历史记忆
         if(ObjectUtil.isNotEmpty(gptChatDTO.getIsContext())&&gptChatDTO.getIsContext().equals(StatusConstant.YES)){
-            List<ChatMessage> historyMessage = getHistoryMessage(gptChatDTO.getConversationId());
+            List<ChatMessage> historyMessage = getHistoryMessage(gptChatDTO.getConversationId(),gptChatDTO.getContextLength());
             if(ObjectUtil.isNotEmpty(historyMessage)){
                 chatMessages.addAll(historyMessage);
             }
         }
         //4.TODO 是否使用联网
+        //5.TODO 对话内容上下文自动补全
 
 
 
@@ -130,10 +136,11 @@ public class GptServiceImpl implements IGptService {
             public void onError(Throwable error) {
                 Error error1 = new Error();
                 error1.setCode(ChatResultCode.CHAT_ERROR.getCode()+"");
-                error1.setMessage(error.getMessage());
+                error1.setMessage(ChatResultCode.CHAT_ERROR.getMessage());
                 gptSSEResponse.setError(error1);
                 gptSSEResponse.setIsEnd(true);
-                sseEmitterComponent.SseEmitterSendMessage(gptSSEResponse, user.getAccount());
+                sseEmitterComponent.SseEmitterSendComplateMessage(gptSSEResponse, user.getAccount());
+                sseEmitterComponent.close(user.getAccount());
                 log.error("聊天异常:",error);
             }
 
@@ -197,8 +204,8 @@ public class GptServiceImpl implements IGptService {
      * @param conversationId 会话id
      * @return 历史记录
      */
-    private List<ChatMessage> getHistoryMessage(String conversationId) {
-        List<GptConversationDetail> gptConversationDetails = gptConversationService.listConversationHistory(conversationId, null);
+    private List<ChatMessage> getHistoryMessage(String conversationId,Integer contextLength) {
+        List<GptConversationDetail> gptConversationDetails = gptConversationService.listConversationHistory(conversationId, contextLength);
         if(ObjectUtil.isNotEmpty(gptConversationDetails)){
             return gptConversationDetails.stream().map(item->{
                 if(item.getType()==1){
@@ -218,10 +225,11 @@ public class GptServiceImpl implements IGptService {
      */
     private SystemMessage getKnowledgeMessage(List<TextSegment> relevant) {
         //知识库内容
-        PromptTemplate promptTemplate = new PromptTemplate("以下是的内容可能对你的回答有帮助:\n" +
-                "{{knowledge}} \n"
+        PromptTemplate promptTemplate = new PromptTemplate("以下是知识库的内容：\n" +
+                "知识库:\n"+
+                "{{knowledge}}"
         );
-        String relevantContext = relevant.stream().map(TextSegment::text).collect(joining("\n\n"));
+        String relevantContext = ObjectUtil.isEmpty(relevant)?"空":relevant.stream().map(TextSegment::text).collect(joining("\n\n"));
         Map<String,Object> map = new HashMap<>();
         map.put("knowledge",relevantContext);
         Prompt prompt = promptTemplate.apply(map);
@@ -234,8 +242,8 @@ public class GptServiceImpl implements IGptService {
      * @param context
      * @return
      */
-    private List<TextSegment> getRelevant(String indexName, String context) {
-        return langchainComponent.findRelevant(indexName, context);
+    private List<TextSegment> getRelevant(String indexName, String context,Double minScore,Integer maxResult) {
+        return langchainComponent.findRelevant(indexName, context, maxResult, minScore);
     }
 
     /**

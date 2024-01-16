@@ -42,4 +42,16 @@ public class KnowledgeVO {
      * els索引名称
      */
     private String indexName;
+
+    /**
+     * 知识库文件匹配度[只有文件类型才有,默认0.7](0-1.0)
+     */
+    @ApiModelProperty(value = "知识库文件匹配度[只有文件类型才有,默认0.7](0-1.0)")
+    private Double minScore;
+
+    /**
+     * 知识库文件匹配度[只有文件类型才有,默认5](0-20)
+     */
+    @ApiModelProperty(value = "知识库文件匹配度[只有文件类型才有,默认5](0-20)")
+    private Integer maxResult;
 }

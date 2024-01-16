@@ -29,6 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,6 +69,10 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
             if(ObjectUtil.isEmpty(knowledge.getIndexName())){
                 knowledge.setIndexName(mkIndexName());
             }
+            //2.匹配度
+            knowledge.setMinScore(createDTO.getMinScore());
+            //3.返回结果
+            knowledge.setMaxResult(createDTO.getMaxResult());
         }else{
             knowledge.setIndexName(null);
             knowledge.setImageUrl(null);
@@ -79,7 +86,6 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
      * @param knowledgeListDTO 查询参数
      * @return 文件或文件夹列表
      */
-
     @Override
     public PageResult<KnowledgeListVO> page(KnowledgeListDTO knowledgeListDTO) {
         LambdaQueryWrapper<Knowledge> lambdaQueryWrapper = new LambdaQueryWrapper<Knowledge>();
@@ -126,11 +132,10 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
             return result;
         }
         List<Knowledge> knowledgeList = getKnowledgeListByIds(pathId);
-        List<KnowledgePathVO> result = new ArrayList<>();
-        //倒叙
-        for (int i = knowledgeList.size() - 1; i >= 0; i--) {
-            result.add(knowledgeConverter.entityToPathVO(knowledgeList.get(i)));
+        if(ObjectUtil.isEmpty(knowledgeList)){
+            return null;
         }
+        List<KnowledgePathVO> result = knowledgeConverter.entityListToPathVOList(knowledgeList);
         result.add(knowledgeConverter.entityToPathVO(knowledgeById));
         return result;
     }
@@ -373,6 +378,12 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
             if(ObjectUtil.isEmpty(updateDTO.getImageUrl())){
                 knowledge.setImageUrl(updateDTO.getImageUrl());
             }
+            if(ObjectUtil.isEmpty(updateDTO.getMinScore())){
+                knowledge.setMinScore(updateDTO.getMinScore());
+            }
+            if(ObjectUtil.isEmpty(updateDTO.getMaxResult())){
+                knowledge.setMaxResult(updateDTO.getMaxResult());
+            }
         }
         return updateById(knowledge) ? knowledgeConverter.entityToVO(knowledge) : null;
     }
@@ -487,7 +498,17 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
      * @return 文件
      */
     private List<Knowledge> getKnowledgeListByIds(List<Long> ids) {
-        return this.list(new LambdaQueryWrapper<Knowledge>().in(Knowledge::getId, ids));
+        List<Knowledge> unsortedKnowledgeList  = this.list(new LambdaQueryWrapper<Knowledge>().in(Knowledge::getId, ids));
+        if(ObjectUtil.isEmpty(unsortedKnowledgeList)){
+            return null;
+        }
+        // 创建一个ID到知识对象的映射
+        Map<Long, Knowledge> knowledgeMap = unsortedKnowledgeList.stream()
+                .collect(Collectors.toMap(Knowledge::getId, Function.identity()));
+        return ids.stream()
+                .map(knowledgeMap::get)
+                .filter(ObjectUtil::isNotEmpty) // 过滤掉任何在数据库中找不到的ID对应的null值
+                .collect(Collectors.toList());
     }
 
     /**

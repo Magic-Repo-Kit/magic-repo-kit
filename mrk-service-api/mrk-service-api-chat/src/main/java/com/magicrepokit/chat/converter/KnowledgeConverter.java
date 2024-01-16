@@ -64,6 +64,8 @@ public interface KnowledgeConverter {
                 knowledgeFileVO.setName(knowledge.getName());
                 knowledgeFileVO.setDescription(knowledge.getDescription());
                 knowledgeFileVO.setIndexName(knowledge.getIndexName());
+                knowledgeFileVO.setMaxResult(knowledge.getMaxResult());
+                knowledgeFileVO.setMinScore(knowledge.getMinScore());
             });
         }
         return knowledgeFileVOS;
@@ -103,6 +105,8 @@ public interface KnowledgeConverter {
                     knowledgeFileVO.setName(knowledge.getName());
                     knowledgeFileVO.setDescription(knowledge.getDescription());
                     knowledgeFileVO.setIndexName(knowledge.getIndexName());
+                    knowledgeFileVO.setMaxResult(knowledge.getMaxResult());
+                    knowledgeFileVO.setMinScore(knowledge.getMinScore());
                 }
             });
         }

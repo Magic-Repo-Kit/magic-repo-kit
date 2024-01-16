@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.magicrepokit.mb.base.BaseEntity;
 import com.magicrepokit.mb.type.LongListTypeHandler;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.util.List;
@@ -43,6 +44,16 @@ public class Knowledge extends BaseEntity {
      * els索引名称
      */
     private String indexName;
+
+    /**
+     * 知识库文件最小匹配度[只有文件类型才有,默认0.7](0-1.0)
+     */
+    private Double minScore;
+
+    /**
+     * 知识库文件返回搜索结果[只有文件类型才有,默认5](0-20)
+     */
+    private Integer maxResult;
 
     /**
      * 知识库路径
