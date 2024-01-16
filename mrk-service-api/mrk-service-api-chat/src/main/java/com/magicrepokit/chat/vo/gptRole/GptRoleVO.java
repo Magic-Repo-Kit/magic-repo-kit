@@ -75,6 +75,12 @@ public class GptRoleVO {
     private Long knowledgeId;
 
     /**
+     * 是否展现知识库
+     */
+    @ApiModelProperty(value = "结果是否展现知识库[1:关闭(默认) 2:开启]",required = false)
+    private Integer isShowKnowledge;
+
+    /**
      * 知识库信息
      */
     @ApiModelProperty(value = "知识库信息")

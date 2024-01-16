@@ -7,7 +7,7 @@ import lombok.Data;
 
 
 @Data
-@ApiModel(value = "知识库创建实体",description = "知识库创建")
+@ApiModel(value = "知识库更新实体",description = "知识库更新")
 public class KnowledgeUpdateDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ApiModelProperty(value = "id",required = true)
@@ -30,4 +30,16 @@ public class KnowledgeUpdateDTO {
      */
     @ApiModelProperty(value = "图片url[只有文件类型才有图片url]")
     private String imageUrl;
+
+    /**
+     * 知识库文件匹配度[只有文件类型才有,默认0.7](0-1.0)
+     */
+    @ApiModelProperty(value = "知识库文件匹配度[只有文件类型才有,默认0.7，范围0-1.0]")
+    private Double minScore;
+
+    /**
+     * 知识库文件匹配度[只有文件类型才有,默认5](0-20)
+     */
+    @ApiModelProperty(value = "知识库文件匹配度[只有文件类型才有,默认5，范围0-20]")
+    private Integer maxResult;
 }

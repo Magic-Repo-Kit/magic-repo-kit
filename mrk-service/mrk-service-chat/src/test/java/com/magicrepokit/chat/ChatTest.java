@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.ObjectMapper;
 import com.magicrepokit.chat.agent.CustomerSupportAgent;
+import com.magicrepokit.chat.component.GoogleSearch;
 import com.magicrepokit.chat.component.LangchainComponent;
 import com.magicrepokit.chat.service.tool.CalculatorService;
 import com.magicrepokit.langchain.ElasticOperation;
@@ -80,6 +81,9 @@ public class ChatTest {
     @Autowired
     LangchainComponent langchainComponent;
 
+    @Autowired
+    GoogleSearch googleSearch;
+
     @Test
     public void testOssTemplate(){
         ossTemplate.makeBucket("test");
@@ -118,7 +122,7 @@ public class ChatTest {
         // Tip: Use gpt-4 for this example, as gpt-3.5-turbo tends to hallucinate often and invent name and surname.
 
         interact(agent, "你好，我忘记我的预订信息");
-//        interact(agent, "123-457");
+        interact(agent, "123-457");
 //        interact(agent, "I'm sorry I'm so inattentive today. Klaus Heisler.");
 //        interact(agent, "My bad, it's 123-456");
 //
@@ -258,6 +262,13 @@ public class ChatTest {
         String generate = model.generate("你好，我忘记我的预订信息?");
         System.out.println(i);
         System.out.println(generate);
+    }
+
+
+    @Test
+    public void searchTest(){
+        String s = googleSearch.searchGoogle("完美世界");
+        System.out.println(s);
     }
 
 }

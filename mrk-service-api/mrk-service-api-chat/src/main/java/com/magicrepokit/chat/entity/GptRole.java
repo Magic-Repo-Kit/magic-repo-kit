@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.magicrepokit.mb.base.BaseEntity;
 import com.magicrepokit.mb.type.StringListTypeHandler;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -57,6 +58,11 @@ public class GptRole extends BaseEntity {
      * 知识库id。
      */
     private Long knowledgeId;
+
+    /**
+     * 是否展现知识库
+     */
+    private Integer isShowKnowledge;
 
     /**
      * 插件列表。

@@ -26,8 +26,6 @@ public class GptSaveChatMessage {
 
     @Data
     @ApiModel(value = "MessageContext消息内容", description = "消息内容")
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class MessageContext{
         /**
          * 消息类型[1:用户 2:AI]

@@ -2,6 +2,7 @@ package com.magicrepokit.chat.component;
 
 import cn.hutool.core.util.StrUtil;
 import com.magicrepokit.chat.constant.GptModel;
+import com.magicrepokit.common.constant.StringConstant;
 import com.magicrepokit.langchain.config.ConfigProperties;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.Tokenizer;
@@ -59,7 +60,7 @@ public class LangchainComponent {
         EmbeddingStoreRetriever embeddingStoreRetriever = new EmbeddingStoreRetriever(getDefaultElasticsearchEmbeddingStore(indexName),
                 getDefaultEmbeddingModel(),
                 5,
-                0.7
+                0.8
         );
         return embeddingStoreRetriever.findRelevant(question);
     }
@@ -74,6 +75,12 @@ public class LangchainComponent {
      * @return List<TextSegment>
      */
     public List<TextSegment> findRelevant(String indexName, String question, int maxResult, double minScore) {
+        if(maxResult<=0){
+            maxResult=5;
+        }
+        if(minScore<=0){
+            minScore=0.7;
+        }
         EmbeddingStoreRetriever embeddingStoreRetriever = new EmbeddingStoreRetriever(getDefaultElasticsearchEmbeddingStore(indexName),
                 getDefaultEmbeddingModel(),
                 maxResult,
@@ -105,11 +112,20 @@ public class LangchainComponent {
      *
      * @return StreamingChatLanguageModel
      */
-    public StreamingChatLanguageModel getStreamingDefaultChatLanguageModel(GptModel gptModel) {
+    private StreamingChatLanguageModel getStreamingDefaultChatLanguageModel(GptModel gptModel) {
         return OpenAiStreamingChatModel.builder()
                 .apiKey("sk-gRbZ9FJz2E7c7mwO5JOvp2u2rtoWoAbg12CxDy3Y25eLeDvd")
                 .baseUrl("https://api.chatanywhere.tech/")
                 .modelName(gptModel.getAcutualModelName())
+                .build();
+    }
+
+    private StreamingChatLanguageModel getStreamingDefaultChatLanguageModel(GptModel gptModel,Double temperature) {
+        return OpenAiStreamingChatModel.builder()
+                .apiKey("sk-gRbZ9FJz2E7c7mwO5JOvp2u2rtoWoAbg12CxDy3Y25eLeDvd")
+                .baseUrl("https://api.chatanywhere.tech/")
+                .modelName(gptModel.getAcutualModelName())
+                .temperature(temperature)
                 .build();
     }
 
@@ -122,6 +138,15 @@ public class LangchainComponent {
         //TODO 获取用户信息 1.查询用户key 2.如果有使用用户，如果没有使用默认
         return getStreamingDefaultChatLanguageModel(gptModel);
     }
+
+    public StreamingChatLanguageModel getStreamingChatLanguageModel(GptModel gptModel,Double temperature) {
+        //TODO 获取用户信息 1.查询用户key 2.如果有使用用户，如果没有使用默认
+        return getStreamingDefaultChatLanguageModel(gptModel,temperature);
+    }
+
+
+
+
 
 
 }

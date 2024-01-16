@@ -42,4 +42,10 @@ public class GptChatDTO {
      */
     @ApiModelProperty(value = "是否开启上下文[1:关闭 2:开启]",required = true)
     private Integer isContext;
+
+    /**
+     * 上下文长度问答对数量(只有开启上下文生效)[默认20，范围1-100]
+     */
+    @ApiModelProperty(value = "上下文长度问答对数量(只有开启上下文生效)[默认20，范围1-100]",required = false)
+    private Integer contextLength;
 }

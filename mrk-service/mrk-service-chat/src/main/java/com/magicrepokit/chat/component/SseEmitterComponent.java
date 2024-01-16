@@ -1,5 +1,8 @@
 package com.magicrepokit.chat.component;
 
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.magicrepokit.log.exceotion.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -62,8 +65,13 @@ public class SseEmitterComponent {
             sseEmitter.completeWithError(new Exception("用户客户端不存在=>"+key));
         }
         try {
+            if(message instanceof String) {
+                sseEmitter.send(message, MediaType.TEXT_EVENT_STREAM);
+            }else {
+                JSONObject entries = JSONUtil.parseObj(message);
+                sseEmitter.send(entries.toString());
+            }
 
-            sseEmitter.send(message, MediaType.TEXT_EVENT_STREAM);
         } catch (IOException e) {
             removeUser(key);
             throw new ServiceException("SSE异常=>"+e.getMessage());
@@ -80,7 +88,12 @@ public class SseEmitterComponent {
             throw new ServiceException("[SSE]用户客户端不存在=>"+key);
         }
         try {
-            sseEmitter.send(message, MediaType.TEXT_EVENT_STREAM);
+            if(message instanceof String) {
+                sseEmitter.send(message, MediaType.TEXT_EVENT_STREAM);
+            }else {
+                JSONObject entries = JSONUtil.parseObj(message);
+                sseEmitter.send(entries.toString());
+            }
             sseEmitter.complete();
         } catch (IOException e) {
             removeUser(key);
