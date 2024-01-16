@@ -20,6 +20,7 @@ import com.magicrepokit.chat.service.*;
 import com.magicrepokit.chat.vo.Error;
 import com.magicrepokit.chat.vo.gpt.GptConversationPage;
 import com.magicrepokit.chat.vo.gpt.GptSSEResponse;
+import com.magicrepokit.chat.vo.gpt.KnowledgeText;
 import com.magicrepokit.chat.vo.gptRole.GptRoleVO;
 import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.common.utils.AuthUtil;
@@ -37,6 +38,7 @@ import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.output.Response;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -55,6 +57,7 @@ import static java.util.stream.Collectors.joining;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class GptServiceImpl implements IGptService {
     private final SseEmitterComponent sseEmitterComponent;
     private final IGptConversationService gptConversationService;
@@ -62,6 +65,11 @@ public class GptServiceImpl implements IGptService {
     private final LangchainComponent langchainComponent;
     @Override
     public SseEmitter chatRole(GptChatDTO gptChatDTO) {
+        boolean isNewConversation = false;
+        if(ObjectUtil.isEmpty(gptChatDTO.getConversationId())){
+            isNewConversation = true;
+            gptChatDTO.setConversationId(UUID.fastUUID().toString());
+        }
         //验证uuid
         checkIsUUID(gptChatDTO.getConversationId());
         //结果集设定
@@ -84,14 +92,12 @@ public class GptServiceImpl implements IGptService {
         chatMessages.add(systemMessage);
 
         //2.知识库内容
+        List<TextSegment> relevant = null;
         if(ObjectUtil.isNotEmpty(gptRoleVO.getKnowledgeFileListVO())){
-            List<TextSegment> relevant = getRelevant(gptChatDTO.getContent(), gptRoleVO.getKnowledgeFileListVO().getIndexName());
+            relevant = getRelevant(gptRoleVO.getKnowledgeFileListVO().getIndexName(),gptChatDTO.getContent());
             if(ObjectUtil.isNotEmpty(relevant)){
                 SystemMessage knowledgeMessage = getKnowledgeMessage(relevant);
                 chatMessages.add(knowledgeMessage);
-                if(gptRoleVO.getIsShowKnowledge().equals(StatusConstant.YES)){
-                    gptSSEResponse.setRelevant(relevant);
-                }
             }
         }
         //3.历史记忆
@@ -109,6 +115,8 @@ public class GptServiceImpl implements IGptService {
         UserMessage userMessage = new UserMessage(gptChatDTO.getContent());
         chatMessages.add(userMessage);
         //6.聊天
+        List<TextSegment> finalRelevant = relevant;
+        boolean finalIsNewConversation = isNewConversation;
         streamingChatLanguageModel.generate(chatMessages, new StreamingResponseHandler<AiMessage>() {
             @Override
             public void onNext(String token) {
@@ -126,18 +134,21 @@ public class GptServiceImpl implements IGptService {
                 gptSSEResponse.setError(error1);
                 gptSSEResponse.setIsEnd(true);
                 sseEmitterComponent.SseEmitterSendMessage(gptSSEResponse, user.getAccount());
-                throw new ServiceException(ChatResultCode.CHAT_ERROR+" "+error.getMessage());
+                log.error("聊天异常:",error);
             }
 
             @Override
             public void onComplete(Response<AiMessage> response) {
                 gptSSEResponse.setError(null);
                 gptSSEResponse.setMessage(response.content().text());
+                if(ObjectUtil.isNotEmpty(finalRelevant)&&gptRoleVO.getIsShowKnowledge().equals(StatusConstant.YES)){
+                    gptSSEResponse.ofKnowledgeText(finalRelevant);
+                }
                 gptSSEResponse.setIsEnd(true);
                 sseEmitterComponent.SseEmitterSendComplateMessage(gptSSEResponse, user.getAccount());
                 sseEmitterComponent.close(user.getAccount());
                 //保存聊天记录
-                saveChatHistory(gptChatDTO.getConversationId(),gptChatDTO.getRoleId(),response.content().text(),userId,gptChatDTO.getContent());
+                saveChatHistory(gptChatDTO.getConversationId(),gptChatDTO.getRoleId(),response.content().text(),userId,gptChatDTO.getContent(), finalIsNewConversation);
                 StreamingResponseHandler.super.onComplete(response);
             }
         });
@@ -146,10 +157,9 @@ public class GptServiceImpl implements IGptService {
     }
 
 
-    public void saveChatHistory(String conversationId,Long gptId,String gptContext,Long userId,String userContext){
+    public void saveChatHistory(String conversationId,Long gptId,String gptContext,Long userId,String userContext,boolean isNewConversation){
         //1.创建conversation
-        if(ObjectUtil.isEmpty(conversationId)){
-            conversationId = UUID.randomUUID().toString();
+        if(isNewConversation){
             GptConversation gptConversation = new GptConversation();
             gptConversation.setConversationId(conversationId);
             gptConversation.setTitle(getOverview(gptContext));
@@ -208,8 +218,7 @@ public class GptServiceImpl implements IGptService {
      */
     private SystemMessage getKnowledgeMessage(List<TextSegment> relevant) {
         //知识库内容
-        PromptTemplate promptTemplate = new PromptTemplate("你可以根据知识库内容回答用户相关问题:\n" +
-                "知识库：\n"+
+        PromptTemplate promptTemplate = new PromptTemplate("以下是的内容可能对你的回答有帮助:\n" +
                 "{{knowledge}} \n"
         );
         String relevantContext = relevant.stream().map(TextSegment::text).collect(joining("\n\n"));

@@ -6,11 +6,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @ApiModel(value = "GptSSEResponse",description = "gpt聊天返回")
-public class GptSSEResponse {
+public class GptSSEResponse implements Serializable {
     /**
      * 会话id
      */
@@ -33,7 +34,7 @@ public class GptSSEResponse {
      * 知识库内容
      */
     @ApiModelProperty(value = "知识库内容")
-    private List<TextSegment> relevant;
+    private List<KnowledgeText> relevant;
 
     /**
      * 错误
@@ -46,4 +47,8 @@ public class GptSSEResponse {
      */
     @ApiModelProperty(value = "是否结束")
     private Boolean isEnd;
+
+    public void ofKnowledgeText(List<TextSegment> textSegment) {
+        this.relevant = KnowledgeText.of(textSegment);
+    }
 }
