@@ -171,6 +171,8 @@ public class GptServiceImpl implements IGptService {
             gptConversation.setConversationId(conversationId);
             gptConversation.setTitle(getOverview(gptContext));
             gptConversation.setGptRoleId(gptId);
+            gptConversation.setCreateUser(userId);
+            gptConversation.setUpdateUser(userId);
             gptConversationService.addConversation(gptConversation);
         }
         //2.保持历史记录
