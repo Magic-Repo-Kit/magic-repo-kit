@@ -52,6 +52,13 @@ public class GptRoleCreateDTO {
     private Long knowledgeId;
 
     /**
+     * 是否展现知识库
+     */
+    @ApiModelProperty(value = "结果是否展现知识库[1:关闭(默认) 2:开启]",required = false)
+    private Integer isShowKnowledge;
+
+
+    /**
      * 插件列表。
      */
     @ApiModelProperty(value = "插件列表",required = false)
