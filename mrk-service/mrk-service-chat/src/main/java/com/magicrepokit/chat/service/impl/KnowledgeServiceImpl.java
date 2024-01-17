@@ -105,6 +105,10 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
         if(ObjectUtil.isNull(user)){
             return null;
         }
+        //4.类型
+        if(ObjectUtil.isNotEmpty(knowledgeListDTO.getType())){
+            lambdaQueryWrapper.eq(Knowledge::getType,knowledgeListDTO.getType());
+        }
         lambdaQueryWrapper.eq(Knowledge::getCreateUser,user.getUserId());
         PageResult<Knowledge> knowledgePageResult = selectPage(knowledgeListDTO, lambdaQueryWrapper);
         return knowledgePageResult.convert(knowledgeConverter::entityToKnowledgeListVO);

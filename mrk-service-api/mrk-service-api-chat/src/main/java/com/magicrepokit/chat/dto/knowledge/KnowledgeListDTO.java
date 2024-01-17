@@ -8,8 +8,10 @@ import lombok.Data;
 @Data
 @ApiModel(value = "知识库分页实体",description = "知识库分页")
 public class KnowledgeListDTO extends PageParam {
-    @ApiModelProperty(value = "知识库父id")
+    @ApiModelProperty(value = "知识库父id",required = false)
     private Long parentId;
-    @ApiModelProperty(value = "关键字")
+    @ApiModelProperty(value = "关键字",required = false)
     private String keywords;
+    @ApiModelProperty(value = "级别类型[1:文件夹 2:文件]",required = false)
+    private Integer type;
 }
