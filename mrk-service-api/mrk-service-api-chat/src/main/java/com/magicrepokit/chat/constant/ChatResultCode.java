@@ -119,7 +119,9 @@ public enum ChatResultCode implements IResultCode {
     /**
      * 角色不存在
      */
-    GPT_ROLE_NOT_EXIST(20010215, "GPT_ROLE_NOT_EXIST");
+    GPT_ROLE_NOT_EXIST(20010215, "GPT_ROLE_NOT_EXIST"),
+
+    CHAT_PRESET_MESSAGE_NOT_EMPTY(20010216, "CHAT_PRESET_MESSAGE_NOT_EMPTY");
 
     /**
      * code编码

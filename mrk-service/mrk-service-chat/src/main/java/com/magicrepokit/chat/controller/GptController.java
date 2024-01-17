@@ -1,6 +1,7 @@
 package com.magicrepokit.chat.controller;
 
 import com.magicrepokit.chat.dto.gpt.GptChatDTO;
+import com.magicrepokit.chat.dto.gpt.GptChatPresetDTO;
 import com.magicrepokit.chat.entity.GptConversationDetail;
 import com.magicrepokit.chat.service.IGptService;
 import com.magicrepokit.chat.vo.gpt.GptConversationPage;
@@ -38,6 +39,16 @@ public class GptController {
     @ApiOperation(value = "gpt知识库聊天", notes = "gpt知识库聊天[返回:text/event-stream]")
     public SseEmitter chatKnowledge(@RequestBody GptChatDTO GptChatDTO) {
         return gptService.chatRole(GptChatDTO);
+    }
+
+    /**
+     * gpt聊天预设
+     */
+    @CrossOrigin("*")
+    @PostMapping(path = "/chat-preset", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
+    @ApiOperation(value = "gpt聊天预设", notes = "gpt聊天预设[返回:text/event-stream]")
+    public SseEmitter chatPreset(@RequestBody GptChatPresetDTO chatPresetDTO) {
+        return gptService.chatPreset(chatPresetDTO);
     }
 
 

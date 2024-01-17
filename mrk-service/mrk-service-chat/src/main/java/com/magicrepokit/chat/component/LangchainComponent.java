@@ -2,8 +2,8 @@ package com.magicrepokit.chat.component;
 
 import cn.hutool.core.util.StrUtil;
 import com.magicrepokit.chat.constant.GptModel;
-import com.magicrepokit.common.constant.StringConstant;
 import com.magicrepokit.langchain.config.ConfigProperties;
+import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.Tokenizer;
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
@@ -142,6 +142,12 @@ public class LangchainComponent {
     public StreamingChatLanguageModel getStreamingChatLanguageModel(GptModel gptModel,Double temperature) {
         //TODO 获取用户信息 1.查询用户key 2.如果有使用用户，如果没有使用默认
         return getStreamingDefaultChatLanguageModel(gptModel,temperature);
+    }
+
+    public SystemMessage getDefalutSystemMessage(GptModel gptModel){
+        String modelName = gptModel.getModelName();
+        String prompt = "你是MagicRepoKit研发的"+modelName+"模型。别人问你有关你的身份信息，你可以回答：我是MagicRepoKit研发的"+modelName+"模型。";
+        return new SystemMessage(prompt);
     }
 
 

@@ -1,5 +1,10 @@
 package com.magicrepokit.chat.constant;
 
+import cn.hutool.core.util.ObjectUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public enum GptModel {
     MRK_3_5_TURBO("mrk-3.5-turbo", "gpt-3.5-turbo", 1001),
     MRK_3_5_TURBO_0301("mrk-3.5-turbo-0301", "gpt-3.5-turbo-0301", 1002),
@@ -52,6 +57,9 @@ public enum GptModel {
     }
 
     public static GptModel getByModelName(String modelName) {
+        if(ObjectUtil.isEmpty(modelName)){
+            return null;
+        }
         for (GptModel gptModel : GptModel.values()) {
             if (gptModel.getModelName().equals(modelName)) {
                 return gptModel;
@@ -62,5 +70,53 @@ public enum GptModel {
 
     public String getAcutualModelName() {
         return acutualModelName;
+    }
+
+    public static List<String> getAllModelName() {
+        List<String> list = new ArrayList<>();
+        for (GptModel gptModel : GptModel.values()) {
+            list.add(gptModel.getModelName());
+        }
+        return list;
+    }
+
+    public static List<String> getLanguageModelName() {
+        List<String> list = new ArrayList<>();
+        for (GptModel gptModel : GptModel.values()) {
+            if(gptModel.getModelName().contains("mrk")){
+                list.add(gptModel.getModelName());
+            }
+        }
+        return list;
+    }
+
+    public static List<String> getEmbeddingModelName() {
+        List<String> list = new ArrayList<>();
+        for (GptModel gptModel : GptModel.values()) {
+            if(gptModel.getModelName().contains("text-embedding")){
+                list.add(gptModel.getModelName());
+            }
+        }
+        return list;
+    }
+
+    public static List<String> getModerationModelName() {
+        List<String> list = new ArrayList<>();
+        for (GptModel gptModel : GptModel.values()) {
+            if(gptModel.getModelName().contains("text-moderation")){
+                list.add(gptModel.getModelName());
+            }
+        }
+        return list;
+    }
+
+    public static List<String> getImageModelName() {
+        List<String> list = new ArrayList<>();
+        for (GptModel gptModel : GptModel.values()) {
+            if(gptModel.getModelName().contains("dall-e")){
+                list.add(gptModel.getModelName());
+            }
+        }
+        return list;
     }
 }

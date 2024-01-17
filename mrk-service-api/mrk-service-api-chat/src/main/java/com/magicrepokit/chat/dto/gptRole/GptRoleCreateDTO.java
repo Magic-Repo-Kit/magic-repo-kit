@@ -30,7 +30,7 @@ public class GptRoleCreateDTO {
     /**
      * 发散能力。
      */
-    @ApiModelProperty(value = "发散能力(0~1)",required = true)
+    @ApiModelProperty(value = "发散能力(0~2)",required = true)
     private String temperature;
 
     /**
