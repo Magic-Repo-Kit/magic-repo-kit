@@ -375,17 +375,17 @@ public class KnowledgeServiceImpl extends BaseServiceImpl<KnowledgeMapper, Knowl
         if(ObjectUtil.isNull(knowledge)){
             throw new ServiceException(ChatResultCode.ID_NOT_EXIST);
         }
-        if(ObjectUtil.isEmpty(updateDTO.getName())){
+        if(ObjectUtil.isNotEmpty(updateDTO.getName())){
             knowledge.setName(updateDTO.getName());
         }
         if(knowledge.getType().equals(KnowledgeConstant.FILE)){
-            if(ObjectUtil.isEmpty(updateDTO.getImageUrl())){
+            if(ObjectUtil.isNotEmpty(updateDTO.getImageUrl())){
                 knowledge.setImageUrl(updateDTO.getImageUrl());
             }
-            if(ObjectUtil.isEmpty(updateDTO.getMinScore())){
+            if(ObjectUtil.isNotEmpty(updateDTO.getMinScore())){
                 knowledge.setMinScore(updateDTO.getMinScore());
             }
-            if(ObjectUtil.isEmpty(updateDTO.getMaxResult())){
+            if(ObjectUtil.isNotEmpty(updateDTO.getMaxResult())){
                 knowledge.setMaxResult(updateDTO.getMaxResult());
             }
         }
