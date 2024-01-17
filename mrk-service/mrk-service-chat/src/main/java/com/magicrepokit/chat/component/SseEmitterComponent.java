@@ -139,7 +139,7 @@ public class SseEmitterComponent {
      */
     private SseEmitter connect(String key) {
         // 设置超时时间，0表示不过期。默认30秒，超过时间未完成会抛出异常：AsyncRequestTimeoutException
-        SseEmitter sseEmitter = new SseEmitter(1000L*60*5);
+        SseEmitter sseEmitter = new SseEmitter(1000L*60);
         // 注册回调
         sseEmitter.onCompletion(completionCallBack(key));
         sseEmitter.onError(errorCallBack(key));
