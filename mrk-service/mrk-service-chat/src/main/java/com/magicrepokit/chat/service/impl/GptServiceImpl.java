@@ -115,7 +115,10 @@ public class GptServiceImpl implements IGptService {
                 systemMessage = createSystemMessage(text);
             }
         }
-        chatMessages.add(systemMessage);
+        if(ObjectUtil.isNotEmpty(systemMessage)&&ObjectUtil.isNotEmpty(systemMessage.text())){
+            chatMessages.add(systemMessage);
+        }
+
 
 
         //3.历史记忆
@@ -223,7 +226,7 @@ public class GptServiceImpl implements IGptService {
             }
 
         }
-        if(ObjectUtil.isNotEmpty(systemMessage)){
+        if(ObjectUtil.isNotEmpty(systemMessage)&&ObjectUtil.isNotEmpty(systemMessage.text())){
             chatMessages.add(systemMessage);
         }
         //5.3 TODO 是否联网

@@ -7,6 +7,8 @@ import com.magicrepokit.chat.vo.gptRole.GptRolePageVO;
 import com.magicrepokit.chat.vo.gptRole.GptRoleVO;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface GptRoleConverter {
     GptRole createDTO2Entity(GptRoleCreateDTO createDTO);
@@ -16,4 +18,8 @@ public interface GptRoleConverter {
     GptRole updateDTO2Entity(GptRoleUpdateDTO updateDTO);
 
     GptRolePageVO entity2PageVO(GptRole gptRole);
+
+    List<GptRoleVO> entityList2VOList(List<GptRole> gptRoles);
+
+    List<GptRolePageVO> entityList2PageListVO(List<GptRole> gptRoles);
 }
