@@ -85,6 +85,8 @@ public class GptRoleServiceImpl extends BaseServiceImpl<GptRoleMapper, GptRole> 
     @Override
     public PageResult<GptRolePageVO> page(GptRolePageDTO pageDTO) {
         LambdaQueryWrapper<GptRole> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        //TODO 后期上角色权限
+        lambdaQueryWrapper.eq(GptRole::getCreateUser, AuthUtil.getUser().getUserId());
         if (ObjectUtil.isNotEmpty(pageDTO.getKeywords())) {
             lambdaQueryWrapper.or()
                     .likeRight(GptRole::getDescription, pageDTO.getKeywords())
@@ -95,8 +97,14 @@ public class GptRoleServiceImpl extends BaseServiceImpl<GptRoleMapper, GptRole> 
             lambdaQueryWrapper.eq(GptRole::getModelName,pageDTO.getModelName());
         }
         PageResult<GptRole> gptRolePageResult = selectPage(pageDTO, lambdaQueryWrapper);
-
-        return gptRolePageResult.convert(gptRoleConverter::entity2PageVO);
+        PageResult<GptRolePageVO> convert = gptRolePageResult.convert(gptRoleConverter::entity2PageVO);
+        List<GptRolePageVO> list = convert.getList();
+        if(ObjectUtil.isEmpty(list)){
+            convert.setList(getDefaultModel());
+            return convert;
+        }
+        list.addAll(getDefaultModel());
+        return convert;
     }
 
     @Override
@@ -106,6 +114,14 @@ public class GptRoleServiceImpl extends BaseServiceImpl<GptRoleMapper, GptRole> 
             return gptRoles.stream().collect(toMap(GptRole::getId, gptRole -> gptRole));
         }
         return null;
+    }
+
+    /**
+     * 获取默认Gpt角色(3.5 4.0)
+     */
+    public List<GptRolePageVO> getDefaultModel() {
+        List<GptRole> gptRoles = this.list(new LambdaQueryWrapper<GptRole>().eq(GptRole::getCreateUser, 0L));
+        return gptRoleConverter.entityList2PageListVO(gptRoles);
     }
 
     /**
