@@ -1,6 +1,7 @@
 package com.magicrepokit.chat.service.impl;
 
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.magicrepokit.chat.constant.ChatResultCode;
 import com.magicrepokit.chat.constant.GptModel;
@@ -17,7 +18,6 @@ import com.magicrepokit.chat.vo.gptRole.GptRoleVO;
 import com.magicrepokit.chat.vo.knowledge.KnowledgeFileListVO;
 import com.magicrepokit.common.api.PageResult;
 import com.magicrepokit.common.utils.AuthUtil;
-import com.magicrepokit.common.utils.ObjectUtil;
 import com.magicrepokit.log.exceotion.ServiceException;
 import com.magicrepokit.mb.base.BaseServiceImpl;
 import lombok.AllArgsConstructor;

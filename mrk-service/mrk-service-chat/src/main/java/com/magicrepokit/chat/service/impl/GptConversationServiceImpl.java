@@ -1,5 +1,6 @@
 package com.magicrepokit.chat.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.magicrepokit.chat.component.LangchainComponent;
 import com.magicrepokit.chat.constant.GptModel;
@@ -15,7 +16,6 @@ import com.magicrepokit.chat.service.IGptConversationService;
 import com.magicrepokit.chat.service.IGptRoleService;
 import com.magicrepokit.chat.vo.gpt.GptConversationPage;
 import com.magicrepokit.common.api.PageResult;
-import com.magicrepokit.common.utils.ObjectUtil;
 import com.magicrepokit.mb.base.BaseServiceImpl;
 import com.magicrepokit.mb.base.PageParam;
 import dev.langchain4j.data.message.ChatMessage;

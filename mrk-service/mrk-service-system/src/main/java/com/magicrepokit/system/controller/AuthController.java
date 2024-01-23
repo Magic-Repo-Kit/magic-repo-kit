@@ -3,6 +3,7 @@ package com.magicrepokit.system.controller;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.system.dto.auth.AuthLoginDTO;
 import com.magicrepokit.system.dto.auth.AuthSocialLoginDTO;
+import com.magicrepokit.system.dto.auth.UserRegister;
 import com.magicrepokit.system.vo.auth.AuthTokenVO;
 import com.magicrepokit.system.service.IAuthService;
 import io.swagger.annotations.Api;
@@ -76,6 +77,26 @@ public class AuthController {
     @ApiOperation(value = "三方授权码登录", notes = "三方授权码登录")
     public R<AuthTokenVO> socialLogin(@RequestBody AuthSocialLoginDTO authSocialLoginDTO){
         return R.data(authService.socialLogin(authSocialLoginDTO));
+    }
+
+    /**
+     * 用户注册
+     * @param userRegister 注册信息
+     * @return 是否注册成功
+     */
+    @PostMapping("/register")
+    @ApiOperation(value = "用户注册", notes = "用户注册")
+    public R<Boolean> register(@RequestBody UserRegister userRegister){
+        return R.data(authService.register(userRegister));
+    }
+
+    @PostMapping("/send-code")
+    @ApiOperation(value = "发送验证码", notes = "发送验证码")
+    public R<Boolean> sendCode(
+            @RequestParam("type") @ApiParam(value = "类型[1:注册 2:忘记密码]",required = true) Integer type,
+            @RequestParam("email") @ApiParam(value = "邮箱",required = true) String email
+    ){
+        return R.data(authService.sendCode(type,email));
     }
 
 }

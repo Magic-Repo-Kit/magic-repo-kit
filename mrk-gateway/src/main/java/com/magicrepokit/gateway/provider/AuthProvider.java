@@ -12,6 +12,9 @@ public class AuthProvider {
         DEFAULT_SKIP_URL.add("/system/auth/social-login-redirect/**");
         DEFAULT_SKIP_URL.add("/system/auth/social-login");
         DEFAULT_SKIP_URL.add("/**/v2/api-docs/**");
+        DEFAULT_SKIP_URL.add("/system/auth/register");
+        DEFAULT_SKIP_URL.add("/system/auth/forget-password");
+        DEFAULT_SKIP_URL.add("/system/auth/send-code");
     }
 
 

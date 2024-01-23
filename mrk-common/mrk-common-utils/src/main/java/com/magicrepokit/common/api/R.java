@@ -1,7 +1,7 @@
 package com.magicrepokit.common.api;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.magicrepokit.common.constant.CommonConstant;
-import com.magicrepokit.common.utils.ObjectUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +11,7 @@ import org.springframework.lang.Nullable;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.Optional;
+
 
 @Getter
 @Setter
@@ -60,7 +61,7 @@ public class R<T> implements Serializable {
      */
     public static boolean isSuccess(@Nullable R<?> result) {
         return Optional.ofNullable(result)
-                .map(x -> ObjectUtil.nullSafeEquals(ResultCode.SUCCESS.code, x.code))
+                .map(x -> ObjectUtil.equal(ResultCode.SUCCESS.code, x.code))
                 .orElse(Boolean.FALSE);
     }
 

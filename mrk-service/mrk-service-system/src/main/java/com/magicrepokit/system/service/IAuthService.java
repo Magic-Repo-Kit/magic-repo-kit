@@ -2,6 +2,7 @@ package com.magicrepokit.system.service;
 
 import com.magicrepokit.system.dto.auth.AuthLoginDTO;
 import com.magicrepokit.system.dto.auth.AuthSocialLoginDTO;
+import com.magicrepokit.system.dto.auth.UserRegister;
 import com.magicrepokit.system.vo.auth.AuthTokenVO;
 
 import javax.validation.Valid;
@@ -46,4 +47,19 @@ public interface IAuthService {
      * @return 令牌信息
      */
     AuthTokenVO socialLogin(AuthSocialLoginDTO authSocialLoginDTO);
+
+    /**
+     * 用户注册
+     * @param userRegister 注册信息
+     * @return 注册结果
+     */
+    Boolean register(UserRegister userRegister);
+
+    /**
+     * 发送验证码
+     * @param type 1:注册 2:忘记密码
+     * @param email 邮箱
+     * @return 是否发送成功
+     */
+    Boolean sendCode(Integer type, String email);
 }

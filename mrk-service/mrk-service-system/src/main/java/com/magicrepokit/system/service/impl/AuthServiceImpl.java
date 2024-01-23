@@ -2,18 +2,23 @@ package com.magicrepokit.system.service.impl;
 
 
 
+
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.magicrepokit.common.utils.MRKUtil;
 import com.magicrepokit.common.utils.WebUtil;
 import com.magicrepokit.jwt.constant.JWTConstant;
 import com.magicrepokit.jwt.utils.JWTUtil;
 import com.magicrepokit.log.exceotion.ServiceException;
+import com.magicrepokit.redis.utils.MRKRedisUtils;
+import com.magicrepokit.system.config.mail.MailUtil;
 import com.magicrepokit.system.constant.SocialTypeEnum;
 import com.magicrepokit.system.constant.SystemConstant;
 import com.magicrepokit.system.constant.SystemResultCode;
 import com.magicrepokit.system.constant.SystemUserStatus;
 import com.magicrepokit.system.dto.auth.AuthLoginDTO;
 import com.magicrepokit.system.dto.auth.AuthSocialLoginDTO;
+import com.magicrepokit.system.dto.auth.UserRegister;
 import com.magicrepokit.system.vo.auth.AuthTokenVO;
 import com.magicrepokit.system.service.IAuthService;
 import com.magicrepokit.system.service.ISocialUserService;
@@ -35,6 +40,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.thymeleaf.context.Context;
+
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -54,11 +61,13 @@ public class AuthServiceImpl implements IAuthService {
     private final AuthRequestFactory authRequestFactory;
     private final ISocialUserService socialUserService;
     private final RestTemplate restTemplate;
+    private final MRKRedisUtils redisUtils;
     @Value("${mrk.auth.local.client-id}")
     private final String clientId = null;
     @Value("${mrk.auth.local.client-secret}")
     private final String clientSecret = null;
-
+    private final static String REDIS_REGISTER_KEY = "register:";
+    private final static String REDIS_FORGET_KEY = "forget:";
     /**
      *  登录
      *
@@ -127,6 +136,75 @@ public class AuthServiceImpl implements IAuthService {
         socialUserService.authSocialUser(authSocialLoginDTO.getType(), authSocialLoginDTO.getCode(), authSocialLoginDTO.getState());
         //2.获取系统用户信息
         return remoteTokenService(JWTConstant.SOCIAL, clientId, clientSecret, null, null, null,authSocialLoginDTO.getType(),authSocialLoginDTO.getCode(),authSocialLoginDTO.getState());
+    }
+
+    /**
+     * 用户注册
+     * @param userRegister 注册信息
+     * @return 注册结果
+     */
+    @Override
+    public Boolean register(UserRegister userRegister) {
+        //0.账户是否已经注册
+        if(ObjectUtil.isEmpty(userRegister.getAccount())||userService.checkAccount(userRegister.getAccount())){
+            throw new ServiceException(SystemResultCode.USERNAME_EXIST);
+        }
+        //1.判断邮箱是否注册
+        if(ObjectUtil.isEmpty(userRegister.getEmail())||!MailUtil.checkEmail(userRegister.getEmail())||userService.checkEmail(userRegister.getEmail())){
+            throw new ServiceException(SystemResultCode.EMAIL_ERROR);
+        }
+        //2.判断验证码是否正确
+        if(!redisUtils.hasKey(REDIS_REGISTER_KEY + userRegister.getEmail())||!redisUtils.get(REDIS_REGISTER_KEY + userRegister.getEmail()).equals(userRegister.getVerificationCode())){
+            throw new ServiceException(SystemResultCode.CAPTCHA_ERROR);
+        }
+        //3.密码校验
+        if(ObjectUtil.isEmpty(userRegister.getPassword())||ObjectUtil.isEmpty(userRegister.getConfirmPassword())||!userRegister.getPassword().equals(userRegister.getConfirmPassword())){
+            throw new ServiceException(SystemResultCode.PASSWORD_NOT_EQUAL);
+        }
+        //4.注册
+        boolean flag =  userService.register(userRegister);
+        //5.删除验证码
+        redisUtils.del(REDIS_REGISTER_KEY + userRegister.getEmail());
+        return flag;
+    }
+
+    /**
+     * 发送验证码
+     * @param type 1:注册 2:忘记密码
+     * @param email 邮箱
+     * @return 是否发送成功
+     */
+    @Override
+    public Boolean sendCode(Integer type, String email) {
+        if(ObjectUtil.isEmpty(type)||ObjectUtil.isEmpty(email)){
+            return false;
+        }
+        //判断邮箱是否正确
+        if(!MailUtil.checkEmail(email)){
+            throw new ServiceException(SystemResultCode.EMAIL_FORMAT_ERROR);
+        }
+        //判断验证码是否存在
+        if(redisUtils.hasKey(REDIS_REGISTER_KEY + email)||redisUtils.hasKey(REDIS_FORGET_KEY + email)){
+            throw new ServiceException(SystemResultCode.EMAIL_SEND);
+        }
+        //1.生成验证码
+        String code = MRKUtil.emailVerificationCode();
+        //2.存入redis
+        switch (type) {
+            case 1:
+                redisUtils.setExpire(REDIS_REGISTER_KEY + email, code, 60);
+                break;
+            case 2:
+                redisUtils.setExpire(REDIS_FORGET_KEY + email, code, 60);
+                break;
+            default:
+                return false;
+        }
+        //3.发送邮件
+        Context context = new Context();
+        context.setVariable("verificationCode", code);
+        MailUtil.sendHtml(email, "MagicRepoKit 认证消息", context, null);
+        return true;
     }
 
 

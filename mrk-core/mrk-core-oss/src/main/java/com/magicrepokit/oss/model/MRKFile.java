@@ -3,9 +3,10 @@ package com.magicrepokit.oss.model;
 import lombok.Data;
 
 /**
- * BladeFile
- *
- * @author Chill
+ * MRKFile
+ * 文件上传返回结果集
+ * @author AuroraPixel
+ * @github https://github.com/AuroraPixel
  */
 @Data
 public class MRKFile {

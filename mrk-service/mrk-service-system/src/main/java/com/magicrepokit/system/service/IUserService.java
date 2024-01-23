@@ -1,6 +1,7 @@
 package com.magicrepokit.system.service;
 
 import com.magicrepokit.mb.base.BaseService;
+import com.magicrepokit.system.dto.auth.UserRegister;
 import com.magicrepokit.system.entity.user.User;
 import com.magicrepokit.system.vo.user.UserInfoVO;
 
@@ -35,8 +36,19 @@ public interface IUserService extends BaseService<User> {
 
     /**
      * 创建用户
-     * @param user
-     * @return
+     * @param user 用户信息
+     * @return 是否创建成功
      */
     boolean createUser(User user);
+
+    /**
+     * 检查账户是否存在
+     * @param email 邮箱
+     * @return 是否存在
+     */
+    boolean checkEmail(String email);
+
+    boolean register(UserRegister userRegister);
+
+    boolean checkAccount(String account);
 }
