@@ -18,6 +18,7 @@ import com.magicrepokit.system.constant.SystemResultCode;
 import com.magicrepokit.system.constant.SystemUserStatus;
 import com.magicrepokit.system.dto.auth.AuthLoginDTO;
 import com.magicrepokit.system.dto.auth.AuthSocialLoginDTO;
+import com.magicrepokit.system.dto.auth.UserForgetPassword;
 import com.magicrepokit.system.dto.auth.UserRegister;
 import com.magicrepokit.system.vo.auth.AuthTokenVO;
 import com.magicrepokit.system.service.IAuthService;
@@ -79,8 +80,7 @@ public class AuthServiceImpl implements IAuthService {
         //校验用户
         UserInfoVO authenticate = authenticate(authLoginDTO.getUsername(), authLoginDTO.getPassword());
         //oauth登录获取令牌
-
-        return remoteTokenService(JWTConstant.PASSWORD, clientId, clientSecret, authLoginDTO.getUsername(), authLoginDTO.getPassword(), null,null,null,null);
+        return remoteTokenService(JWTConstant.PASSWORD, clientId, clientSecret, authenticate.getUser().getAccount(), authLoginDTO.getPassword(), null,null,null,null);
     }
 
     /**
@@ -207,6 +207,58 @@ public class AuthServiceImpl implements IAuthService {
         return true;
     }
 
+    /**
+     * 忘记密码
+     * @param userForgetPassword 忘记密码信息
+     * @return 是否修改成功
+     */
+    @Override
+    public boolean forgetPassword(UserForgetPassword userForgetPassword) {
+        //1.判断邮箱是否注册
+        if(ObjectUtil.isEmpty(userForgetPassword.getEmail())||!MailUtil.checkEmail(userForgetPassword.getEmail())||!userService.checkEmail(userForgetPassword.getEmail())){
+            throw new ServiceException(SystemResultCode.EMAIL_ERROR);
+        }
+        //2.判断验证码是否正确
+        if(!redisUtils.hasKey(REDIS_FORGET_KEY + userForgetPassword.getEmail())||!redisUtils.get(REDIS_FORGET_KEY + userForgetPassword.getEmail()).equals(userForgetPassword.getVerificationCode())){
+            throw new ServiceException(SystemResultCode.CAPTCHA_ERROR);
+        }
+        //3.密码校验
+        if(ObjectUtil.isEmpty(userForgetPassword.getPassword())||ObjectUtil.isEmpty(userForgetPassword.getConfirmPassword())||!userForgetPassword.getPassword().equals(userForgetPassword.getConfirmPassword())){
+            throw new ServiceException(SystemResultCode.PASSWORD_NOT_EQUAL);
+        }
+        //4.修改密码
+        boolean flag = userService.forgetPassword(userForgetPassword);
+        //5.删除验证码
+        redisUtils.del(REDIS_FORGET_KEY + userForgetPassword.getEmail());
+        return flag;
+    }
+
+    /**
+     * 检查邮箱是否存在
+     * @param email 邮箱
+     * @return 是否存在
+     */
+    @Override
+    public boolean checkEmail(String email) {
+        if(ObjectUtil.isEmpty(email)){
+            return false;
+        }
+        return userService.checkEmail(email);
+    }
+
+    /**
+     * 检查账户是否存在
+     * @param account 账户
+     * @return 是否存在
+     */
+    @Override
+    public boolean checkAccount(String account) {
+        if(ObjectUtil.isEmpty(account)){
+            return false;
+        }
+        return userService.checkAccount(account);
+    }
+
 
     /**
      * 认证中心获取令牌
@@ -283,8 +335,15 @@ public class AuthServiceImpl implements IAuthService {
      * @return
      */
     public UserInfoVO authenticate(String username, String password){
-        //查询用户信息
-        UserInfoVO userInfoVO = userService.userInfo(username);
+        UserInfoVO userInfoVO;
+        //检查是否邮箱
+        if(MailUtil.checkEmail(username)){
+            userInfoVO= userService.userInfoByEmail(username);
+        }else{
+            //根据用户名查询用户信息
+            userInfoVO= userService.userInfo(username);
+        }
+
         if(ObjectUtil.isEmpty(userInfoVO)){
             throw new ServiceException(SystemResultCode.NOT_FOUND_USER);
         }

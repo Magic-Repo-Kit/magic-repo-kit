@@ -7,14 +7,8 @@ import lombok.Data;
 
 
 @Data
-@ApiModel(value = "注册对象DTO", description = "注册对象")
-public class UserRegister {
-    /**
-     * 账户
-     */
-    @ApiModelProperty(value = "账户", required = true)
-    private String account;
-
+@ApiModel(value = "根据邮箱修改密码DTO", description = "根据邮箱修改密码")
+public class UserForgetPassword {
     /**
      * 邮箱
      */

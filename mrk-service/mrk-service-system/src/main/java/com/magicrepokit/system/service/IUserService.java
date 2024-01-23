@@ -1,6 +1,7 @@
 package com.magicrepokit.system.service;
 
 import com.magicrepokit.mb.base.BaseService;
+import com.magicrepokit.system.dto.auth.UserForgetPassword;
 import com.magicrepokit.system.dto.auth.UserRegister;
 import com.magicrepokit.system.entity.user.User;
 import com.magicrepokit.system.vo.user.UserInfoVO;
@@ -13,15 +14,15 @@ public interface IUserService extends BaseService<User> {
     /**
      * 用户信息
      *
-     * @param userId
-     * @return
+     * @param userId 用户id
+     * @return 用户信息
      */
     UserInfoVO userInfo(Long userId);
 
     /**
      * 用户信息
-     * @param account
-     * @return
+     * @param account 账户
+     * @return 用户信息
      */
     UserInfoVO userInfo(String account);
 
@@ -48,7 +49,31 @@ public interface IUserService extends BaseService<User> {
      */
     boolean checkEmail(String email);
 
+    /**
+     * 注册
+     * @param userRegister 注册信息
+     * @return 是否成功
+     */
     boolean register(UserRegister userRegister);
 
+    /**
+     * 检查账户是否存在
+     * @param account 账户
+     * @return 是否存在
+     */
     boolean checkAccount(String account);
+
+    /**
+     * 忘记密码
+     * @param userForgetPassword 忘记密码信息
+     * @return 是否成功
+     */
+    boolean forgetPassword(UserForgetPassword userForgetPassword);
+
+    /**
+     * 查询用户信息
+     * @param email 邮箱
+     * @return 用户信息
+     */
+    UserInfoVO userInfoByEmail(String email);
 }

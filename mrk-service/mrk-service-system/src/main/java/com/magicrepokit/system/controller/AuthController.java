@@ -3,6 +3,7 @@ package com.magicrepokit.system.controller;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.system.dto.auth.AuthLoginDTO;
 import com.magicrepokit.system.dto.auth.AuthSocialLoginDTO;
+import com.magicrepokit.system.dto.auth.UserForgetPassword;
 import com.magicrepokit.system.dto.auth.UserRegister;
 import com.magicrepokit.system.vo.auth.AuthTokenVO;
 import com.magicrepokit.system.service.IAuthService;
@@ -90,6 +91,21 @@ public class AuthController {
         return R.data(authService.register(userRegister));
     }
 
+    /**
+     * 忘记密码
+     */
+    @PostMapping("/forget-password")
+    @ApiOperation(value = "忘记密码", notes = "忘记密码")
+    public R<Boolean> forgetPassword(@RequestBody UserForgetPassword userForgetPassword){
+        return R.data(authService.forgetPassword(userForgetPassword));
+    }
+
+    /**
+     * 发送验证码
+     * @param type 类型[1:注册 2:忘记密码]
+     * @param email 邮箱
+     * @return
+     */
     @PostMapping("/send-code")
     @ApiOperation(value = "发送验证码", notes = "发送验证码")
     public R<Boolean> sendCode(
@@ -97,6 +113,26 @@ public class AuthController {
             @RequestParam("email") @ApiParam(value = "邮箱",required = true) String email
     ){
         return R.data(authService.sendCode(type,email));
+    }
+
+    /**
+     * 检查邮箱是否存在
+     * @param email 邮箱
+     * @return 是否存在
+     */
+    @GetMapping("/check-email")
+    @ApiOperation(value = "检查邮箱是否存在", notes = "检查邮箱是否存在")
+    public R<Boolean> checkEmail(@RequestParam("email") @ApiParam(value = "邮箱",required = true) String email){
+        return R.data(authService.checkEmail(email));
+    }
+
+    /**
+     * 检查账户是否存在
+     */
+    @GetMapping("/check-account")
+    @ApiOperation(value = "检查账户是否存在", notes = "检查账户是否存在")
+    public R<Boolean> checkAccount(@RequestParam("account") @ApiParam(value = "账户",required = true) String account){
+        return R.data(authService.checkAccount(account));
     }
 
 }
