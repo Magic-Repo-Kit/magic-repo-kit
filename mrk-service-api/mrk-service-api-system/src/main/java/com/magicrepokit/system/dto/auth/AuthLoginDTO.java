@@ -15,7 +15,7 @@ import javax.validation.constraints.NotEmpty;
 public class AuthLoginDTO {
 
     @NotEmpty(message = "The account cannot be empty.")
-    @ApiModelProperty(value = "账号", required = true)
+    @ApiModelProperty(value = "账号[账户或邮箱]", required = true)
     private String username;
 
     @NotEmpty(message = "The password cannot be empty.")

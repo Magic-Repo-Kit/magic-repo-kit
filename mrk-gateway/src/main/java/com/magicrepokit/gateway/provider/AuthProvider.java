@@ -7,10 +7,7 @@ public class AuthProvider {
     private static final List<String> DEFAULT_SKIP_URL = new ArrayList<>();
 
     static {
-        DEFAULT_SKIP_URL.add("/system/auth/login");
-        DEFAULT_SKIP_URL.add("/system/auth/refresh-token/**");
-        DEFAULT_SKIP_URL.add("/system/auth/social-login-redirect/**");
-        DEFAULT_SKIP_URL.add("/system/auth/social-login");
+        DEFAULT_SKIP_URL.add("/system/auth/**");
         DEFAULT_SKIP_URL.add("/**/v2/api-docs/**");
     }
 

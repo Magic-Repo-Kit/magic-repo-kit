@@ -1,11 +1,11 @@
 package com.magicrepokit.chat.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.magicrepokit.chat.entity.KnowledgeDetail;
 import com.magicrepokit.chat.mapper.KnowledgeDetailMapper;
 import com.magicrepokit.chat.service.IKnowledgeDetailService;
 import com.magicrepokit.common.utils.AuthUtil;
-import com.magicrepokit.common.utils.ObjectUtil;
 import com.magicrepokit.jwt.entity.MRKUser;
 import com.magicrepokit.mb.base.BaseServiceImpl;
 import org.springframework.stereotype.Service;

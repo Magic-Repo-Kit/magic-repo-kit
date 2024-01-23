@@ -1,5 +1,7 @@
 package com.magicrepokit.auth.service;
 
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.magicrepokit.auth.constant.MRKAuthConstant;
 import com.magicrepokit.auth.constant.MRKI18N;
 import com.magicrepokit.jwt.constant.UserType;
