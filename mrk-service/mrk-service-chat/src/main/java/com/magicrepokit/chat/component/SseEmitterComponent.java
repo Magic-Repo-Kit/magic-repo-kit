@@ -6,6 +6,7 @@ import cn.hutool.json.JSONUtil;
 import com.magicrepokit.log.exceotion.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -60,16 +61,16 @@ public class SseEmitterComponent {
      */
     public void SseEmitterSendMessage(Object message,String key){
         SseEmitter sseEmitter = maps.get(key);
+        //log.info("SSE开始给{}推送消息",key);
         if(sseEmitter==null){
-            log.info("SSE开始给{}推送消息",key);
             sseEmitter.completeWithError(new Exception("用户客户端不存在=>"+key));
         }
         try {
             if(message instanceof String) {
-                sseEmitter.send(message, MediaType.TEXT_EVENT_STREAM);
+                sseEmitter.send(message+"\n", MediaType.TEXT_EVENT_STREAM);
             }else {
                 JSONObject entries = JSONUtil.parseObj(message);
-                sseEmitter.send(entries.toString());
+                sseEmitter.send(entries.toString(),MediaType.TEXT_EVENT_STREAM);
             }
 
         } catch (IOException e) {
