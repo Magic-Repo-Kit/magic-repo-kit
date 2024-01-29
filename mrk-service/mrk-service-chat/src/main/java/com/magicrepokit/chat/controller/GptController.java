@@ -34,7 +34,6 @@ public class GptController {
      * gpt角色聊天
      * @param GptChatDTO
      */
-    @CrossOrigin("*")
     @PostMapping(path = "/chat-role", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
     @ApiOperation(value = "gpt知识库聊天", notes = "gpt知识库聊天[返回:text/event-stream]")
     public SseEmitter chatKnowledge(@RequestBody GptChatDTO GptChatDTO) {
@@ -44,7 +43,6 @@ public class GptController {
     /**
      * gpt聊天预设
      */
-    @CrossOrigin("*")
     @PostMapping(path = "/chat-preset", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
     @ApiOperation(value = "gpt聊天预设", notes = "gpt聊天预设[返回:text/event-stream]")
     public SseEmitter chatPreset(@RequestBody GptChatPresetDTO chatPresetDTO) {
