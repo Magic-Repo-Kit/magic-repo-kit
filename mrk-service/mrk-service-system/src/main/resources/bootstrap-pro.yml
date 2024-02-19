@@ -11,9 +11,12 @@ spring:
     # 注册中心配置
     nacos:
       discovery:
-        server-addr: 124.222.46.195:8848
+        server-addr: 60.204.200.62:8848
+        # 映射的ip
+        ip: 47.97.71.113
+        port: 8001
       config:
-        server-addr: 124.222.46.195:8848
+        server-addr: 60.204.200.62:8848
         # 配置文件格式
         file-extension: yml
         shared-configs[0]:

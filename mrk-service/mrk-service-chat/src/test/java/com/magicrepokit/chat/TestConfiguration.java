@@ -117,7 +117,7 @@ public class TestConfiguration {
         ElasticsearchEmbeddingStore embeddingStore = ElasticsearchEmbeddingStore.builder()
                 .serverUrl("154.204.60.125:9200")
                 .userName("elastic")
-                .password("123456")
+                .password("admin8989")
                 .indexName("mrk_gpt_knowledge2")
                 .dimension(1536)
                 .build();
