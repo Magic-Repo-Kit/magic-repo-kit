@@ -12,12 +12,12 @@ spring:
     nacos:
       discovery:
         # 服务注册地址
-        server-addr: 124.222.46.195:8848
+        server-addr: 60.204.200.62
         # 配置中心
         namespace: 123456
       config:
         # 配置中心地址
-        server-addr: 124.222.46.195:8848
+        server-addr: 60.204.200.62
         # 配置中心
         namespace: 123456
         # 配置文件格式
