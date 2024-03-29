@@ -12,9 +12,7 @@ spring:
     nacos:
       discovery:
         server-addr: 60.204.200.62:8848
-        # 映射的ip
-        ip: 47.97.71.113
-        port: 8002
+        ip: auroralpixel.zapto.org
       config:
         server-addr: 60.204.200.62:8848
         file-extension: yml
