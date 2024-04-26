@@ -1,4 +1,4 @@
-package com.magicrepokit.auth.service;
+package com.gpt.auth.service;
 
 import com.magicrepokit.system.vo.user.UserInfoVO;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.util.Collection;
  * 认证用户增强
  */
 @Getter
-public class MrkUserDetails extends User {
+public class GPTUserDetails extends User {
     /**
      * 用户id
      */
@@ -41,7 +41,7 @@ public class MrkUserDetails extends User {
      */
     private final String roleId;
 
-    public MrkUserDetails(Long userId, String name, String realName, String deptId, String postId, String roleId, String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+    public GPTUserDetails(Long userId, String name, String realName, String deptId, String postId, String roleId, String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
         this.userId = userId;
         this.name = name;
@@ -52,7 +52,7 @@ public class MrkUserDetails extends User {
         this.roleId = roleId;
     }
 
-    public MrkUserDetails(UserInfoVO userInfoVO, Collection<? extends GrantedAuthority> authorities){
+    public GPTUserDetails(UserInfoVO userInfoVO, Collection<? extends GrantedAuthority> authorities){
         super(userInfoVO.getUser().getAccount(), userInfoVO.getUser().getPassword(),true,true,true,true,authorities);
         this.userId = userInfoVO.getUser().getId();
         this.name = userInfoVO.getUser().getName();

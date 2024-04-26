@@ -1,8 +1,8 @@
-package com.magicrepokit.auth.config;
+package com.gpt.auth.config;
 
-import com.magicrepokit.auth.constant.MRKAuthConstant;
-import com.magicrepokit.auth.granter.MRKTokenGranter;
-import com.magicrepokit.auth.service.MRKClientDetailsServiceImpl;
+import com.gpt.auth.granter.GPTTokenGranter;
+import com.gpt.auth.service.GPTClientDetailsServiceImpl;
+import com.gpt.auth.constant.GPTAuthConstant;
 import com.magicrepokit.jwt.properties.JWTProperties;
 import com.magicrepokit.system.feign.ISystemClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ import java.util.List;
  */
 @Configuration
 @EnableAuthorizationServer //开启资源认证服务
-public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapter {
+public class GPTAuthorizationService extends AuthorizationServerConfigurerAdapter {
     @Autowired
     private  TokenStore tokenStore;
     @Autowired
@@ -56,7 +56,7 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
     @Autowired
     private ISystemClient ISystemClient;
     @Autowired
-    private MRKOAuthRequestFactory mrkoAuthRequestFactory;
+    private GPTOAuthRequestFactory GPTOAuthRequestFactory;
     /**
      * 配置客户端详情信息
      * @param clients
@@ -64,10 +64,10 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
      */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        JdbcClientDetailsService clientDetailsService = new MRKClientDetailsServiceImpl(dataSource);
+        JdbcClientDetailsService clientDetailsService = new GPTClientDetailsServiceImpl(dataSource);
         //从数据库获取客户端信息
-        clientDetailsService.setSelectClientDetailsSql(MRKAuthConstant.SELECT_BY_CLIENT_ID);
-        clientDetailsService.setFindClientDetailsSql(MRKAuthConstant.BASE_SELECT);
+        clientDetailsService.setSelectClientDetailsSql(GPTAuthConstant.SELECT_BY_CLIENT_ID);
+        clientDetailsService.setFindClientDetailsSql(GPTAuthConstant.BASE_SELECT);
         //设置密码验证方法
         clientDetailsService.setPasswordEncoder(passwordEncoder);
         clients.withClientDetails(clientDetailsService);
@@ -81,7 +81,7 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         //获取自定义tokenGranter
-        TokenGranter tokenGranter = MRKTokenGranter.getTokenGranter(authenticationManager, endpoints, ISystemClient);
+        TokenGranter tokenGranter = GPTTokenGranter.getTokenGranter(authenticationManager, endpoints, ISystemClient);
         //令牌增强器
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
         List<TokenEnhancer> enhancerList = new ArrayList<>();
@@ -95,7 +95,7 @@ public class MRKAuthorizationService extends AuthorizationServerConfigurerAdapte
                 .tokenGranter(tokenGranter) //自定义服务
                 .tokenEnhancer(tokenEnhancerChain)
                 .accessTokenConverter(accessTokenConverter)
-                .requestFactory(mrkoAuthRequestFactory)
+                .requestFactory(GPTOAuthRequestFactory)
 //                .tokenServices(tokenServices()) //token管理服务
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST)//允许post请求
         ;

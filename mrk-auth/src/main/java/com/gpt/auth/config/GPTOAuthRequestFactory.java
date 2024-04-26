@@ -1,4 +1,4 @@
-package com.magicrepokit.auth.config;
+package com.gpt.auth.config;
 
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -11,8 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MRKOAuthRequestFactory extends DefaultOAuth2RequestFactory {
-    public MRKOAuthRequestFactory(ClientDetailsService clientDetailsService) {
+public class GPTOAuthRequestFactory extends DefaultOAuth2RequestFactory {
+    public GPTOAuthRequestFactory(ClientDetailsService clientDetailsService) {
         super(clientDetailsService);
     }
 

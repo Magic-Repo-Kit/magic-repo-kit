@@ -1,6 +1,6 @@
-package com.magicrepokit.auth.service;
+package com.gpt.auth.service;
 
-import com.magicrepokit.auth.constant.MRKAuthConstant;
+import com.gpt.auth.constant.GPTAuthConstant;
 import com.magicrepokit.redis.utils.MRKRedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -14,12 +14,12 @@ import java.util.concurrent.TimeUnit;
  * MRK授权码管理服务
  */
 @Service
-public class MRKAuthorizationCodeServiceImpl extends RandomValueAuthorizationCodeServices {
+public class GPTAuthorizationCodeServiceImpl extends RandomValueAuthorizationCodeServices {
     @Autowired
     private MRKRedisUtils redisUtils;
     private final RedisSerializer<Object> valueSerializer;
 
-    public MRKAuthorizationCodeServiceImpl() {
+    public GPTAuthorizationCodeServiceImpl() {
         this.valueSerializer = RedisSerializer.java();
     }
 
@@ -53,6 +53,6 @@ public class MRKAuthorizationCodeServiceImpl extends RandomValueAuthorizationCod
      * @return key
      */
     private String getKey(String code) {
-        return MRKAuthConstant.REDIS_KEY_AUTHORIZATION_CODE_PREFIX + code;
+        return GPTAuthConstant.REDIS_KEY_AUTHORIZATION_CODE_PREFIX + code;
     }
 }

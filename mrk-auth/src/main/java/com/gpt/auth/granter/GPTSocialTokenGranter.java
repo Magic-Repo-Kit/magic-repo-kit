@@ -1,7 +1,7 @@
-package com.magicrepokit.auth.granter;
+package com.gpt.auth.granter;
 
-import com.magicrepokit.auth.constant.MRKI18N;
-import com.magicrepokit.auth.service.MrkUserDetails;
+import com.gpt.auth.constant.GPTI18N;
+import com.gpt.auth.service.GPTUserDetails;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.system.constant.SocialTypeEnum;
 import com.magicrepokit.system.dto.auth.AuthSocialLoginDTO;
@@ -21,12 +21,12 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class SocialTokenGranter extends AbstractTokenGranter {
+public class GPTSocialTokenGranter extends AbstractTokenGranter {
     private static final String GRANT_TYPE = "social";
     private final ISystemClient ISystemClient;
 
 
-    protected SocialTokenGranter(AuthorizationServerTokenServices tokenServices, ClientDetailsService clientDetailsService, OAuth2RequestFactory requestFactory, ISystemClient ISystemClient) {
+    protected GPTSocialTokenGranter(AuthorizationServerTokenServices tokenServices, ClientDetailsService clientDetailsService, OAuth2RequestFactory requestFactory, ISystemClient ISystemClient) {
         super(tokenServices, clientDetailsService, requestFactory, GRANT_TYPE);
         this.ISystemClient = ISystemClient;
     }
@@ -38,7 +38,7 @@ public class SocialTokenGranter extends AbstractTokenGranter {
         String source = parameters.get("source");
         SocialTypeEnum socialTypeEnum = SocialTypeEnum.valueOfType(Integer.valueOf(source));
         if(socialTypeEnum==null){
-            throw new UsernameNotFoundException(MRKI18N.UNKNOWN_SOURCE_TYPE.getMessage());
+            throw new UsernameNotFoundException(GPTI18N.UNKNOWN_SOURCE_TYPE.getMessage());
         }
         // 开放平台授权码
         String code = parameters.get("code");
@@ -58,12 +58,12 @@ public class SocialTokenGranter extends AbstractTokenGranter {
             }
         }
         if(userInfoVO == null ){
-            throw new UsernameNotFoundException(MRKI18N.USER_NOT_FOUND.getMessage());
+            throw new UsernameNotFoundException(GPTI18N.USER_NOT_FOUND.getMessage());
         }
         ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        MrkUserDetails mrkUserDetails = new MrkUserDetails(userInfoVO, grantedAuthorities);
+        GPTUserDetails GPTUserDetails = new GPTUserDetails(userInfoVO, grantedAuthorities);
         // 组装认证数据，关闭密码校验
-        Authentication userAuth = new UsernamePasswordAuthenticationToken(mrkUserDetails, null, mrkUserDetails.getAuthorities());
+        Authentication userAuth = new UsernamePasswordAuthenticationToken(GPTUserDetails, null, GPTUserDetails.getAuthorities());
         ((AbstractAuthenticationToken) userAuth).setDetails(parameters);
         OAuth2Request storedOAuth2Request = getRequestFactory().createOAuth2Request(client, tokenRequest);
         // 返回 OAuth2Authentication

@@ -1,9 +1,8 @@
-package com.magicrepokit.auth.service;
+package com.gpt.auth.service;
 
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.magicrepokit.auth.constant.MRKAuthConstant;
-import com.magicrepokit.auth.constant.MRKI18N;
+import com.gpt.auth.constant.GPTAuthConstant;
+import com.gpt.auth.constant.GPTI18N;
 import com.magicrepokit.jwt.constant.UserType;
 import com.magicrepokit.common.api.R;
 import com.magicrepokit.common.utils.*;
@@ -28,7 +27,7 @@ import java.util.ArrayList;
  * 用户管理服务
  */
 @Service
-public class MRKUserDetailsServiceImpl implements UserDetailsService {
+public class GPTUserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private ISystemClient ISystemClient;
     @Autowired
@@ -38,18 +37,18 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String account) throws UsernameNotFoundException {
         HttpServletRequest request = WebUtil.getRequest();
         //获取用户类型
-        String userType = request.getHeader(MRKAuthConstant.USER_TYPE);
+        String userType = request.getHeader(GPTAuthConstant.USER_TYPE);
         //获取密码
-        String password = request.getParameter(MRKAuthConstant.PASSWORD);
+        String password = request.getParameter(GPTAuthConstant.PASSWORD);
         //请求类型
-        String grantType = request.getParameter(MRKAuthConstant.GRANT_TYPE);
+        String grantType = request.getParameter(GPTAuthConstant.GRANT_TYPE);
 
         if (StringUtil.isEmpty(userType)) {
-            throw new UserDeniedAuthorizationException(MRKI18N.NOT_FOUND_USER_TYPE.getMessage());
+            throw new UserDeniedAuthorizationException(GPTI18N.NOT_FOUND_USER_TYPE.getMessage());
         }
         UserType userTypeEnum = UserType.getByUserType(userType);
         if(userTypeEnum==null){
-            throw new UserDeniedAuthorizationException(MRKI18N.NOT_FOUND_USER_TYPE.getMessage());
+            throw new UserDeniedAuthorizationException(GPTI18N.NOT_FOUND_USER_TYPE.getMessage());
         }
 
         //判断token
@@ -62,42 +61,42 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
         R<UserInfoVO> result = ISystemClient.userInfo(account);
         if (result.isSuccess()) {
             UserInfoVO userInfoVO = result.getData();
-            if(ObjectUtil.isEmpty(userInfoVO)||ObjectUtil.isEmpty(userInfoVO.getUser())||(grantType.equals(MRKAuthConstant.PASSWORD)&&!BCrypt.checkpw(password, userInfoVO.getUser().getPassword()))){
+            if(ObjectUtil.isEmpty(userInfoVO)||ObjectUtil.isEmpty(userInfoVO.getUser())||(grantType.equals(GPTAuthConstant.PASSWORD)&&!BCrypt.checkpw(password, userInfoVO.getUser().getPassword()))){
                 //用户错误次数+1
                 setFailCount(account);
-                throw new UsernameNotFoundException(MRKI18N.USER_NOT_FOUND.getMessage());
+                throw new UsernameNotFoundException(GPTI18N.USER_NOT_FOUND.getMessage());
             }
             //匹配用户type
             if(!userInfoVO.getUser().getUserType().contains(userTypeEnum.getCode())){
                 //用户错误次数+1
                 setFailCount(account);
-                throw new UsernameNotFoundException(MRKI18N.NOT_FOUND_USER_TYPE.getMessage());
+                throw new UsernameNotFoundException(GPTI18N.NOT_FOUND_USER_TYPE.getMessage());
             }
 
 
             ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
             //成功清除错误次数
             delFailCount(account);
-            return new MrkUserDetails(userInfoVO, grantedAuthorities);
+            return new GPTUserDetails(userInfoVO, grantedAuthorities);
         } else {
             //用户错误次数+1
             setFailCount(account);
-            throw new UsernameNotFoundException(MRKI18N.USER_NOT_FOUND.getMessage());
+            throw new UsernameNotFoundException(GPTI18N.USER_NOT_FOUND.getMessage());
         }
     }
 
     private void judgeRefreshToken(String grantType,String userType,HttpServletRequest request) {
-        if (grantType.equals(MRKAuthConstant.REFRESH_TOKEN)) {
-            String refreshToken = request.getParameter(MRKAuthConstant.REFRESH_TOKEN);
+        if (grantType.equals(GPTAuthConstant.REFRESH_TOKEN)) {
+            String refreshToken = request.getParameter(GPTAuthConstant.REFRESH_TOKEN);
             //判断令牌的合法性
             Claims claims = JWTUtil.parseJWT(refreshToken);
             if(claims==null){
-                throw new UserDeniedAuthorizationException(MRKI18N.UNKNOWN_REFRESH_TOKEN.getMessage());
+                throw new UserDeniedAuthorizationException(GPTI18N.UNKNOWN_REFRESH_TOKEN.getMessage());
             }
             Long userId = Long.valueOf(String.valueOf(claims.get("user_id")));
             String token = JWTUtil.getRefreshToken(userId, userType);
             if(token==null||!token.equalsIgnoreCase(refreshToken)){
-                throw new UserDeniedAuthorizationException(MRKI18N.INVALID_TOKEN.getMessage());
+                throw new UserDeniedAuthorizationException(GPTI18N.INVALID_TOKEN.getMessage());
             }
         }
     }
@@ -107,7 +106,7 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
      * @param account 账户
      */
     private void delFailCount(String account) {
-        mrkRedisUtils.del(MRKAuthConstant.getFailRedisKey(account));
+        mrkRedisUtils.del(GPTAuthConstant.getFailRedisKey(account));
     }
 
     /**
@@ -115,8 +114,8 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
      * @param account 账户
      */
     private void setFailCount(String account) {
-        mrkRedisUtils.incr(MRKAuthConstant.getFailRedisKey(account), 1);
-        mrkRedisUtils.expire(MRKAuthConstant.getFailRedisKey(account), 5 * 60);
+        mrkRedisUtils.incr(GPTAuthConstant.getFailRedisKey(account), 1);
+        mrkRedisUtils.expire(GPTAuthConstant.getFailRedisKey(account), 5 * 60);
     }
 
     /**
@@ -125,9 +124,9 @@ public class MRKUserDetailsServiceImpl implements UserDetailsService {
      * @param account 账户
      */
     private void judgeFail(String account) {
-        int count = MRKUtil.toInt(mrkRedisUtils.get(MRKAuthConstant.getFailRedisKey(account)), 0);
-        if (count >= MRKAuthConstant.FAIL_COUNT) {
-            throw new UserDeniedAuthorizationException(MRKI18N.USER_IS_LOCKED.getMessage());
+        int count = MRKUtil.toInt(mrkRedisUtils.get(GPTAuthConstant.getFailRedisKey(account)), 0);
+        if (count >= GPTAuthConstant.FAIL_COUNT) {
+            throw new UserDeniedAuthorizationException(GPTI18N.USER_IS_LOCKED.getMessage());
         }
     }
 }

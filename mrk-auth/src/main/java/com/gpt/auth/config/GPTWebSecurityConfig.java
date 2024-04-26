@@ -1,4 +1,4 @@
-package com.magicrepokit.auth.config;
+package com.gpt.auth.config;
 
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-public class MRKWebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class GPTWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 认证管理器

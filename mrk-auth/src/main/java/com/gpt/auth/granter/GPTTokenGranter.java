@@ -1,4 +1,4 @@
-package com.magicrepokit.auth.granter;
+package com.gpt.auth.granter;
 
 import com.magicrepokit.system.feign.ISystemClient;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MRKTokenGranter {
+public class GPTTokenGranter {
     /**
      * 自定义tokenGranter
      */
@@ -18,7 +18,7 @@ public class MRKTokenGranter {
         // 默认tokenGranter集合
         List<TokenGranter> granters = new ArrayList<>(Collections.singletonList(endpoints.getTokenGranter()));
         // 增加第三方登陆模式
-        granters.add(new SocialTokenGranter(endpoints.getTokenServices(), endpoints.getClientDetailsService(), endpoints.getOAuth2RequestFactory(), ISystemClient));
+        granters.add(new GPTSocialTokenGranter(endpoints.getTokenServices(), endpoints.getClientDetailsService(), endpoints.getOAuth2RequestFactory(), ISystemClient));
         // 组合tokenGranter集合
         return new CompositeTokenGranter(granters);
     }

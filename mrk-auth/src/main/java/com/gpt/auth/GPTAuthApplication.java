@@ -1,4 +1,4 @@
-package com.magicrepokit.auth;
+package com.gpt.auth;
 
 
 import org.springframework.boot.SpringApplication;
@@ -11,8 +11,8 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @ComponentScan("com.magicrepokit")
 @EnableFeignClients({"com.magicrepokit"})
-public class MRKAuthApplication {
+public class GPTAuthApplication {
     public static void main(String[] args) {
-        SpringApplication.run(MRKAuthApplication.class);
+        SpringApplication.run(GPTAuthApplication.class);
     }
 }

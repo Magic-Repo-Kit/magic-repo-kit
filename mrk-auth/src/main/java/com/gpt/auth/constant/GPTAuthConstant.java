@@ -1,9 +1,9 @@
-package com.magicrepokit.auth.constant;
+package com.gpt.auth.constant;
 
 /**
  * Auth常量
  */
-public interface MRKAuthConstant {
+public interface GPTAuthConstant {
 
     /**
      * 客户端表名

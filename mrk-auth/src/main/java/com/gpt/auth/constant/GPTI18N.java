@@ -1,9 +1,9 @@
-package com.magicrepokit.auth.constant;
+package com.gpt.auth.constant;
 
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum MRKI18N {
+public enum GPTI18N {
 
     /**
      * 未发现用户登录类型

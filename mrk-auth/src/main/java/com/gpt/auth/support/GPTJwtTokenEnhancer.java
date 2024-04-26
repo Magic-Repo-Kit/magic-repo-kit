@@ -1,7 +1,7 @@
-package com.magicrepokit.auth.support;
+package com.gpt.auth.support;
 
-import com.magicrepokit.auth.constant.MRKAuthConstant;
-import com.magicrepokit.auth.service.MrkUserDetails;
+import com.gpt.auth.constant.GPTAuthConstant;
+import com.gpt.auth.service.GPTUserDetails;
 import com.magicrepokit.common.utils.WebUtil;
 import com.magicrepokit.jwt.constant.JWTConstant;
 import com.magicrepokit.jwt.utils.JWTUtil;
@@ -21,7 +21,7 @@ import java.util.Map;
  * 令牌增强器
  */
 @AllArgsConstructor
-public class MRKJwtTokenEnhancer implements TokenEnhancer {
+public class GPTJwtTokenEnhancer implements TokenEnhancer {
     private final JwtAccessTokenConverter jwtAccessTokenConverter;
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken oAuth2AccessToken, OAuth2Authentication oAuth2Authentication) {
@@ -29,12 +29,12 @@ public class MRKJwtTokenEnhancer implements TokenEnhancer {
             return oAuth2AccessToken;
         }
         //oauth中user信息
-        MrkUserDetails principal = (MrkUserDetails) oAuth2Authentication.getUserAuthentication().getPrincipal();
+        GPTUserDetails principal = (GPTUserDetails) oAuth2Authentication.getUserAuthentication().getPrincipal();
         //token参数增强
         Map<String, Object> info = new HashMap<>(16);
         HttpServletRequest request = WebUtil.getRequest();
         //获取用户类型
-        String userType = request.getHeader(MRKAuthConstant.USER_TYPE);
+        String userType = request.getHeader(GPTAuthConstant.USER_TYPE);
         info.put(JWTConstant.USER_ID, principal.getUserId());
         info.put(JWTConstant.DEPT_ID, principal.getDeptId());
         info.put(JWTConstant.POST_ID, principal.getPostId());

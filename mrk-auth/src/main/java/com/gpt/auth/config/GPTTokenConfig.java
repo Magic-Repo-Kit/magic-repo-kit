@@ -1,18 +1,17 @@
-package com.magicrepokit.auth.config;
+package com.gpt.auth.config;
 
-import com.magicrepokit.auth.support.MRKJwtTokenEnhancer;
+import com.gpt.auth.support.GPTJwtTokenEnhancer;
 import com.magicrepokit.jwt.properties.JWTProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @Configuration
-public class MRKTokenConfig {
+public class GPTTokenConfig {
     /**
      * 指定令牌存储
      * @return
@@ -38,11 +37,11 @@ public class MRKTokenConfig {
 
     @Bean
     public TokenEnhancer tokenEnhancer(JwtAccessTokenConverter accessTokenConverter){
-        return new MRKJwtTokenEnhancer(accessTokenConverter);
+        return new GPTJwtTokenEnhancer(accessTokenConverter);
     }
 
     @Bean
-    public MRKOAuthRequestFactory mrkOAuthRequestFactory(ClientDetailsService clientDetailsService){
-        return new MRKOAuthRequestFactory(clientDetailsService);
+    public GPTOAuthRequestFactory mrkOAuthRequestFactory(ClientDetailsService clientDetailsService){
+        return new GPTOAuthRequestFactory(clientDetailsService);
     }
 }
