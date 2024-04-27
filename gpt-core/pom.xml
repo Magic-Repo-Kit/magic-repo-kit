@@ -13,7 +13,6 @@
         <module>gpt-core-jwt</module>
         <module>gpt-core-mybatis</module>
         <module>gpt-core-redis</module>
-        <module>gpt-core-generate</module>
         <module>gpt-core-i18n</module>
         <module>gpt-core-log</module>
         <module>gpt-core-swagger</module>
