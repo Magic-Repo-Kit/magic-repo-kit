@@ -13,36 +13,36 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>mrk-service-api-system</module>
-        <module>mrk-service-api-chat</module>
+        <module>gpt-service-api-system</module>
+        <module>gpt-service-api-chat</module>
     </modules>
 
     <dependencies>
         <dependency>
             <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-mybatis</artifactId>
+            <artifactId>gpt-core-mybatis</artifactId>
         </dependency>
         <dependency>
             <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-oss</artifactId>
+            <artifactId>gpt-core-oss</artifactId>
         </dependency>
         <dependency>
             <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-i18n</artifactId>
+            <artifactId>gpt-core-i18n</artifactId>
         </dependency>
         <dependency>
             <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-jwt</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-log</artifactId>
+            <artifactId>gpt-core-jwt</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-core-langchain</artifactId>
+            <artifactId>gpt-core-log</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.auoralpixel</groupId>
+            <artifactId>gpt-core-langchain</artifactId>
         </dependency>
 
         <dependency>

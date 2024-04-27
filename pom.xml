@@ -11,13 +11,13 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>mrk-bom</module>
-        <module>mrk-auth</module>
-        <module>mrk-common</module>
+        <module>gpt-bom</module>
+        <module>gpt-auth</module>
+        <module>gpt-common</module>
         <module>mrk-service-api</module>
-        <module>mrk-core</module>
-        <module>mrk-gateway</module>
-        <module>mrk-service</module>
+        <module>gpt-core</module>
+        <module>gpt-gateway</module>
+        <module>gpt-service</module>
     </modules>
 
 
@@ -32,7 +32,7 @@
     <dependencies>
         <dependency>
             <groupId>org.auoralpixel</groupId>
-            <artifactId>mrk-bom</artifactId>
+            <artifactId>gpt-bom</artifactId>
             <version>1.0.0</version>
             <type>pom</type>
             <scope>import</scope>
