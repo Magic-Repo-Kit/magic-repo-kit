@@ -1,1 +1,1 @@
-# MagicRepoKit
+# GPT

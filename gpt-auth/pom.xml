@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <description>MagicRepoKit认证服务</description>
+    <description>GPT认证服务</description>
     <parent>
         <groupId>org.auoralpixel</groupId>
-        <artifactId>MagicRepoKit</artifactId>
+        <artifactId>GPTKit</artifactId>
         <version>1.0.0</version>
     </parent>
 
@@ -124,7 +124,7 @@
 
     <!-- 打包配置 -->
     <build>
-        <finalName>mrk-auth</finalName>
+        <finalName>gpt-auth</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

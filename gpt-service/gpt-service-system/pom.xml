@@ -9,7 +9,7 @@
     <artifactId>gpt-service-system</artifactId>
     <name>${project.artifactId}</name>
     <version>1.0.0</version>
-    <description>MagicRepoKit系统服务</description>
+    <description>系统服务</description>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -28,7 +28,7 @@
     </dependencies>
 
     <build>
-        <finalName>mrk-service-system</finalName>
+        <finalName>gpt-service-system</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -2,9 +2,9 @@ package com.gpt.auth.support;
 
 import com.gpt.auth.constant.GPTAuthConstant;
 import com.gpt.auth.service.GPTUserDetails;
-import com.magicrepokit.common.utils.WebUtil;
-import com.magicrepokit.jwt.constant.JWTConstant;
-import com.magicrepokit.jwt.utils.JWTUtil;
+import com.gpt.common.utils.WebUtil;
+import com.gpt.jwt.constant.JWTConstant;
+import com.gpt.jwt.utils.JWTUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;

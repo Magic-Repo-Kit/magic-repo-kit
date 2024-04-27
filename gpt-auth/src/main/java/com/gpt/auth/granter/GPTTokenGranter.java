@@ -1,6 +1,6 @@
 package com.gpt.auth.granter;
 
-import com.magicrepokit.system.feign.ISystemClient;
+import com.gpt.system.feign.ISystemClient;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.CompositeTokenGranter;

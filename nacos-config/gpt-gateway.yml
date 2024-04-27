@@ -30,22 +30,22 @@ spring:
 #          uri: lb://stock-user
 #          predicates:
 #            - Path=/user/**
-        - id: mrk-auth
-          uri: lb://mrk-auth
+        - id: gpt-auth
+          uri: lb://gpt-auth
           predicates:
             # - Method=GET,POST  不要开启此项
             - Path=/auth/**
           filters:
             - StripPrefix=1
-        - id: mrk-user
-          uri: lb://mrk-system
+        - id: gpt-user
+          uri: lb://gpt-system
           predicates:
             # - Method=GET,POST  不要开启此项
             - Path=/system/**
           filters:
             - StripPrefix=1
-        - id: mrk-chat
-          uri: lb://mrk-chat
+        - id: gpt-chat
+          uri: lb://gpt-chat
           predicates:
             # - Method=GET,POST  不要开启此项
             - Path=/chat/**
@@ -66,7 +66,7 @@ knife4j:
       enabled: true
       version: swagger2
       excluded-services:
-        - mrk-gateway
-        - mrk-auth
+        - gpt-gateway
+        - gpt-auth
       swagger2:
         url: /v2/api-docs?group=default

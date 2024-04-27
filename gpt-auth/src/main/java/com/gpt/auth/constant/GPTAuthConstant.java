@@ -8,7 +8,7 @@ public interface GPTAuthConstant {
     /**
      * 客户端表名
      */
-    String CLIENT_TABLE_NAME = "mrk_client";
+    String CLIENT_TABLE_NAME = "gpt_client";
 
     /**
      * 客户端SQL字段
@@ -30,7 +30,7 @@ public interface GPTAuthConstant {
     /**
      * redis中授权码存储前缀key
      */
-    String REDIS_KEY_AUTHORIZATION_CODE_PREFIX = "mrk:auth:authorization_code:";
+    String REDIS_KEY_AUTHORIZATION_CODE_PREFIX = "gpt:auth:authorization_code:";
 
     /**
      * 用户登录的type
@@ -46,7 +46,7 @@ public interface GPTAuthConstant {
     /**
      * 用户锁定的key
      */
-    String FAIL_REDIS_KEY = "mrk:auth:login:fail:";
+    String FAIL_REDIS_KEY = "gpt:auth:login:fail:";
 
 
     /**

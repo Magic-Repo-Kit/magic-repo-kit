@@ -1,6 +1,6 @@
 package com.gpt.auth.service;
 
-import com.magicrepokit.system.vo.user.UserInfoVO;
+import com.gpt.system.vo.user.UserInfoVO;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;

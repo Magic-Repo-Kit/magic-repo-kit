@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: mrk-gateway
+    name: gpt-gateway
   config:
     activate:
       on-profile: test

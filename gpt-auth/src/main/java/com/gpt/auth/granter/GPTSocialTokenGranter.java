@@ -2,12 +2,12 @@ package com.gpt.auth.granter;
 
 import com.gpt.auth.constant.GPTI18N;
 import com.gpt.auth.service.GPTUserDetails;
-import com.magicrepokit.common.api.R;
-import com.magicrepokit.system.constant.SocialTypeEnum;
-import com.magicrepokit.system.dto.auth.AuthSocialLoginDTO;
-import com.magicrepokit.system.vo.auth.SocialUserAuthVO;
-import com.magicrepokit.system.vo.user.UserInfoVO;
-import com.magicrepokit.system.feign.ISystemClient;
+import com.gpt.common.api.R;
+import com.gpt.system.constant.SocialTypeEnum;
+import com.gpt.system.dto.auth.AuthSocialLoginDTO;
+import com.gpt.system.vo.auth.SocialUserAuthVO;
+import com.gpt.system.vo.user.UserInfoVO;
+import com.gpt.system.feign.ISystemClient;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

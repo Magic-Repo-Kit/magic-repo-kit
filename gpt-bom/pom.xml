@@ -6,7 +6,7 @@
     <artifactId>gpt-bom</artifactId>
     <version>1.0.0</version>
     <name>${project.artifactId}</name>
-    <description>MagicRepoKit骨架依赖</description>
+    <description>GPT骨架依赖</description>
     <packaging>pom</packaging>
 
     <properties>

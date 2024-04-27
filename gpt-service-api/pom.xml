@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.auoralpixel</groupId>
-        <artifactId>MagicRepoKit</artifactId>
+        <artifactId>GPTKit</artifactId>
         <version>1.0.0</version>
     </parent>
 
     <artifactId>gpt-service-api</artifactId>
     <name>${project.artifactId}</name>
-    <description>MagicRepoKit业务服务api</description>
+    <description>业务服务api</description>
     <packaging>pom</packaging>
 
     <modules>

@@ -23,14 +23,14 @@ spring:
       # 解决 SpringFox 与 SpringBoot 2.6.x 不兼容的问题，参见 SpringFoxHandlerProviderBeanPostProcessor 类
       matching-strategy: ANT_PATH_MATCHER
     
-# magicRepoKit服务配置
-mrk:
+# GPT服务配置
+gpt:
   token:
-    sing-key: mrkmrkisapowerfulmicroservicearchitectureupgradedandoptimizedfromacommercialproject
+    sing-key: gptgptisapowerfulmicroservicearchitectureupgradedandoptimizedfromacommercialproject
   auth:
     local:
-      client-id: magicrepokit
-      client-secret: magicrepokit
+      client-id: gpt
+      client-secret: gpt
   langchain:
     elastic-username: elastic
     elastic-password: 123456
@@ -40,36 +40,16 @@ mrk:
 # 三方登录配置
 justauth:
   cache:
-    prefix: 'mrk:social:state:'
+    prefix: 'gpt:social:state:'
     type: redis
     timeout: 24h
   enabled: true
   type:
     GITEE:
-      client-id: 0396203ae2b0c332f514dcbf752097f0a8a69bb6672eacc4b781be737b5aad68
-      client-secret: b519097c0d81206e9a2db86154d574edc81ff50b87aa80b248d5593293ce21f0
-      redirect-uri: https://mrk.auroralpixel.world/auth
+      client-id: 自己申请
+      client-secret: 自己申请
+      redirect-uri: 自己登陆地址
       ignore-check-redirect-uri: true
-    GITHUB:
-      client-id: 53b541f7602d85d88cf0
-      client-secret: 4fe37d5be18c24d4b2783438b24be0595616eb5a
-      redirect-uri: https://mrk.auroralpixel.world/auth
-      ignore-check-redirect-uri: true
-    GOOGLE:
-      client-id: 523371826852-0l0cips35vf8ss9mt7bbq7mnau1flngj.apps.googleusercontent.com
-      client-secret: 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
-      redirect-uri: https://mrk.auroralpixel.world/auth
-      ignore-check-redirect-uri: true
-  http-config:
-    proxy:
-      GITHUB:
-        hostname: 127.0.0.1
-        port: 7890
-        type: HTTP
-      GOOGLE:
-        hostname: 127.0.0.1
-        port: 7890
-        type: HTTP
 
 # mybatis日志
 mybatis-plus:
@@ -78,9 +58,4 @@ mybatis-plus:
 
 # 对象存储
 oss:
-  enabled: true
-  access-key: ku5ENxlbBfnVKvoPejJmC73R48dr0GnCu5htG8bk
-  secret-key: OIiBcXoyBQgMAR0BYWzrwsoHsi1_beXVE79Gp6fs
-  endpoint: s6ie5kuog.hd-bkt.clouddn.com
-  bucket-name: system
-  region: huadong
+  enabled: false

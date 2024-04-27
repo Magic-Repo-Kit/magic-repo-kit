@@ -9,6 +9,6 @@
     <artifactId>gpt-service-api-system</artifactId>
     <name>${project.artifactId}</name>
     <version>1.0.0</version>
-    <description>MagicRepoKit用户服务api</description>
+    <description>用户服务api</description>
     <packaging>jar</packaging>
 </project>

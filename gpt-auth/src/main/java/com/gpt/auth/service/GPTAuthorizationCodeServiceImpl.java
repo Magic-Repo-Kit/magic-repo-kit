@@ -1,7 +1,7 @@
 package com.gpt.auth.service;
 
 import com.gpt.auth.constant.GPTAuthConstant;
-import com.magicrepokit.redis.utils.GPTRedisUtils;
+import com.gpt.redis.utils.GPTRedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.TimeUnit;
 
 /**
- * MRK授权码管理服务
+ * 授权码管理服务
  */
 @Service
 public class GPTAuthorizationCodeServiceImpl extends RandomValueAuthorizationCodeServices {

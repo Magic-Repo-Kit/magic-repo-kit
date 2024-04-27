@@ -4,7 +4,7 @@
     <description>微服务网关</description>
     <parent>
         <groupId>org.auoralpixel</groupId>
-        <artifactId>MagicRepoKit</artifactId>
+        <artifactId>GPTKit</artifactId>
         <version>1.0.0</version>
     </parent>
     <artifactId>gpt-gateway</artifactId>
@@ -66,7 +66,7 @@
 
     <!-- 打包配置 -->
     <build>
-        <finalName>mrk-gateway</finalName>
+        <finalName>gpt-gateway</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

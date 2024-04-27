@@ -9,8 +9,8 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan("com.magicrepokit")
-@EnableFeignClients({"com.magicrepokit"})
+@ComponentScan("com.gpt")
+@EnableFeignClients({"com.gpt"})
 public class GPTAuthApplication {
     public static void main(String[] args) {
         SpringApplication.run(GPTAuthApplication.class);

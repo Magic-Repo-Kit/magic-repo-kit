@@ -9,6 +9,6 @@
     <artifactId>gpt-service-api-chat</artifactId>
     <name>${project.artifactId}</name>
     <version>1.0.0</version>
-    <description>MagicRepoKit聊天api</description>
+    <description>gpt聊天api</description>
     <packaging>jar</packaging>
 </project>

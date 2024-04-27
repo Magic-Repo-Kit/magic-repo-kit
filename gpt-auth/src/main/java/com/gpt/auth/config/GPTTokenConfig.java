@@ -1,7 +1,7 @@
 package com.gpt.auth.config;
 
 import com.gpt.auth.support.GPTJwtTokenEnhancer;
-import com.magicrepokit.jwt.properties.JWTProperties;
+import com.gpt.jwt.properties.JWTProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -41,7 +41,7 @@ public class GPTTokenConfig {
     }
 
     @Bean
-    public GPTOAuthRequestFactory mrkOAuthRequestFactory(ClientDetailsService clientDetailsService){
+    public GPTOAuthRequestFactory oAuthRequestFactory(ClientDetailsService clientDetailsService){
         return new GPTOAuthRequestFactory(clientDetailsService);
     }
 }

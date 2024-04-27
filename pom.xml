@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.auoralpixel</groupId>
-    <artifactId>MagicRepoKit</artifactId>
+    <artifactId>GPTKit</artifactId>
     <version>1.0.0</version>
-    <description>MagicRepoKit统一配置</description>
+    <description>gpt统一配置</description>
     <packaging>pom</packaging>
 
     <modules>

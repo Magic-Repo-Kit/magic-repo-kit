@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
 
 /**
- * MRK客户端管理服务
+ * 客户端管理服务
  */
 @Service
 public class GPTClientDetailsServiceImpl extends JdbcClientDetailsService {
