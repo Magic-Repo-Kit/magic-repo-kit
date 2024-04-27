@@ -12,7 +12,6 @@ spring:
     nacos:
       discovery:
         server-addr: 60.204.200.62
-        ip: auroralpixel.zapto.org
       config:
         server-addr: 60.204.200.62
         file-extension: yml

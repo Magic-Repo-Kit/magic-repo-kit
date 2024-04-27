@@ -13,7 +13,6 @@ spring:
       discovery:
         # 服务注册地址
         server-addr: 60.204.200.62
-        ip: auroralpixel.zapto.org
         # 配置中心
       config:
         # 配置中心地址
