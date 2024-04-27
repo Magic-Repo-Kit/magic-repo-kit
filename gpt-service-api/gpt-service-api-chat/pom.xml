@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.auoralpixel</groupId>
-        <artifactId>mrk-service-api</artifactId>
+        <artifactId>gpt-service-api</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>gpt-service-api-system</artifactId>
+    <artifactId>gpt-service-api-chat</artifactId>
     <name>${project.artifactId}</name>
     <version>1.0.0</version>
-    <description>MagicRepoKit用户服务api</description>
+    <description>MagicRepoKit聊天api</description>
     <packaging>jar</packaging>
 </project>

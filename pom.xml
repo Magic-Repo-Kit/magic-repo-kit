@@ -14,7 +14,7 @@
         <module>gpt-bom</module>
         <module>gpt-auth</module>
         <module>gpt-common</module>
-        <module>mrk-service-api</module>
+        <module>gpt-service-api</module>
         <module>gpt-core</module>
         <module>gpt-gateway</module>
         <module>gpt-service</module>

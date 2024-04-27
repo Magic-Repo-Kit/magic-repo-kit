@@ -7,7 +7,7 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>mrk-service-api</artifactId>
+    <artifactId>gpt-service-api</artifactId>
     <name>${project.artifactId}</name>
     <description>MagicRepoKit业务服务api</description>
     <packaging>pom</packaging>
