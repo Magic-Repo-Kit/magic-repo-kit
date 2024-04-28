@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "gpt_gpt_conversation",autoResultMap = true)
+@TableName(value = "gpt_conversation",autoResultMap = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

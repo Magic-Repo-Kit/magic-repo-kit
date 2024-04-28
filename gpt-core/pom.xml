@@ -17,7 +17,6 @@
         <module>gpt-core-log</module>
         <module>gpt-core-swagger</module>
         <module>gpt-core-langchain</module>
-        <module>gpt-core-oss</module>
     </modules>
     <dependencies>
         <!--        springboot组件-->

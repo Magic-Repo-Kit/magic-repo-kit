@@ -1,5 +1,6 @@
 package com.gpt.chat.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.ObjectUtil;
 import com.gpt.chat.component.LangchainComponent;
@@ -54,9 +55,7 @@ import static java.util.stream.Collectors.joining;
 public class GptServiceImpl implements IGptService {
     private final SseEmitterComponent sseEmitterComponent;
     private final IGptConversationService gptConversationService;
-    private final IGptRoleService gptRoleService;
     private final LangchainComponent langchainComponent;
-    private final IKnowledgeService knowledgeService;
 
     /**
      * gpt角色聊天
@@ -81,51 +80,23 @@ public class GptServiceImpl implements IGptService {
         Long userId = user.getUserId();
         String sseKey = getSSEKey();
         SseEmitter sseEmitter = sseEmitterComponent.SseEmitterConnect(sseKey);
-        //查询模型信息
-        GptRoleVO gptRoleVO = getGptRole(gptChatDTO.getRoleId());
 
         //建立模型
-        StreamingChatLanguageModel streamingChatLanguageModel = langchainComponent.getStreamingChatLanguageModel(getGptModel(gptRoleVO.getModelName()),new Double(gptRoleVO.getTemperature()));
+        StreamingChatLanguageModel streamingChatLanguageModel = langchainComponent.getStreamingChatLanguageModel(GptModel.GPT_3_5_TURBO,0.7);
         List<ChatMessage> chatMessages = new ArrayList<>();
-        chatMessages.add(langchainComponent.getDefalutSystemMessage(getGptModel(gptRoleVO.getModelName())));
 
-        //1.系统提示词
-        SystemMessage systemMessage = new SystemMessage(gptRoleVO.getPrompt());
-        //2.知识库内容
-        List<TextSegment> relevant = null;
-        if(ObjectUtil.isNotEmpty(gptRoleVO.getKnowledgeFileListVO())){
-            KnowledgeFileListVO knowledge = gptRoleVO.getKnowledgeFileListVO();
-            relevant = getRelevant(knowledge.getIndexName(),gptChatDTO.getContent(),knowledge.getMinScore(),knowledge.getMaxResult());
-            SystemMessage knowledgeMessage = getKnowledgeMessage(relevant);
-            String text = systemMessage.text();
-            if(ObjectUtil.isNotEmpty(knowledgeMessage)){
-                text = text+"\n\n"+knowledgeMessage.text();
-                systemMessage = createSystemMessage(text);
-            }
-        }
-        if(ObjectUtil.isNotEmpty(systemMessage)&&ObjectUtil.isNotEmpty(systemMessage.text())){
-            chatMessages.add(systemMessage);
-        }
-
-
-
-        //3.历史记忆
+        //1.历史记忆
         if(ObjectUtil.isNotEmpty(gptChatDTO.getIsContext())&&gptChatDTO.getIsContext().equals(StatusConstant.YES)){
             List<ChatMessage> historyMessage = getHistoryMessage(gptChatDTO.getConversationId(),gptChatDTO.getContextLength());
-            if(ObjectUtil.isNotEmpty(historyMessage)){
+            if(CollUtil.isNotEmpty(historyMessage)){
                 chatMessages.addAll(historyMessage);
             }
         }
-        //4.TODO 是否使用联网
-        //5.TODO 对话内容上下文自动补全
-
-
 
         //5.用户问题
         UserMessage userMessage = new UserMessage(gptChatDTO.getContent());
         chatMessages.add(userMessage);
-        //6.聊天
-        List<TextSegment> finalRelevant = relevant;
+
         boolean finalIsNewConversation = isNewConversation;
         streamingChatLanguageModel.generate(chatMessages, new StreamingResponseHandler<AiMessage>() {
             @Override
@@ -140,10 +111,10 @@ public class GptServiceImpl implements IGptService {
             @Override
             @Async
             public void onError(Throwable error) {
-                Error error1 = new Error();
-                error1.setCode(ChatResultCode.CHAT_ERROR.getCode()+"");
-                error1.setMessage(ChatResultCode.CHAT_ERROR.getMessage());
-                gptSSEResponse.setError(error1);
+                Error resError = new Error();
+                resError.setCode(ChatResultCode.CHAT_ERROR.getCode()+"");
+                resError.setMessage(error.getMessage());
+                gptSSEResponse.setError(resError);
                 gptSSEResponse.setIsEnd(true);
                 sseEmitterComponent.SseEmitterSendMessage(gptSSEResponse, sseKey);
                 sseEmitterComponent.close(sseKey);
@@ -156,9 +127,6 @@ public class GptServiceImpl implements IGptService {
                 StreamingResponseHandler.super.onComplete(response);
                 gptSSEResponse.setError(null);
                 gptSSEResponse.setMessage(response.content().text());
-                if(ObjectUtil.isNotEmpty(finalRelevant)&&gptRoleVO.getIsShowKnowledge().equals(StatusConstant.YES)){
-                    gptSSEResponse.ofKnowledgeText(finalRelevant);
-                }
                 gptSSEResponse.setIsEnd(true);
                 sseEmitterComponent.SseEmitterSendMessage(gptSSEResponse, sseKey);
                 sseEmitterComponent.close(sseKey);
@@ -166,104 +134,6 @@ public class GptServiceImpl implements IGptService {
                 saveChatHistory(gptChatDTO.getConversationId(),gptChatDTO.getRoleId(),response.content().text(),userId,gptChatDTO.getContent(), finalIsNewConversation);
             }
         });
-
-        return sseEmitter;
-    }
-
-    /**
-     * gpt聊天预设
-     * @param chatPresetDTO 聊天内容
-     * @return SseEmitter
-     */
-    @Override
-    public SseEmitter chatPreset(GptChatPresetDTO chatPresetDTO) {
-        //1.验证聊天
-        if(ObjectUtil.isEmpty(chatPresetDTO.getMessages())){
-            throw new ServiceException(ChatResultCode.CHAT_PRESET_MESSAGE_NOT_EMPTY);
-        }
-        if(ObjectUtil.isEmpty(chatPresetDTO.getIsShowKnowledge())){
-            chatPresetDTO.setIsShowKnowledge(StatusConstant.NO);
-        }
-        //结果集设定
-        GptSSEResponse gptSSEResponse = new GptSSEResponse();
-        //2.获取SSeKey
-        String sseKey = getSSEKey();
-        //3.获取连接
-        SseEmitter sseEmitter = sseEmitterComponent.SseEmitterConnect(sseKey);
-        //4.建立模型
-        StreamingChatLanguageModel streamingChatLanguageModel = langchainComponent.getStreamingChatLanguageModel(getGptModel(chatPresetDTO.getModelName()),new Double(chatPresetDTO.getTemperature()));
-        //5.聊天
-        List<ChatMessage> chatMessages = new ArrayList<>();
-        chatMessages.add(langchainComponent.getDefalutSystemMessage(getGptModel(chatPresetDTO.getModelName())));
-        //5.1系统提示词
-        SystemMessage systemMessage = ObjectUtil.isNotEmpty(chatPresetDTO.getPrompt())?new SystemMessage(chatPresetDTO.getPrompt()):null;
-        //5.2知识库内容
-        List<TextSegment> relevant = null;
-        if(ObjectUtil.isNotEmpty(chatPresetDTO.getKnowledgeId())){
-            KnowledgeFileListVO knowledge = knowledgeService.detailFile(chatPresetDTO.getKnowledgeId());
-            if(!ObjectUtil.isEmpty(knowledge)){
-                relevant = getRelevant(knowledge.getIndexName(), chatPresetDTO.getUserInput(), knowledge.getMinScore(), knowledge.getMaxResult());
-                SystemMessage knowledgeMessage = getKnowledgeMessage(relevant);
-                if(ObjectUtil.isNotEmpty(knowledgeMessage)&&ObjectUtil.isNotEmpty(systemMessage)){
-                    String text = systemMessage.text();
-                    text = text+"\n\n"+knowledgeMessage.text();
-                    systemMessage = createSystemMessage(text);
-                }else{
-                    systemMessage = knowledgeMessage;
-                }
-            }
-
-        }
-        if(ObjectUtil.isNotEmpty(systemMessage)&&ObjectUtil.isNotEmpty(systemMessage.text())){
-            chatMessages.add(systemMessage);
-        }
-        //5.3 TODO 是否联网
-        //5.4 TODO 对话内容上下文自动补全
-
-        //5.5用户问题与对话记录
-        chatMessages.addAll(chatPresetDTO.getChatMessages());
-
-        //6.聊天
-        List<TextSegment> finalRelevant = relevant;
-        streamingChatLanguageModel.generate(chatMessages, new StreamingResponseHandler<AiMessage>() {
-            @Override
-            @Async
-            public void onNext(String token) {
-                gptSSEResponse.setMessage(token);
-                gptSSEResponse.setError(null);
-                gptSSEResponse.setIsEnd(false);
-                gptSSEResponse.setRelevant(null);
-                sseEmitterComponent.SseEmitterSendMessage(gptSSEResponse, sseKey);
-            }
-
-            @Override
-            @Async
-            public void onError(Throwable error) {
-                Error error1 = new Error();
-                error1.setCode(ChatResultCode.CHAT_ERROR.getCode()+"");
-                error1.setMessage(ChatResultCode.CHAT_ERROR.getMessage());
-                gptSSEResponse.setError(error1);
-                gptSSEResponse.setIsEnd(true);
-                sseEmitterComponent.SseEmitterSendMessage(gptSSEResponse, sseKey);
-                sseEmitterComponent.close(sseKey);
-                log.error("聊天异常:",error);
-            }
-
-            @Override
-            @Async
-            public void onComplete(Response<AiMessage> response) {
-                StreamingResponseHandler.super.onComplete(response);
-                gptSSEResponse.setError(null);
-                gptSSEResponse.setMessage(response.content().text());
-                if(ObjectUtil.isNotEmpty(finalRelevant)&&chatPresetDTO.getIsShowKnowledge().equals(StatusConstant.YES)){
-                    gptSSEResponse.ofKnowledgeText(finalRelevant);
-                }
-                gptSSEResponse.setIsEnd(true);
-                sseEmitterComponent.SseEmitterSendMessage(gptSSEResponse, sseKey);
-                sseEmitterComponent.close(sseKey);
-            }
-        });
-
 
         return sseEmitter;
     }
@@ -368,60 +238,6 @@ public class GptServiceImpl implements IGptService {
     }
 
     /**
-     * 获取知识库内容
-     * @param relevant 相关内容
-     * @return 知识库内容
-     */
-    private SystemMessage getKnowledgeMessage(List<TextSegment> relevant) {
-        //知识库内容
-        PromptTemplate promptTemplate = new PromptTemplate("以下是知识库的内容：\n" +
-                "知识库:\n"+
-                "{{knowledge}}"
-        );
-        String relevantContext = ObjectUtil.isEmpty(relevant)?"空":relevant.stream().map(TextSegment::text).collect(joining("\n\n"));
-        Map<String,Object> map = new HashMap<>();
-        map.put("knowledge",relevantContext);
-        Prompt prompt = promptTemplate.apply(map);
-        return new SystemMessage(prompt.text());
-    }
-
-    /**
-     * 获取相关内容
-     * @param indexName
-     * @param context
-     * @return
-     */
-    private List<TextSegment> getRelevant(String indexName, String context,Double minScore,Integer maxResult) {
-        return langchainComponent.findRelevant(indexName, context, maxResult, minScore);
-    }
-
-    /**
-     * 获取Gpt角色信息
-     * @param roleId Gpt角色id
-     * @return Gpt角色信息
-     */
-    private GptRoleVO getGptRole(Long  roleId) {
-        GptRoleVO gptRoleVO = gptRoleService.detailById(roleId);
-        if (ObjectUtil.isEmpty(gptRoleVO)) {
-            throw new ServiceException(ChatResultCode.GPT_ROLE_NOT_EXIST);
-        }
-        return gptRoleVO;
-    }
-
-    /**
-     * 获取模型信息
-     * @param name 模型名称
-     * @return 模型信息
-     */
-    private GptModel getGptModel(String  name) {
-        GptModel gptModel = GptModel.getByModelName(name);
-        if (ObjectUtil.isEmpty(gptModel)) {
-            throw new ServiceException(ChatResultCode.GPT_MODEL_NAME_ERROR);
-        }
-        return gptModel;
-    }
-
-    /**
      * 检测是否为uuid
      * @param uuid uuid
      * @return 是否为uuid
@@ -433,16 +249,6 @@ public class GptServiceImpl implements IGptService {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    /**
-     * 创建系统消息
-     * @param text 文本
-     * @return 系统消息
-     */
-
-    private SystemMessage createSystemMessage(String text) {
-        return new SystemMessage(text);
     }
 
     /**
@@ -486,107 +292,5 @@ public class GptServiceImpl implements IGptService {
             return gptContext + "..........".substring(0, 10 - gptContext.length());
         }
     }
-
-
-//    /**
-//     * 流处理
-//     *
-//     * @param account         用户账户
-//     * @param userId          用户id
-//     * @param messageId       消息id
-//     * @param parentMessageId 父消息id
-//     * @param conversationId  会话id
-//     * @param ask             问题
-//     * @return 流处理
-//     */
-//    private Consumer<InputStream> createConsumer(Long userId, String account, String messageId, String parentMessageId, String conversationId, String ask) {
-//        return new Consumer<InputStream>() {
-//            @Override
-//            public void accept(InputStream inputStream) {
-//                SSEClientSend(inputStream, userId, account, messageId, parentMessageId, conversationId, ask);
-//            }
-//        };
-//    }
-//
-//    /**
-//     * 解析流
-//     *
-//     * @param inputStream     输入流
-//     * @param userId          用户id
-//     * @param account         用户账户
-//     * @param messageId       消息id
-//     * @param parentMessageId 父消息id
-//     * @param conversationId  会话id
-//     * @param ask             问题
-//     */
-//    private void SSEClientSend(InputStream inputStream, Long userId, String account, String messageId, String parentMessageId, String conversationId, String ask) {
-//        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-//        String line;
-//        //缓存上一条数据
-//        JSONObject end = null;
-//        JSONObject lastResponse = null;
-//        int index = 0;
-//        try (BufferedReader reader = new BufferedReader(inputStreamReader)) {
-//            while ((line = reader.readLine()) != null) {
-//                //特殊字符串解析
-//                line = line.replaceAll("\\\\\"", "\"");
-//                //line 去掉 data:
-//                if (StrUtil.isNotBlank(line) && line.startsWith("data:")) {
-//                    line = line.substring(5);
-//                    if (line.contains("[DONE]")) {
-//                        line = "{done:true}";
-//                    }
-//                }
-//                if (StrUtil.isNotBlank(line)) {
-//                    if (!line.trim().startsWith("{")||!line.trim().endsWith("}")) {
-//                        continue;
-//                    }
-//                    JSONObject local = JSONUtil.parseObj(line);
-//                    if (index == 0) {
-//                        end = local;
-//                        lastResponse = local;
-//                    }
-//                    //if(local.getIsCompletion()!=null&& local.getIsCompletion())
-//                    if (local.getBool("done") != null && local.getBool("done")) {
-//                        //存入数据库
-//                        //1.判断是否为新的会话
-//                        System.out.println("end:" + end);
-//                        if (conversationId == null||conversationId.equals("")) {
-//                            conversationId = end.getStr("conversation_id");
-//                            if (conversationId != null&&!conversationId.equals("")) {
-////                                if (!gptConversationService.addConversation(userId, conversationId, ask.substring(0, Math.min(ask.length(), 5)) + "...")) {
-////                                    throw new ServiceException(ChatResultCode.CHAT_ADD_CONVERSATION_ERROR);
-////                                }
-//                            }
-//                        }
-//                        JSONObject message = lastResponse.getJSONObject("message");
-//                        if (message != null) {
-//                            JSONObject content = message.getJSONObject("content");
-//                            if (content != null) {
-//                                JSONArray parts = content.getJSONArray("parts");
-//                                if (parts != null) {
-//                                    String string = parts.get(0).toString();
-//                                    //2.存入消息
-////                                    if (!gptConversationService.addMessage(conversationId, messageId, parentMessageId, ask, UnicodeUtil.toString(string))) {
-////                                        throw new ServiceException(ChatResultCode.CHAT_ADD_CONVERSATION_ERROR);
-////                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//
-//                    lastResponse = end;
-//                    end = local;
-//
-//                    sseEmitterComponent.SseEmitterSendMessage(line, account);
-//                    index++;
-//                }
-//            }
-//        } catch (IOException e) {
-//            // 处理异常
-//            throw new ServiceException(ChatResultCode.CHAT_ERROR);
-//        }
-//    }
 
 }

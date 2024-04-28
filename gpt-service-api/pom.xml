@@ -24,10 +24,6 @@
         </dependency>
         <dependency>
             <groupId>org.auoralpixel</groupId>
-            <artifactId>gpt-core-oss</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.auoralpixel</groupId>
             <artifactId>gpt-core-i18n</artifactId>
         </dependency>
         <dependency>

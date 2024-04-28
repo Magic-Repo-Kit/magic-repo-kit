@@ -4,7 +4,6 @@ import cn.hutool.core.util.ObjectUtil;
 import com.gpt.chat.vo.gpt.GptConversationPage;
 import com.gpt.chat.entity.GptConversation;
 import com.gpt.chat.entity.GptConversationDetail;
-import com.gpt.chat.entity.GptRole;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.UserMessage;
@@ -17,16 +16,6 @@ import java.util.stream.Collectors;
 public interface GptConverter {
 
     GptConversationPage entity2Page(GptConversation gptConversation);
-
-    default GptConversationPage entity2Page(GptConversation gptConversation, GptRole gptRole) {
-        GptConversationPage gptConversationPage = entity2Page(gptConversation);
-        if (ObjectUtil.isNotEmpty(gptRole)){
-            gptConversationPage.setGptRoleId(gptRole.getId());
-            gptConversationPage.setGptRoleName(gptRole.getName());
-            gptConversationPage.setGptRoleImageUrl(gptRole.getImageUrl());
-        }
-        return gptConversationPage;
-    }
 
     default List<ChatMessage> conversationDetail2ChatMessage(List<GptConversationDetail> list){
         if(ObjectUtil.isEmpty(list)){

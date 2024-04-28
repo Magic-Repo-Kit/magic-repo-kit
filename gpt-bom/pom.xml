@@ -29,18 +29,7 @@
             </dependency>
             <dependency>
                 <groupId>org.auoralpixel</groupId>
-                <artifactId>gpt-core-oss</artifactId>
-                <version>1.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.auoralpixel</groupId>
                 <artifactId>gpt-common-utils</artifactId>
-                <version>1.0.0</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.auoralpixel</groupId>
-                <artifactId>gpt-core-generate</artifactId>
                 <version>1.0.0</version>
             </dependency>
 

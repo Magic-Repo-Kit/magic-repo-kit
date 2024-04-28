@@ -9,11 +9,9 @@ import com.gpt.chat.dto.gpt.GptConversationPageDTO;
 import com.gpt.chat.dto.gpt.GptSaveChatMessage;
 import com.gpt.chat.entity.GptConversation;
 import com.gpt.chat.entity.GptConversationDetail;
-import com.gpt.chat.entity.GptRole;
 import com.gpt.chat.mapper.GptConversationMapper;
 import com.gpt.chat.service.IGptConversationDetailService;
 import com.gpt.chat.service.IGptConversationService;
-import com.gpt.chat.service.IGptRoleService;
 import com.gpt.chat.vo.gpt.GptConversationPage;
 import com.gpt.common.api.PageResult;
 import com.gpt.mb.base.BaseServiceImpl;
@@ -33,7 +31,6 @@ import java.util.stream.Collectors;
 public class GptConversationServiceImpl extends BaseServiceImpl<GptConversationMapper, GptConversation> implements IGptConversationService {
     private final IGptConversationDetailService gptConversationDetailService;
     private final GptConverter gptConverter;
-    private final IGptRoleService gptRoleService;
     private final LangchainComponent langchainComponent;
     private final static Integer DEFAULT_MAX_COUNT = 20;
     private final static Integer DEFAULT_MAX_TOKEN = 1500;
@@ -51,11 +48,7 @@ public class GptConversationServiceImpl extends BaseServiceImpl<GptConversationM
         if (ObjectUtil.isEmpty(list)) {
             return new PageResult<>();
         }
-        List<Long> gptRoleIds = list.stream().map(GptConversation::getGptRoleId).collect(Collectors.toList());
-        Map<Long, GptRole> gptRoleMap = gptRoleService.queryIdMap(gptRoleIds);
-        return result.convert(item -> {
-            return gptConverter.entity2Page(item, ObjectUtil.isEmpty(gptRoleMap) ? null : gptRoleMap.get(item.getGptRoleId()));
-        });
+        return result.convert(gptConverter::entity2Page);
     }
 
     @Override

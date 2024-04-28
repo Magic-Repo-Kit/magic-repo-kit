@@ -41,16 +41,6 @@ public class GptController {
     }
 
     /**
-     * gpt聊天预设
-     */
-    @PostMapping(path = "/chat-preset", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
-    @ApiOperation(value = "gpt聊天预设", notes = "gpt聊天预设[返回:text/event-stream]")
-    public SseEmitter chatPreset(@RequestBody GptChatPresetDTO chatPresetDTO) {
-        return gptService.chatPreset(chatPresetDTO);
-    }
-
-
-    /**
      * 分页查询会话列表
      */
     @GetMapping("/page-conversation")

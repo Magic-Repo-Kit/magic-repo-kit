@@ -8,7 +8,7 @@ public interface GPTAuthConstant {
     /**
      * 客户端表名
      */
-    String CLIENT_TABLE_NAME = "gpt_client";
+    String CLIENT_TABLE_NAME = "sys_client";
 
     /**
      * 客户端SQL字段

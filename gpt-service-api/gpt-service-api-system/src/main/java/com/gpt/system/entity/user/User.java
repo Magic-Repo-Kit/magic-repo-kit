@@ -16,7 +16,7 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "system_user",autoResultMap = true)
+@TableName(value = "sys_user",autoResultMap = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
