@@ -12,6 +12,7 @@ spring:
     nacos:
       discovery:
         server-addr: 60.204.200.62
+        namespace: gpt
       config:
         server-addr: 60.204.200.62
         # 配置文件格式
@@ -19,4 +20,5 @@ spring:
         shared-configs[0]:
           dataId: application.yml
           refresh: true
+        namespace: gpt
 

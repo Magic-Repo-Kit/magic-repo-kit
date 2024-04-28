@@ -14,12 +14,12 @@ spring:
         # 服务注册地址
         server-addr: 60.204.200.62
         # 配置中心
-        namespace: 123456
+        namespace: gpt
       config:
         # 配置中心地址
         server-addr: 60.204.200.62
         # 配置中心
-        namespace: 123456
+        namespace: gpt
         # 配置文件格式
         file-extension: yml
         shared-configs[0]:

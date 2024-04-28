@@ -12,9 +12,11 @@ spring:
     nacos:
       discovery:
         server-addr: 60.204.200.62:8848
+        namespace: gpt
       config:
         server-addr: 60.204.200.62:8848
         file-extension: yml
         shared-configs[0]:
           dataId: application.yml
           refresh: true
+        namespace: gpt
