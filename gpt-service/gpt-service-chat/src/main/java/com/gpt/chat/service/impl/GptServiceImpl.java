@@ -82,7 +82,7 @@ public class GptServiceImpl implements IGptService {
         SseEmitter sseEmitter = sseEmitterComponent.SseEmitterConnect(sseKey);
 
         //建立模型
-        StreamingChatLanguageModel streamingChatLanguageModel = langchainComponent.getStreamingChatLanguageModel(GptModel.GPT_3_5_TURBO,0.7);
+        StreamingChatLanguageModel streamingChatLanguageModel = langchainComponent.getLlamaChatModel(GptModel.LLAMA2);
         List<ChatMessage> chatMessages = new ArrayList<>();
 
         //1.历史记忆

@@ -25,7 +25,8 @@ public enum GptModel {
     TEXT_MODERATION_STABLE("text-moderation-stable", "TEXT_MODERATION_STABLE",1017),
     TEXT_MODERATION_LATEST("text-moderation-latest", "TEXT_MODERATION_LATEST",1018),
     DALL_E_2("dall-e-2", "DALL_E_2",1019),
-    DALL_E_3("dall-e-3", "DALL_E_3",1020);
+    DALL_E_3("dall-e-3", "DALL_E_3",1020),
+    LLAMA2("llama2", "llama2", 1021);
 
 
     private String modelName;

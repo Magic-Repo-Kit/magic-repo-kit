@@ -3,11 +3,13 @@ package com.gpt.chat.component;
 import cn.hutool.core.util.StrUtil;
 import com.gpt.chat.constant.GptModel;
 import com.gpt.langchain.config.ConfigProperties;
+import com.gpt.log.exceotion.ServiceException;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.Tokenizer;
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.model.ollama.OllamaStreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
@@ -48,55 +50,6 @@ public class LangchainComponent {
                 .build();
     }
 
-
-    /**
-     * 向量检索
-     *
-     * @param indexName 索引名称
-     * @param question  问题
-     * @return List<TextSegment>
-     */
-    public List<TextSegment> findRelevant(String indexName, String question) {
-        EmbeddingStoreRetriever embeddingStoreRetriever = new EmbeddingStoreRetriever(getDefaultElasticsearchEmbeddingStore(indexName),
-                getDefaultEmbeddingModel(),
-                5,
-                0.8
-        );
-        return embeddingStoreRetriever.findRelevant(question);
-    }
-
-    /**
-     * 向量检索
-     *
-     * @param indexName 索引名称
-     * @param question  问题
-     * @param maxResult 最大结果
-     * @param minScore  最小分数
-     * @return List<TextSegment>
-     */
-    public List<TextSegment> findRelevant(String indexName, String question, int maxResult, double minScore) {
-        if(maxResult<=0){
-            maxResult=5;
-        }
-        if(minScore<=0){
-            minScore=0.7;
-        }
-        EmbeddingStoreRetriever embeddingStoreRetriever = new EmbeddingStoreRetriever(getDefaultElasticsearchEmbeddingStore(indexName),
-                getDefaultEmbeddingModel(),
-                maxResult,
-                minScore
-        );
-        return embeddingStoreRetriever.findRelevant(question);
-    }
-
-
-    /**
-     * 获取分词模型
-     */
-    public EmbeddingModel getDefaultEmbeddingModel() {
-        return OpenAiEmbeddingModel.builder().apiKey("sk-gRbZ9FJz2E7c7mwO5JOvp2u2rtoWoAbg12CxDy3Y25eLeDvd").baseUrl("https://api.chatanywhere.tech/v1").build();
-    }
-
     /**
      * 获取分词器
      *
@@ -126,6 +79,18 @@ public class LangchainComponent {
                 .baseUrl("https://api.chatanywhere.tech/")
                 .modelName(gptModel.getAcutualModelName())
                 .temperature(temperature)
+                .build();
+    }
+
+    public StreamingChatLanguageModel getLlamaChatModel(GptModel gptModel){
+        String acutualModelName = gptModel.getAcutualModelName();
+        if(!acutualModelName.startsWith("llama")){
+            throw new ServiceException("只支持llama模型");
+        }
+        return OllamaStreamingChatModel.builder()
+                .baseUrl("http://localhost:11434/")
+                .modelName(acutualModelName)
+                .temperature(0.7)
                 .build();
     }
 
