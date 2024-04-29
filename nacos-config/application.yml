@@ -2,15 +2,15 @@ spring:
   # 数据库
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://124.222.46.195:3306/magic_repo_kit?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://60.204.200.62:3306/gpt?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
     username: root
-    password: apollotest
+    password: wang8946
   # redis
   redis:
     ##redis 单机环境配置
-    host: 124.222.46.195
+    host: auroralpixel.zapto.org
     port: 6379
-    password: apollotest
+    password: wang
     database: 0
     ssl: false
   # spring缓存
@@ -31,11 +31,6 @@ gpt:
     local:
       client-id: gpt
       client-secret: gpt
-  langchain:
-    elastic-username: elastic
-    elastic-password: 123456
-    elastic-host: 154.204.60.125
-    elastic-port: 9200
 
 # 三方登录配置
 justauth:

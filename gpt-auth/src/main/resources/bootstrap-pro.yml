@@ -12,16 +12,14 @@ spring:
     nacos:
       discovery:
         # 服务注册地址
-        server-addr: 60.204.200.62
+        server-addr: 182.92.129.14
         # 配置中心
-        namespace: gpt
       config:
         # 配置中心地址
-        server-addr: 60.204.200.62
+        server-addr: 182.92.129.14
         # 配置中心
         # 配置文件格式
         file-extension: yml
         shared-configs[0]:
           dataId: application.yml
           refresh: true
-        namespace: gpt
