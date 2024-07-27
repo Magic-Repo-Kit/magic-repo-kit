@@ -35,8 +35,6 @@ public class BookingService {
      */
     public void cancelBooking(String bookingNumber, String customerName, String customerSurname) {
         ensureExists(bookingNumber, customerName, customerSurname);
-
-        // Imitating cancellation
         throw new BookingCannotBeCancelledException(bookingNumber);
     }
 

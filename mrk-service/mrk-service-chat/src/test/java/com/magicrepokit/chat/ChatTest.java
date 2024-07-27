@@ -2,12 +2,14 @@ package com.magicrepokit.chat;
 
 
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.ObjectMapper;
 import com.magicrepokit.chat.agent.CustomerSupportAgent;
 import com.magicrepokit.chat.component.GoogleSearch;
 import com.magicrepokit.chat.component.LangchainComponent;
+import com.magicrepokit.chat.constant.GptModel;
 import com.magicrepokit.chat.service.tool.CalculatorService;
 import com.magicrepokit.langchain.ElasticOperation;
 import com.magicrepokit.langchain.config.ConfigProperties;
@@ -29,6 +31,7 @@ import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.PromptTemplate;
+import dev.langchain4j.model.input.structured.StructuredPromptProcessor;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.model.output.Response;
@@ -61,7 +64,7 @@ import static java.util.stream.Collectors.joining;
 @ComponentScan(basePackages = {"com.magicrepokit"})
 public class ChatTest {
     @Autowired
-    private ChatLanguageModel model;
+    ChatLanguageModel model;
 
     @Autowired
     CustomerSupportAgent agent;
@@ -117,19 +120,39 @@ public class ChatTest {
 
     @Test
     public void should_provide_booking_details_and_explain_why_cancellation_is_not_possible() {
-
-        // Please define API keys in application.properties before running this test.
-        // Tip: Use gpt-4 for this example, as gpt-3.5-turbo tends to hallucinate often and invent name and surname.
-
         interact(agent, "你好，我忘记我的预订信息");
         interact(agent, "123-457");
-//        interact(agent, "I'm sorry I'm so inattentive today. Klaus Heisler.");
-//        interact(agent, "My bad, it's 123-456");
-//
-//        // Here, information about the cancellation policy is automatically retrieved and injected into the prompt.
-//        // Although the LLM sometimes attempts to cancel the booking, it fails to do so and will explain
-//        // the reason why the booking cannot be cancelled, based on the injected cancellation policy.
-//        interact(agent, "My plans have changed, can I cancel my booking?");
+        interact(agent, "对不起我忘记是哪一天。 名字叫:Klaus Heisler.");
+        interact(agent, "对不起,房间号是 123-456");
+        interact(agent, "我想取消我的预订");
+    }
+
+
+    @Test
+    public void TestStreamChatModel(){
+        //建立模型
+        StreamingChatLanguageModel streamingChatLanguageModel = langchainComponent.getStreamingChatLanguageModel(GptModel.MRK_3_5_TURBO,0.7);
+        streamingChatLanguageModel.generate("帮我写一个js代码", new StreamingResponseHandler<AiMessage>() {
+            @Override
+            public void onNext(String token) {
+                System.out.println("onNext(): " + token);
+            }
+
+            @Override
+            public void onComplete(Response<AiMessage> response) {
+                System.out.println("onComplete(): " + response);
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                System.out.println("onError(): " + error);
+            }
+        });
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void interact(CustomerSupportAgent agent, String userMessage) {
@@ -269,6 +292,21 @@ public class ChatTest {
     public void searchTest(){
         String s = googleSearch.searchGoogle("完美世界");
         System.out.println(s);
+    }
+
+    /**
+     * 结构化提示词的使用
+     */
+    @Test
+    public void TestStructPrompt() {
+        CookingAssistant cookingAssistant = new CookingAssistant();
+        cookingAssistant.setDish("西红柿炒鸡蛋");
+        List<String> ingredients = ListUtil.of("西红柿","鸡蛋");
+        cookingAssistant.setIngredients(ingredients);
+        Prompt prompt = StructuredPromptProcessor.toPrompt(cookingAssistant);
+        //AiMessage content = chatModel.generate(prompt.toUserMessage()).content();
+
+        System.out.println(prompt);
     }
 
 }

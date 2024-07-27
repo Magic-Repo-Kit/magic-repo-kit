@@ -26,4 +26,10 @@ public class CalculatorService {
         System.out.println("Called defaultMethod");
         return "默认空方函数";
     }
+
+    @Tool("计算两个数的差除")
+    public String div(int a, int b) {
+        System.out.println("Called div with a=" + a + ", b=" + b);
+        return "a/b="+ (a / b);
+    }
 }

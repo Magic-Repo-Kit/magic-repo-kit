@@ -11,35 +11,27 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
+    <properties>
+        <langchain.version>0.32.0</langchain.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-open-ai</artifactId>
-            <version>0.25.0</version>
+            <version>${langchain.version}</version>
         </dependency>
 
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j</artifactId>
-            <version>0.25.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j-open-ai-spring-boot-starter</artifactId>
-            <version>0.25.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j-embeddings-all-minilm-l6-v2</artifactId>
-            <version>0.25.0</version>
+            <version>${langchain.version}</version>
         </dependency>
 
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-elasticsearch</artifactId>
-            <version>0.25.0</version>
+            <version>${langchain.version}</version>
         </dependency>
 
         <dependency>
@@ -51,13 +43,13 @@
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-document-parser-apache-pdfbox</artifactId>
-            <version>0.25.0</version>
+            <version>${langchain.version}</version>
         </dependency>
 
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-document-parser-apache-poi</artifactId>
-            <version>0.25.0</version>
+            <version>${langchain.version}</version>
         </dependency>
 
         <dependency>
